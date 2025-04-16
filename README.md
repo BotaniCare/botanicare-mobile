@@ -2,15 +2,11 @@
 
 A new Flutter project.
 
-## Getting Started
+## UI Guide
 
-This project is a starting point for a Flutter application.
+To improve the re-usability of code and UI components, we create our own sub components.
+Please make sure to import the correct UI components. You can check them out in the folder shared/ui/*.
 
-A few resources to get you started if this is your first Flutter project:
+## Building the AAB/IPA file
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+You can run flutter build aab or flutter build ipa to build the artefact.
