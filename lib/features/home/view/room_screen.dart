@@ -1,3 +1,4 @@
+import 'package:botanicare/features/home/widgets/room_card.dart';
 import 'package:flutter/material.dart';
 
 class RoomScreen extends StatelessWidget {
@@ -6,7 +7,12 @@ class RoomScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text("View your Plants! 🌿")),
+      body: ListView(
+        children: [
+          RoomCard(roomName: "Kitchen", imageUrl: "https://cdn.pixabay.com/photo/2024/12/24/10/04/kitchen-9288111_1280.jpg",),
+          RoomCard(roomName: "Living Room", imageUrl: "https://cdn.pixabay.com/photo/2016/09/19/17/20/home-1680800_1280.jpg",),
+        ],
+      )
     );
   }
 }
