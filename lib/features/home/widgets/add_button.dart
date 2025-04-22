@@ -13,8 +13,8 @@ class _AddButtonState extends State<AddButton> {
   Widget build(BuildContext context) {
     return FloatingActionButton(
         onPressed: widget.onPressed,
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.green,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         shape: CircleBorder(),
         child: const Icon(Icons.add),
     );
