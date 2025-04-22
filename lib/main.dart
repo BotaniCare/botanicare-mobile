@@ -21,7 +21,7 @@ class BotaniCareMobileApp extends StatelessWidget {
     final brightness = View.of(context).platformDispatcher.platformBrightness;
 
     // Retrieves the default theme for the platform
-    //TextTheme textTheme = Theme.of(context).textTheme;
+    // TextTheme textTheme = Theme.of(context).textTheme;
 
     // Use with Google Fonts package to use downloadable fonts
     TextTheme textTheme = createTextTheme(context, "Inter Tight", "Inter");
@@ -67,8 +67,8 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        selectedItemColor: ,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.secondary,
         onTap: (index) {
           setState(() {
             _currentIndex = index;
