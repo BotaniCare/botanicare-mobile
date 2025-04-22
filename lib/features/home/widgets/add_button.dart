@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AddButton extends StatefulWidget {
-  const AddButton({super.key});
+  final VoidCallback onPressed;
+  const AddButton({super.key, required this.onPressed,});
 
   @override
   State<AddButton> createState() => _AddButtonState();
@@ -10,17 +11,12 @@ class AddButton extends StatefulWidget {
 class _AddButtonState extends State<AddButton> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text("View your Plants! 🌿")),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-
-        },
+    return FloatingActionButton(
+        onPressed: widget.onPressed,
         foregroundColor: Colors.white,
         backgroundColor: Colors.green,
         shape: CircleBorder(),
         child: const Icon(Icons.add),
-      ),
     );
   }
 }

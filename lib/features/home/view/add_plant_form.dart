@@ -1,47 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class AddPlantForm extends StatefulWidget {
-  const AddPlantForm({super.key});
+import '../viewmodel/add_plant_view_model.dart';
+
+class AddPlantScreen extends StatefulWidget {
+  const AddPlantScreen({super.key});
 
   @override
-  State<AddPlantForm> createState() => _AddPlantFormState();
+  State<AddPlantScreen> createState() => _AddPlantScreenState();
 }
 
-class _AddPlantFormState extends State<AddPlantForm> {
+class _AddPlantScreenState extends State<AddPlantScreen> {
   final _formKey = GlobalKey<FormState>();
-
-  String? _name;
-  String? _type;
-  String? _waterNeed = 'normal';
-  String? _sunlight = 'sonnig';
-  String? _room;
-  bool _isCustomType = true;
-
-  final List<String> _plantTypesFromDb = ['Ficus', 'Monstera', 'Aloe Vera'];
-  final Map<String, String> _waterNeedDefaults = {
-    'Ficus': 'normal',
-    'Monstera': 'hoch',
-    'Aloe Vera': 'gering',
-  };
-
-  final List<String> _rooms = ['Wohnzimmer', 'Küche', 'Balkon'];
   final TextEditingController _newRoomController = TextEditingController();
-
-  void _onTypeSelected(String? value) {
-    setState(() {
-      _type = value;
-      _isCustomType = false;
-      _waterNeed = _waterNeedDefaults[value] ?? 'normal';
-    });
-  }
-
-  void _addRoom(String newRoom) {
-    setState(() {
-      _rooms.add(newRoom);
-      _room = newRoom;
-      _newRoomController.clear();
-    });
-  }
+  bool _isCustomType = true;
 
   @override
   void dispose() {
@@ -51,91 +23,74 @@ class _AddPlantFormState extends State<AddPlantForm> {
 
   @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<AddPlantViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Pflanze hinzufügen')),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
-              // Bild Upload Placeholder
-              Container(
-                height: 150,
-                color: Colors.grey[300],
-                child: const Center(child: Text('Bild hinzufügen (coming soon)')),
-              ),
               const SizedBox(height: 16),
-
-              // Name
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Name der Pflanze'),
-                validator: (value) =>
-                value == null || value.isEmpty ? 'Bitte einen Namen eingeben' : null,
-                onSaved: (value) => _name = value,
+                decoration: const InputDecoration(labelText: 'Name'),
+                validator: (val) => val == null || val.isEmpty ? 'Name erforderlich' : null,
+                onSaved: (val) => vm.name = val,
               ),
-
               const SizedBox(height: 16),
 
-              // Pflanzenart
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Art auswählen'),
-                items: _plantTypesFromDb
+                decoration: const InputDecoration(labelText: 'Art aus Datenbank'),
+                items: vm.plantTypesFromDb
                     .map((type) => DropdownMenuItem(value: type, child: Text(type)))
                     .toList(),
-                onChanged: _onTypeSelected,
+                onChanged: (value) {
+                  vm.setType(value);
+                  setState(() => _isCustomType = false);
+                },
               ),
-
-              const SizedBox(height: 8),
-
-              // Oder eigene Art eingeben
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Eigene Art (optional)'),
-                onChanged: (value) {
-                  setState(() {
-                    _type = value;
-                    _isCustomType = true;
-                  });
+                onChanged: (val) {
+                  vm.type = val;
+                  setState(() => _isCustomType = true);
                 },
               ),
 
               const SizedBox(height: 16),
 
-              // Wasserbedarf
               DropdownButtonFormField<String>(
+                value: vm.waterNeed,
                 decoration: const InputDecoration(labelText: 'Wasserbedarf'),
-                value: _waterNeed,
                 items: ['gering', 'normal', 'hoch']
-                    .map((level) => DropdownMenuItem(value: level, child: Text(level)))
+                    .map((val) => DropdownMenuItem(value: val, child: Text(val)))
                     .toList(),
-                onChanged: (value) => setState(() => _waterNeed = value),
+                onChanged: (val) => setState(() => vm.waterNeed = val),
               ),
 
               const SizedBox(height: 16),
 
-              // Sonneneinstrahlung
               DropdownButtonFormField<String>(
+                value: vm.sunlight,
                 decoration: const InputDecoration(labelText: 'Sonneneinstrahlung'),
-                value: _sunlight,
                 items: ['sonnig', 'teilweise sonnig', 'nicht sonnig']
-                    .map((sun) => DropdownMenuItem(value: sun, child: Text(sun)))
+                    .map((val) => DropdownMenuItem(value: val, child: Text(val)))
                     .toList(),
-                onChanged: (value) => setState(() => _sunlight = value),
+                onChanged: (val) => setState(() => vm.sunlight = val),
               ),
 
               const SizedBox(height: 16),
 
-              // Raum Auswahl
               DropdownButtonFormField<String>(
+                value: vm.room,
                 decoration: const InputDecoration(labelText: 'Raum'),
-                value: _room,
-                items: _rooms
+                items: vm.rooms
                     .map((room) => DropdownMenuItem(value: room, child: Text(room)))
                     .toList(),
-                onChanged: (value) => setState(() => _room = value),
+                onChanged: (val) => setState(() => vm.room = val),
               ),
-
-              // Neuen Raum hinzufügen
               Row(
                 children: [
                   Expanded(
@@ -147,29 +102,23 @@ class _AddPlantFormState extends State<AddPlantForm> {
                   IconButton(
                     icon: const Icon(Icons.add),
                     onPressed: () {
-                      if (_newRoomController.text.isNotEmpty) {
-                        _addRoom(_newRoomController.text);
-                      }
+                      vm.addRoom(_newRoomController.text);
+                      _newRoomController.clear();
                     },
-                  )
+                  ),
                 ],
               ),
-
               const SizedBox(height: 24),
 
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    // Hier könntest du die Daten an ViewModel oder Datenbank weitergeben
-                    print('Name: $_name');
-                    print('Art: $_type');
-                    print('Wasserbedarf: $_waterNeed');
-                    print('Sonne: $_sunlight');
-                    print('Raum: $_room');
+                    vm.savePlant();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Pflanze gespeichert')),
                     );
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text('Speichern'),

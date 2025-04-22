@@ -1,4 +1,3 @@
-import 'package:botanicare/features/home/widgets/plant_scroll_list.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -6,6 +5,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PlantScrollList();
+    return Scaffold(
+      body: Center(child: Text("Welcome to BotaniCare! 🌿")),
+    );
   }
 }
+
