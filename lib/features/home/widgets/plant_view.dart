@@ -11,6 +11,9 @@ class PlantView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("Item $value");
+    return Text(
+      "Item $value",
+      style: Theme.of(context).textTheme.headlineMedium,
+    );
   }
 }
