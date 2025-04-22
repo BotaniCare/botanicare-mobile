@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class AddPlantViewModel extends ChangeNotifier {
@@ -28,6 +30,18 @@ class AddPlantViewModel extends ChangeNotifier {
       room = newRoom;
       notifyListeners();
     }
+  }
+
+  File? plantImage;
+
+  void setImage(File image) {
+    plantImage = image;
+    notifyListeners();
+  }
+
+  void clearImage() {
+    plantImage = null;
+    notifyListeners();
   }
 
   void savePlant() {

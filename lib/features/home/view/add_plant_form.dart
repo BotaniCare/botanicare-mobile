@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodel/add_plant_view_model.dart';
@@ -21,6 +24,15 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     super.dispose();
   }
 
+  Future<void> _pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+    if (pickedFile != null) {
+      final imageFile = File(pickedFile.path);
+      Provider.of<AddPlantViewModel>(context, listen: false).setImage(imageFile);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<AddPlantViewModel>(context);
@@ -33,7 +45,57 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              const SizedBox(height: 16),
+              const Text(
+                "Bild der Pflanze",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (_) => SafeArea(
+                      child: Wrap(
+                        children: [
+                          ListTile(
+                            leading: const Icon(Icons.photo_library),
+                            title: const Text('Aus Galerie auswählen'),
+                            onTap: () {
+                              Navigator.pop(context);
+                              _pickImage(ImageSource.gallery);
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.camera_alt),
+                            title: const Text('Foto aufnehmen'),
+                            onTap: () {
+                              Navigator.pop(context);
+                              _pickImage(ImageSource.camera);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 180,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: vm.plantImage != null
+                      ? ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.file(vm.plantImage!, fit: BoxFit.cover),
+                  )
+                      : const Center(child: Text("Bild hinzufügen")),
+                ),
+              ),
+              const SizedBox(height: 24),
+
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Name'),
                 validator: (val) => val == null || val.isEmpty ? 'Name erforderlich' : null,
@@ -130,3 +192,4 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     );
   }
 }
+
