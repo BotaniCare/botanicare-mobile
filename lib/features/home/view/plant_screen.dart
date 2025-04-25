@@ -5,8 +5,6 @@ class PlantScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text("View your Plants! 🌿")),
-    );
+    return Scaffold(body: Center(child: Text("View your Plants! 🌿")));
   }
 }
