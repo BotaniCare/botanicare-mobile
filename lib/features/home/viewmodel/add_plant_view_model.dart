@@ -54,6 +54,11 @@ class AddPlantViewModel extends ChangeNotifier {
     }
   }
 
+  void removeRoom(String roomName) {
+    rooms.remove(roomName);
+    notifyListeners();
+  }
+
   void setImage(File image) {
     plantImage = image;
     notifyListeners();

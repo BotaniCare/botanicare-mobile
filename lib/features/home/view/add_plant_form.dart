@@ -159,30 +159,73 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
 
               const SizedBox(height: 16),
 
-              DropdownButtonFormField<String>(
-                value: vm.room,
-                decoration: const InputDecoration(labelText: 'Raum'),
-                items: vm.rooms
-                    .map((room) => DropdownMenuItem(value: room, child: Text(room)))
-                    .toList(),
-                onChanged: (val) => setState(() => vm.room = val),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _newRoomController,
-                      decoration: const InputDecoration(hintText: 'Neuen Raum hinzufügen'),
+              Autocomplete<String>(
+                optionsBuilder: (TextEditingValue textEditingValue) {
+                  if (textEditingValue.text.isEmpty) {
+                    return const Iterable<String>.empty();
+                  }
+                  return vm.rooms.where((String option) {
+                    return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                  });
+                },
+                onSelected: (String selection) {
+                  setState(() {
+                    vm.room = selection;
+                  });
+                },
+                fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
+                  return TextFormField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(
+                      labelText: 'Raum',
+                      hintText: 'Raum wählen oder neuen eingeben',
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      vm.addRoom(_newRoomController.text);
-                      _newRoomController.clear();
+                    onEditingComplete: () {
+                      final enteredRoom = controller.text.trim();
+                      if (enteredRoom.isNotEmpty) {
+                        bool isNewRoom = false;
+                        if (!vm.rooms.contains(enteredRoom)) {
+                          vm.addRoom(enteredRoom);
+                          isNewRoom = true;
+                        } else {
+                          vm.room = enteredRoom;
+                        }
+                        setState(() {});
+
+                        if (isNewRoom) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Neuer Raum "$enteredRoom" hinzugefügt!'),
+                              duration: const Duration(seconds: 3),
+                              behavior: SnackBarBehavior.floating,
+                              action: SnackBarAction(
+                                label: 'Rückgängig',
+                                onPressed: () {
+                                  vm.removeRoom(enteredRoom);
+                                  setState(() {
+                                    vm.room = null;
+                                  });
+                                },
+                              ),
+                            ),
+                          );
+                        }
+                      } else {
+                        // Falls der User das Feld leer abschließt:
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('Bitte gib einen Raumnamen ein.'),
+                            duration: const Duration(seconds: 2),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                          ),
+                        );
+                      }
+                      onEditingComplete();
                     },
-                  ),
-                ],
+                  );
+                },
               ),
               const SizedBox(height: 24),
 
@@ -190,9 +233,44 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
+
+                    // Weitere Validierungen außerhalb der Form Felder:
+                    bool hasError = false;
+                    String errorMessage = '';
+
+                    if (vm.plantImage == null) {
+                      hasError = true;
+                      errorMessage = 'Bitte füge ein Bild hinzu.';
+                    } else if ((vm.type == null || vm.type!.isEmpty)) {
+                      hasError = true;
+                      errorMessage = 'Bitte gib eine Pflanzenart ein oder wähle eine.';
+                    } else if (vm.waterNeed == null || vm.waterNeed!.isEmpty) {
+                      hasError = true;
+                      errorMessage = 'Bitte wähle den Wasserbedarf aus.';
+                    } else if (vm.sunlight == null || vm.sunlight!.isEmpty) {
+                      hasError = true;
+                      errorMessage = 'Bitte wähle die Sonneneinstrahlung aus.';
+                    } else if (vm.room == null || vm.room!.isEmpty) {
+                      hasError = true;
+                      errorMessage = 'Bitte wähle oder gib einen Raum ein.';
+                    }
+
+                    if (hasError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(errorMessage),
+                          duration: const Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ),
+                      );
+                      return;
+                    }
+
+                    // Alles gültig → Pflanze speichern
                     vm.savePlant();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Pflanze gespeichert')),
+                      const SnackBar(content: Text('Pflanze erfolgreich gespeichert! 🎉')),
                     );
                     Navigator.pop(context);
                   }
