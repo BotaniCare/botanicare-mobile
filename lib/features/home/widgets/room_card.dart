@@ -16,12 +16,12 @@ class RoomCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: GestureDetector(
-
-          onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (_) => RoomDetailScreen(roomName: roomName)
-              )
-          ),
+          onTap:
+              () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => RoomDetailScreen(roomName: roomName),
+                ),
+              ),
           child: Stack(
             children: [
               Image.network(
@@ -39,7 +39,7 @@ class RoomCard extends StatelessWidget {
                 child: Text(
                   roomName,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),

@@ -9,7 +9,7 @@ class PlantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.onSurface,
       margin: EdgeInsets.all(12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
@@ -45,7 +45,11 @@ class PlantCard extends StatelessWidget {
                         ),
                         PopupMenuItem(value: "löschen", child: Text("Löschen")),
                       ],
-                  icon: Icon(Icons.more_vert, size: 25, color: Colors.white),
+                  icon: Icon(
+                    Icons.more_vert,
+                    size: 25,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
               ),
             ],
@@ -59,7 +63,7 @@ class PlantCard extends StatelessWidget {
                   'Pflanzi',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.green,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -69,12 +73,15 @@ class PlantCard extends StatelessWidget {
                     Icon(
                       Icons.water_drop_outlined,
                       size: 12,
-                      color: Colors.green,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                     SizedBox(width: 2),
                     Text(
                       ' -',
-                      style: TextStyle(fontSize: 11, color: Colors.green),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                     ),
                   ],
                 ),
