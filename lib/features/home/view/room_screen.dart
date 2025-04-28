@@ -1,18 +1,17 @@
+import 'package:botanicare/features/home/widgets/room_card.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/add_button.dart';
+import 'room_selection_screen.dart';
 
 class RoomScreen extends StatelessWidget {
   const RoomScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body:
-        Center(child: Text("View your Plants! 🌿")),
-      floatingActionButton: AddButton(onPressed: () {
-
-      }),
+    return Navigator(
+      onGenerateRoute: (settings) {
+        return MaterialPageRoute(builder: (context) => const RoomSelectionScreen());
+      },
     );
   }
 }

@@ -32,10 +32,10 @@ class BotaniCareMobileApp extends StatelessWidget {
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       home: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => HomeScreenViewModel())
+          ChangeNotifierProvider(create: (context) => HomeScreenViewModel()),
         ],
         child: const Scaffold(body: BotaniCareHome()),
-      )
+      ),
     );
   }
 }
@@ -61,9 +61,6 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('BotaniCare'),
-      ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -75,22 +72,13 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
           });
         },
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_florist),
             label: 'Plants',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.task_alt),
-            label: 'Tasks',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.weekend),
-            label: 'Rooms',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.task_alt), label: 'Tasks'),
+          BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Rooms'),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
