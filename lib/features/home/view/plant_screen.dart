@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../viewmodel/add_plant_view_model.dart';
+import '../widgets/add_button.dart';
 import '../widgets/plant_card.dart';
+import 'add_plant_form.dart';
 
 class PlantScreen extends StatelessWidget {
   const PlantScreen({super.key});
@@ -22,6 +26,20 @@ class PlantScreen extends StatelessWidget {
                 "https://cdn.pixabay.com/photo/2022/08/05/18/50/houseplant-7367379_1280.jpg",
           ),
         ),
+      ),
+      floatingActionButton: AddButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (_) => ChangeNotifierProvider(
+                    create: (_) => AddPlantViewModel(),
+                    child: const AddPlantScreen(),
+                  ),
+            ),
+          );
+        },
       ),
     );
   }
