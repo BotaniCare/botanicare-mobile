@@ -103,14 +103,28 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               ),
               const SizedBox(height: 16),
 
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Art aus Datenbank'),
-                items: vm.plantTypesFromDb
-                    .map((type) => DropdownMenuItem(value: type, child: Text(type)))
-                    .toList(),
-                onChanged: (value) {
-                  vm.setType(value);
+              Autocomplete<String>(
+                optionsBuilder: (TextEditingValue textEditingValue) {
+                  if (textEditingValue.text == '') {
+                    return const Iterable<String>.empty();
+                  }
+                  return vm.plantTypesFromDb.where((String option) {
+                    return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                  });
+                },
+                onSelected: (String selection) {
+                  vm.setType(selection);
                   setState(() => _isCustomType = false);
+                },
+                fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
+                  return TextFormField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(
+                      labelText: 'Art aus Datenbank',
+                    ),
+                    onEditingComplete: onEditingComplete,
+                  );
                 },
               ),
               TextFormField(

@@ -2,25 +2,47 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+class PlantDefaults {
+  final String type;
+  final String waterNeed;
+  final String sunlight;
+
+  PlantDefaults({
+    required this.type,
+    required this.waterNeed,
+    required this.sunlight,
+  });
+}
+
 class AddPlantViewModel extends ChangeNotifier {
   String? name;
   String? type;
   String? waterNeed = 'normal';
   String? sunlight = 'sonnig';
   String? room;
-
-  final List<String> plantTypesFromDb = ['Ficus', 'Monstera', 'Aloe Vera'];
-  final Map<String, String> waterNeedDefaults = {
-    'Ficus': 'normal',
-    'Monstera': 'hoch',
-    'Aloe Vera': 'gering',
-  };
+  File? plantImage;
 
   final List<String> rooms = ['Wohnzimmer', 'Küche', 'Balkon'];
 
+  // Neue Liste von Pflanzen mit Defaults
+  final List<PlantDefaults> plantDefaults = [
+    PlantDefaults(type: 'Ficus', waterNeed: 'normal', sunlight: 'teilweise sonnig'),
+    PlantDefaults(type: 'Monstera', waterNeed: 'hoch', sunlight: 'nicht sonnig'),
+    PlantDefaults(type: 'Aloe Vera', waterNeed: 'gering', sunlight: 'sonnig'),
+  ];
+
+  List<String> get plantTypesFromDb => plantDefaults.map((p) => p.type).toList();
+
   void setType(String? newType) {
     type = newType;
-    waterNeed = waterNeedDefaults[newType] ?? 'normal';
+
+    final selectedPlant = plantDefaults.firstWhere(
+          (plant) => plant.type == newType,
+      orElse: () => PlantDefaults(type: '', waterNeed: 'normal', sunlight: 'sonnig'),
+    );
+
+    waterNeed = selectedPlant.waterNeed;
+    sunlight = selectedPlant.sunlight;
     notifyListeners();
   }
 
@@ -31,8 +53,6 @@ class AddPlantViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  File? plantImage;
 
   void setImage(File image) {
     plantImage = image;
@@ -45,7 +65,6 @@ class AddPlantViewModel extends ChangeNotifier {
   }
 
   void savePlant() {
-    // Hier kannst du z. B. die Daten speichern oder an DB weitergeben
     debugPrint('🌱 Neue Pflanze gespeichert:');
     debugPrint('Name: $name');
     debugPrint('Art: $type');
@@ -54,3 +73,4 @@ class AddPlantViewModel extends ChangeNotifier {
     debugPrint('Raum: $room');
   }
 }
+
