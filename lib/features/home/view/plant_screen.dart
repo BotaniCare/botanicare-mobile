@@ -8,6 +8,7 @@ class PlantScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Pflanzen')),
       body: GridView.count(
         padding: const EdgeInsets.all(8.0),
         crossAxisCount: 2,
