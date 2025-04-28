@@ -1,7 +1,5 @@
 import 'package:botanicare/features/home/view/room_detail_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../viewmodel/room_detail_screen_view_model.dart';
 
 class RoomCard extends StatelessWidget {
   final String roomName;
@@ -12,12 +10,13 @@ class RoomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
+      elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: GestureDetector(
+
           onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
                   builder: (_) => RoomDetailScreen(roomName: roomName)
