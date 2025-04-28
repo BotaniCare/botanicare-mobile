@@ -5,8 +5,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text("Welcome to BotaniCare! 🌿")),
-    );
+    return Scaffold(body: Center(child: Text("Welcome to BotaniCare! 🌿")));
   }
 }
