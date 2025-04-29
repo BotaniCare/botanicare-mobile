@@ -1,5 +1,4 @@
-import 'package:botanicare/features/home/view/home_screen.dart';
-import 'package:botanicare/features/home/viewmodel/home_screen_view_model.dart';
+import 'package:botanicare/features/home/viewmodel/task_screen_view_model.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
 import 'package:botanicare/features/home/view/plant_screen.dart';
@@ -32,7 +31,7 @@ class BotaniCareMobileApp extends StatelessWidget {
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       home: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => HomeScreenViewModel()),
+          ChangeNotifierProvider(create: (context) => TaskScreenViewModel()),
         ],
         child: const Scaffold(body: BotaniCareHome()),
       ),
