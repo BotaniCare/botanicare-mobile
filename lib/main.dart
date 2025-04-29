@@ -51,9 +51,8 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    HomeScreen(),
-    PlantScreen(),
     TasksScreen(),
+    PlantScreen(),
     RoomScreen(),
     SettingsScreen(),
   ];
@@ -72,16 +71,18 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
           });
         },
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.task_alt),
+            label: 'Aufgaben',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_florist),
-            label: 'Plants',
+            label: 'Pflanzen',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.task_alt), label: 'Tasks'),
-          BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Rooms'),
+          BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Räume'),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Settings',
+            label: 'Einstellungen',
           ),
         ],
       ),

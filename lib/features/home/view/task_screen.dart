@@ -8,11 +8,9 @@ class TasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-        Center(child: Text("View your Tasks! 🌿")),
-        floatingActionButton: AddButton(onPressed: () {
-
-        }),
+      appBar: AppBar(title: Text("BotaniCare")),
+      body: Center(child: Text("Hallo!")),
+      floatingActionButton: AddButton(onPressed: () {}),
     );
   }
 }
