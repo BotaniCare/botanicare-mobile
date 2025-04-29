@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'room_selection_screen.dart';
 
 class RoomScreen extends StatelessWidget {
-  final GlobalKey<NavigatorState> navigatorStateRoom;
-
   const RoomScreen({super.key, required this.navigatorStateRoom});
+
+  final GlobalKey<NavigatorState> navigatorStateRoom;
 
   @override
   Widget build(BuildContext context) {
