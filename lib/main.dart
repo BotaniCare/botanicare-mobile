@@ -8,6 +8,9 @@ import 'package:botanicare/features/home/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+final GlobalKey<NavigatorState> navigatorStateRoom =
+    GlobalKey<NavigatorState>();
+
 void main() {
   runApp(const BotaniCareMobileApp());
 }
@@ -52,7 +55,7 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
   final List<Widget> _pages = [
     TasksScreen(),
     PlantScreen(),
-    RoomScreen(),
+    RoomScreen(navigatorStateRoom: navigatorStateRoom),
     SettingsScreen(),
   ];
 
@@ -65,6 +68,11 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Theme.of(context).colorScheme.secondary,
         onTap: (index) {
+          if (index == 2) {
+            navigatorStateRoom.currentState?.popUntil(
+              (route) => route.isFirst,
+            ); //um wieder auf erste Seite von Räume zu kommen
+          }
           setState(() {
             _currentIndex = index;
           });
