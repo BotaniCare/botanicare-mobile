@@ -52,7 +52,7 @@ class TasksScreen extends StatelessWidget {
               ),
               TaskCard(
                 imageUrl:
-                    "https://cdn.pixabay.com/photo/2023/09/15/12/43/living-room-8254772_1280.jpg",
+                    "https://cdn.pixabay.com/photo/2022/08/05/18/50/houseplant-7367379_1280.jpg",
               ),
             ],
           ),

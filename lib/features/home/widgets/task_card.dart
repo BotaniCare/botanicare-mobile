@@ -19,7 +19,7 @@ class TaskCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 imageUrl,
-                width: 80,
+                width: 90,
                 height: 90,
                 fit: BoxFit.cover,
               ),
@@ -31,7 +31,7 @@ class TaskCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Planzenname",
+                      "Pflanzenname",
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
