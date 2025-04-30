@@ -8,86 +8,101 @@ class PlantCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 4,
-      color: Theme.of(context).colorScheme.onSurface,
+      elevation: 3,
       margin: EdgeInsets.all(12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      color: Theme.of(context).colorScheme.onSurface,
+
+      child: Row(
         children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                child: Image.network(
-                  imageUrl,
-                  width: double.infinity,
-                  height: 120,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                top: 1,
-                right: 1,
-                child: PopupMenuButton<String>(
-                  onSelected: (value) {
-                    if (value == "bearbeiten") {
-                      //edit functionality - redirect to edit form
-                    } else if (value == "löschen") {
-                      //delete functionality
-                    }
-                  },
-                  itemBuilder:
-                      (context) => [
-                        PopupMenuItem(
-                          value: "bearbeiten",
-                          child: Text("Bearbeiten"),
-                        ),
-                        PopupMenuItem(value: "löschen", child: Text("Löschen")),
-                      ],
-                  icon: Icon(
-                    Icons.more_vert,
-                    size: 25,
-                    color: Theme.of(context).colorScheme.onSurface,
+          ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(8),
+              bottomLeft: Radius.circular(8),
+            ),
+            child: Image.network(
+              imageUrl,
+              width: 90,
+              height: 97,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Pflanzenname",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                   ),
+                  SizedBox(height: 3),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_month_outlined,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      SizedBox(width: 6),
+                      Text(
+                        "1x/Woche",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 3),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.water_drop_outlined,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      SizedBox(width: 6),
+                      Text(
+                        "200ml",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          Column(
+            children: [
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(48, 30),
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
+                child: Icon(Icons.edit),
+              ),
+
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(48, 30),
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                child: Icon(Icons.delete_forever),
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(11, 11, 11, 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Pflanzi',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.water_drop_outlined,
-                      size: 12,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    SizedBox(width: 2),
-                    Text(
-                      ' -',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          SizedBox(width: 10),
         ],
       ),
     );
