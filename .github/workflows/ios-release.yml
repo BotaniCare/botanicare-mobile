@@ -1,0 +1,46 @@
+name: iOS Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  ios-build-deploy:
+    name: Build and Deploy iOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Set version from Git tag
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          echo "Setting version to $TAG_VERSION"
+          sed -i '' "s/^version:.*/version: ${TAG_VERSION}+${GITHUB_RUN_NUMBER}/" pubspec.yaml
+          cat pubspec.yaml
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build iOS App
+        run: flutter build ipa --release
+
+      - name: Upload to TestFlight
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_ISSUER_ID }}
+          APP_STORE_CONNECT_API_PRIVATE_KEY: ${{ secrets.APP_STORE_PRIVATE_KEY }}
+        run: |
+          xcrun altool --upload-app -f build/ios/ipa/Runner.ipa -t ios \
+            --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+            --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID"
