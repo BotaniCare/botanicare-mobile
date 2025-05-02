@@ -15,267 +15,117 @@ class AddPlantScreen extends StatefulWidget {
 
 class _AddPlantScreenState extends State<AddPlantScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _newRoomController = TextEditingController();
-  bool _isCustomType = true;
+  late TextEditingController _typeController;
+  late TextEditingController _roomController;
+
+  @override
+  void initState() {
+    super.initState();
+    final vm = Provider.of<AddPlantViewModel>(context, listen: false);
+
+    _typeController = TextEditingController(
+      text: vm.isEditing ? vm.plant.type : '',
+    );
+    _roomController = TextEditingController(
+      text: vm.isEditing ? vm.plant.room : '',
+    );
+  }
 
   @override
   void dispose() {
-    _newRoomController.dispose();
+    _typeController.dispose();
+    _roomController.dispose();
     super.dispose();
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: source);
+  Future<void> _pickImage(BuildContext context, ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile != null) {
-      final imageFile = File(pickedFile.path);
-      Provider.of<AddPlantViewModel>(context, listen: false).setImage(imageFile);
+      final image = File(pickedFile.path);
+      context.read<AddPlantViewModel>().setImage(image);
+
     }
+  }
+
+  void _saveForm(BuildContext context) {
+    final vm = context.read<AddPlantViewModel>();
+
+    _formKey.currentState!.save();
+    if (_formKey.currentState!.validate()) {
+      final error = vm.validateForm();
+      if (error != null) {
+        _showSnackBar(context, error, isError: true);
+        return;
+      }
+
+      vm.save();
+
+      _showSnackBar(
+        context,
+        vm.isEditing ? 'Änderungen erfolgreich gespeichert! 🎉' : 'Pflanze erfolgreich gespeichert! 🎉',
+      );
+      Navigator.pop(context,true);
+    }
+  }
+
+  void _showSnackBar(BuildContext context, String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Theme.of(context).colorScheme.error : null,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final vm = Provider.of<AddPlantViewModel>(context);
-
+    final vm = context.watch<AddPlantViewModel>();
     return Scaffold(
-      appBar: AppBar(title: const Text('Pflanze hinzufügen')),
+      appBar: AppBar(title: Text(vm.isEditing ? 'Pflanze bearbeiten' : 'Pflanze hinzufügen')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
-              const Text(
-                "Bild der Pflanze",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (_) => SafeArea(
-                      child: Wrap(
-                        children: [
-                          ListTile(
-                            leading: const Icon(Icons.photo_library),
-                            title: const Text('Aus Galerie auswählen'),
-                            onTap: () {
-                              Navigator.pop(context);
-                              _pickImage(ImageSource.gallery);
-                            },
-                          ),
-                          ListTile(
-                            leading: const Icon(Icons.camera_alt),
-                            title: const Text('Foto aufnehmen'),
-                            onTap: () {
-                              Navigator.pop(context);
-                              _pickImage(ImageSource.camera);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: vm.plantImage != null
-                      ? ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.file(vm.plantImage!, fit: BoxFit.cover),
-                  )
-                      : const Center(child: Text("Bild hinzufügen")),
-                ),
-              ),
+              _buildImagePicker(context, vm),
               const SizedBox(height: 24),
-
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Name'),
-                validator: (val) => val == null || val.isEmpty ? 'Name erforderlich' : null,
-                onSaved: (val) => vm.name = val,
-              ),
+              _buildTextField('Name', initialValue: vm.isEditing ? vm.plant.name : '', onSaved: vm.updateName),
               const SizedBox(height: 16),
-
-              Autocomplete<String>(
-                optionsBuilder: (TextEditingValue textEditingValue) {
-                  if (textEditingValue.text == '') {
-                    return const Iterable<String>.empty();
+              _buildAutocomplete(
+                context,
+                label: 'Art aus Datenbank',
+                options: vm.plantTypesFromDb,
+                controller: _typeController,
+                onSelected: vm.setType,
+              ),
+              _buildTextField('Eigene Art (optional)', onChanged: vm.updateCustomType),
+              const SizedBox(height: 16),
+              _buildDropdown('Wasserbedarf', ['gering', 'normal', 'hoch'], vm.plant.waterNeed, vm.updateWaterNeed),
+              const SizedBox(height: 16),
+              _buildDropdown('Sonneneinstrahlung', ['sonnig', 'teilweise sonnig', 'nicht sonnig'], vm.plant.sunlight, vm.updateSunlight),
+              const SizedBox(height: 16),
+              _buildAutocomplete(
+                context,
+                label: 'Raum',
+                hint: 'Raum wählen oder neuen eingeben',
+                options: vm.rooms,
+                controller: _roomController,
+                onSelected: vm.setRoom,
+                onSubmitted: (room) {
+                  if (room.trim().isEmpty) {
+                    _showSnackBar(context, 'Bitte gib einen Raumnamen ein.', isError: true);
+                  } else {
+                    vm.addRoomIfNew(room);
                   }
-                  return vm.plantTypesFromDb.where((String option) {
-                    return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
-                  });
-                },
-                onSelected: (String selection) {
-                  vm.setType(selection);
-                  setState(() => _isCustomType = false);
-                },
-                fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
-                  return TextFormField(
-                    controller: controller,
-                    focusNode: focusNode,
-                    decoration: const InputDecoration(
-                      labelText: 'Art aus Datenbank',
-                    ),
-                    onEditingComplete: onEditingComplete,
-                  );
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Eigene Art (optional)'),
-                onChanged: (val) {
-                  vm.type = val;
-                  setState(() => _isCustomType = true);
-                },
-              ),
-
-              const SizedBox(height: 16),
-
-              DropdownButtonFormField<String>(
-                value: vm.waterNeed,
-                decoration: const InputDecoration(labelText: 'Wasserbedarf'),
-                items: ['gering', 'normal', 'hoch']
-                    .map((val) => DropdownMenuItem(value: val, child: Text(val)))
-                    .toList(),
-                onChanged: (val) => setState(() => vm.waterNeed = val),
-              ),
-
-              const SizedBox(height: 16),
-
-              DropdownButtonFormField<String>(
-                value: vm.sunlight,
-                decoration: const InputDecoration(labelText: 'Sonneneinstrahlung'),
-                items: ['sonnig', 'teilweise sonnig', 'nicht sonnig']
-                    .map((val) => DropdownMenuItem(value: val, child: Text(val)))
-                    .toList(),
-                onChanged: (val) => setState(() => vm.sunlight = val),
-              ),
-
-              const SizedBox(height: 16),
-
-              Autocomplete<String>(
-                optionsBuilder: (TextEditingValue textEditingValue) {
-                  if (textEditingValue.text.isEmpty) {
-                    return const Iterable<String>.empty();
-                  }
-                  return vm.rooms.where((String option) {
-                    return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
-                  });
-                },
-                onSelected: (String selection) {
-                  setState(() {
-                    vm.room = selection;
-                  });
-                },
-                fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
-                  return TextFormField(
-                    controller: controller,
-                    focusNode: focusNode,
-                    decoration: const InputDecoration(
-                      labelText: 'Raum',
-                      hintText: 'Raum wählen oder neuen eingeben',
-                    ),
-                    onEditingComplete: () {
-                      final enteredRoom = controller.text.trim();
-                      if (enteredRoom.isNotEmpty) {
-                        bool isNewRoom = false;
-                        if (!vm.rooms.contains(enteredRoom)) {
-                          vm.addRoom(enteredRoom);
-                          isNewRoom = true;
-                        } else {
-                          vm.room = enteredRoom;
-                        }
-                        setState(() {});
-
-                        if (isNewRoom) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Neuer Raum "$enteredRoom" hinzugefügt!'),
-                              duration: const Duration(seconds: 3),
-                              behavior: SnackBarBehavior.floating,
-                              action: SnackBarAction(
-                                label: 'Rückgängig',
-                                onPressed: () {
-                                  vm.removeRoom(enteredRoom);
-                                  setState(() {
-                                    vm.room = null;
-                                  });
-                                },
-                              ),
-                            ),
-                          );
-                        }
-                      } else {
-                        // Falls der User das Feld leer abschließt:
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text('Bitte gib einen Raumnamen ein.'),
-                            duration: const Duration(seconds: 2),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                          ),
-                        );
-                      }
-                      onEditingComplete();
-                    },
-                  );
                 },
               ),
               const SizedBox(height: 24),
-
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-
-                    // Weitere Validierungen außerhalb der Form Felder:
-                    bool hasError = false;
-                    String errorMessage = '';
-
-                    if (vm.plantImage == null) {
-                      hasError = true;
-                      errorMessage = 'Bitte füge ein Bild hinzu.';
-                    } else if ((vm.type == null || vm.type!.isEmpty)) {
-                      hasError = true;
-                      errorMessage = 'Bitte gib eine Pflanzenart ein oder wähle eine.';
-                    } else if (vm.waterNeed == null || vm.waterNeed!.isEmpty) {
-                      hasError = true;
-                      errorMessage = 'Bitte wähle den Wasserbedarf aus.';
-                    } else if (vm.sunlight == null || vm.sunlight!.isEmpty) {
-                      hasError = true;
-                      errorMessage = 'Bitte wähle die Sonneneinstrahlung aus.';
-                    } else if (vm.room == null || vm.room!.isEmpty) {
-                      hasError = true;
-                      errorMessage = 'Bitte wähle oder gib einen Raum ein.';
-                    }
-
-                    if (hasError) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(errorMessage),
-                          duration: const Duration(seconds: 2),
-                          behavior: SnackBarBehavior.floating,
-                          backgroundColor: Theme.of(context).colorScheme.error,
-                        ),
-                      );
-                      return;
-                    }
-
-                    // Alles gültig → Pflanze speichern
-                    vm.savePlant();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Pflanze erfolgreich gespeichert! 🎉')),
-                    );
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Speichern'),
+                onPressed: () => _saveForm(context),
+                child: Text(vm.isEditing ? 'Änderungen speichern' : 'Speichern'),
               ),
             ],
           ),
@@ -283,5 +133,94 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
       ),
     );
   }
-}
 
+  Widget _buildImagePicker(BuildContext context, AddPlantViewModel vm) {
+    return GestureDetector(
+      onTap: () => _showImageSourceSelector(context),
+      child: Container(
+        height: 180,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Theme.of(context).colorScheme.secondary),
+        ),
+        child: vm.plant.image != null
+            ? ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.file(vm.plant.image!, fit: BoxFit.cover),
+        )
+            : const Center(child: Text("Bild hinzufügen")),
+      ),
+    );
+  }
+
+  void _showImageSourceSelector(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Aus Galerie auswählen'),
+              onTap: () => _pickImage(context, ImageSource.gallery),
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Foto aufnehmen'),
+              onTap: () => _pickImage(context, ImageSource.camera),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String label, {String? initialValue, void Function(String)? onChanged, void Function(String)? onSaved}) {
+    return TextFormField(
+      initialValue: initialValue,
+      decoration: InputDecoration(labelText: label),
+      onSaved: onSaved != null ? (val) => onSaved(val!) : null,
+      onChanged: onChanged,
+    );
+  }
+
+  Widget _buildAutocomplete(
+      BuildContext context, {
+        required String label,
+        String? hint,
+        required List<String> options,
+        required TextEditingController controller,
+        required void Function(String) onSelected,
+        void Function(String)? onSubmitted,
+      }) {
+    return Autocomplete<String>(
+      optionsBuilder: (textEditingValue) => options.where(
+            (option) => option.toLowerCase().contains(textEditingValue.text.toLowerCase()),
+      ),
+      onSelected: onSelected,
+      fieldViewBuilder: (context, fieldController, focusNode, onEditingComplete) {
+        fieldController.text = controller.text;
+        fieldController.selection = TextSelection.fromPosition(TextPosition(offset: fieldController.text.length));
+        fieldController.addListener(() => controller.text = fieldController.text);
+
+        return TextFormField(
+          controller: fieldController,
+          focusNode: focusNode,
+          decoration: InputDecoration(labelText: label, hintText: hint),
+          onEditingComplete: onEditingComplete,
+          onFieldSubmitted: onSubmitted,
+        );
+      },
+    );
+  }
+
+  Widget _buildDropdown(String label, List<String> items, String value, void Function(String) onChanged) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      decoration: InputDecoration(labelText: label),
+      items: items.map((val) => DropdownMenuItem(value: val, child: Text(val))).toList(),
+      onChanged: (val) => onChanged(val!),
+    );
+  }
+}

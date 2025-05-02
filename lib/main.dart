@@ -1,5 +1,3 @@
-import 'package:botanicare/features/home/view/home_screen.dart';
-import 'package:botanicare/features/home/viewmodel/home_screen_view_model.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
 import 'package:botanicare/features/home/view/plant_screen.dart';
@@ -8,6 +6,9 @@ import 'package:botanicare/features/home/view/settings_screen.dart';
 import 'package:botanicare/features/home/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'features/home/viewmodel/task_screen_view_model.dart';
+import 'features/home/viewmodel/plant_provider.dart';
 
 void main() {
   runApp(const BotaniCareMobileApp());
@@ -32,7 +33,8 @@ class BotaniCareMobileApp extends StatelessWidget {
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       home: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => HomeScreenViewModel()),
+          ChangeNotifierProvider(create: (context) => TaskScreenViewModel()),
+          ChangeNotifierProvider(create: (context) => PlantProvider()),
         ],
         child: const Scaffold(body: BotaniCareHome()),
       ),
@@ -50,18 +52,17 @@ class BotaniCareHome extends StatefulWidget {
 class BotaniCareHomeState extends State<BotaniCareHome> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    HomeScreen(),
-    PlantScreen(),
-    TasksScreen(),
-    RoomScreen(),
-    SettingsScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<Widget> pages = [
+      PlantScreen(),
+      TasksScreen(),
+      RoomScreen(),
+      SettingsScreen(),
+    ];
+
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Theme.of(context).colorScheme.primary,
@@ -72,17 +73,10 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
           });
         },
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_florist),
-            label: 'Plants',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.local_florist), label: 'Plants',),
           BottomNavigationBarItem(icon: Icon(Icons.task_alt), label: 'Tasks'),
           BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Rooms'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings',),
         ],
       ),
     );

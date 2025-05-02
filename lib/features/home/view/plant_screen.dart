@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/plant.dart';
 import '../viewmodel/add_plant_view_model.dart';
+import '../viewmodel/plant_provider.dart';
+import '../widgets/plant_list.dart';
 import '../widgets/add_button.dart';
-import '../widgets/plant_card.dart';
 import 'add_plant_form.dart';
 
 class PlantScreen extends StatelessWidget {
@@ -13,30 +15,30 @@ class PlantScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Pflanzen')),
-      body: GridView.count(
-        padding: const EdgeInsets.all(8.0),
-        crossAxisCount: 2,
-        crossAxisSpacing: 5,
-        mainAxisSpacing: 5,
-        childAspectRatio: 0.8,
-        children: List.generate(
-          7,
-          (index) => PlantCard(
-            imageUrl:
-                "https://cdn.pixabay.com/photo/2022/08/05/18/50/houseplant-7367379_1280.jpg",
-          ),
-        ),
-      ),
+      body: PlantsList(),
       floatingActionButton: AddButton(
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder:
-                  (_) => ChangeNotifierProvider(
-                    create: (_) => AddPlantViewModel(),
-                    child: const AddPlantScreen(),
+              builder: (_) {
+                final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+                return ChangeNotifierProvider(
+                  create: (_) => AddPlantViewModel(
+                      isEditing: false,
+                      plantProvider: plantProvider,
+                      initialPlant: Plant(
+                          id: 0, // will be provided in plantProvider correctly
+                          name: '',
+                          type: 'Monstera',
+                          waterNeed: 'hoch',
+                          sunlight: 'nicht sonnig',
+                          room: ''
+                      )
                   ),
+                  child: const AddPlantScreen(),
+                );
+              },
             ),
           );
         },

@@ -1,81 +1,118 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 
-class PlantDefaults {
-  final String type;
-  final String waterNeed;
-  final String sunlight;
-
-  PlantDefaults({
-    required this.type,
-    required this.waterNeed,
-    required this.sunlight,
-  });
-}
+import '../models/plant_defaults.dart';
+import '../../home/models/plant.dart';
+import '../../home/viewmodel/plant_provider.dart';
 
 class AddPlantViewModel extends ChangeNotifier {
-  String? name;
-  String? type;
-  String? waterNeed = 'normal';
-  String? sunlight = 'sonnig';
-  String? room;
-  File? plantImage;
+  final PlantProvider plantProvider;
+  final bool isEditing;
 
-  final List<String> rooms = ['Wohnzimmer', 'Küche', 'Balkon'];
+  // Internal state
+  late Plant _plant;
+  final List<String> _rooms = ['Wohnzimmer', 'Küche', 'Balkon'];
 
-  // Neue Liste von Pflanzen mit Defaults
-  final List<PlantDefaults> plantDefaults = [
+  // Preset defaults
+  final List<PlantDefaults> _plantDefaults = [
     PlantDefaults(type: 'Ficus', waterNeed: 'normal', sunlight: 'teilweise sonnig'),
     PlantDefaults(type: 'Monstera', waterNeed: 'hoch', sunlight: 'nicht sonnig'),
     PlantDefaults(type: 'Aloe Vera', waterNeed: 'gering', sunlight: 'sonnig'),
   ];
 
-  List<String> get plantTypesFromDb => plantDefaults.map((p) => p.type).toList();
+  AddPlantViewModel({
+    required this.isEditing,
+    required this.plantProvider,
+    required Plant initialPlant,
+  }) {
+    _plant = initialPlant;
+  }
 
-  void setType(String? newType) {
-    type = newType;
+  Plant get plant => _plant;
 
-    final selectedPlant = plantDefaults.firstWhere(
-          (plant) => plant.type == newType,
+  List<String> get rooms => List.unmodifiable(_rooms);
+
+  List<String> get plantTypesFromDb => _plantDefaults.map((p) => p.type).toList();
+
+  void setType(String newType) {
+    _plant.type = newType;
+
+    final match = _plantDefaults.firstWhere(
+          (e) => e.type == newType,
       orElse: () => PlantDefaults(type: '', waterNeed: 'normal', sunlight: 'sonnig'),
     );
 
-    waterNeed = selectedPlant.waterNeed;
-    sunlight = selectedPlant.sunlight;
+    _plant.waterNeed = match.waterNeed;
+    _plant.sunlight = match.sunlight;
+
     notifyListeners();
   }
 
-  void addRoom(String newRoom) {
-    if (!rooms.contains(newRoom)) {
-      rooms.add(newRoom);
-      room = newRoom;
+  void setRoom(String room) {
+    _plant.room = room;
+    notifyListeners();
+  }
+
+  void addRoomIfNew(String room) {
+    if (!_rooms.contains(room)) {
+      _rooms.add(room);
+      _plant.room = room;
       notifyListeners();
     }
   }
 
-  void removeRoom(String roomName) {
-    rooms.remove(roomName);
+  void removeRoom(String room) {
+    _rooms.remove(room);
+    if (_plant.room == room) {
+      _plant.room = null;
+    }
     notifyListeners();
   }
 
   void setImage(File image) {
-    plantImage = image;
+    _plant.image = image;
     notifyListeners();
   }
 
   void clearImage() {
-    plantImage = null;
+    _plant.image = null;
     notifyListeners();
   }
 
-  void savePlant() {
-    debugPrint('🌱 Neue Pflanze gespeichert:');
-    debugPrint('Name: $name');
-    debugPrint('Art: $type');
-    debugPrint('Wasser: $waterNeed');
-    debugPrint('Sonne: $sunlight');
-    debugPrint('Raum: $room');
+  void updateName(String name) {
+    _plant.name = name;
+    notifyListeners();
+  }
+
+  void updateWaterNeed(String need) {
+    _plant.waterNeed = need;
+    notifyListeners();
+  }
+
+  void updateSunlight(String sunlight) {
+    _plant.sunlight = sunlight;
+    notifyListeners();
+  }
+
+  void updateCustomType(String customType) {
+    _plant.type = customType;
+    notifyListeners();
+  }
+
+  String? validateForm() {
+    if (_plant.name.isEmpty) return 'Bitte füge einen Namen hinzu';
+    if (_plant.image == null) return 'Bitte füge ein Bild hinzu.';
+    if (_plant.type.trim().isEmpty) return 'Bitte gib eine Pflanzenart ein oder wähle eine.';
+    if (_plant.room == null || _plant.room!.trim().isEmpty) return 'Bitte wähle oder gib einen Raum ein.';
+    return null; // no error
+  }
+
+  void save() {
+    if (isEditing) {
+      plantProvider.updatePlant(_plant);
+    } else {
+      plantProvider.addPlant(_plant);
+    }
+    notifyListeners();
   }
 }
-

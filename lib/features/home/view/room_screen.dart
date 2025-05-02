@@ -1,6 +1,4 @@
-import 'package:botanicare/features/home/widgets/room_card.dart';
 import 'package:flutter/material.dart';
-
 import 'room_selection_screen.dart';
 
 class RoomScreen extends StatelessWidget {

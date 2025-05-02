@@ -1,9 +1,16 @@
+import 'package:botanicare/features/home/models/plant.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../view/add_plant_form.dart';
+import '../viewmodel/add_plant_view_model.dart';
+import '../viewmodel/plant_provider.dart';
 
 class PlantCard extends StatelessWidget {
+  final Plant plant;
   final String imageUrl;
 
-  const PlantCard({super.key, required this.imageUrl});
+  const PlantCard({super.key, required this.plant, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,22 @@ class PlantCard extends StatelessWidget {
                 child: PopupMenuButton<String>(
                   onSelected: (value) {
                     if (value == "bearbeiten") {
-                      //edit functionality - redirect to edit form
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) {
+                            final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+                            return ChangeNotifierProvider(
+                              create: (_) => AddPlantViewModel(
+                                  isEditing: true,
+                                  plantProvider: plantProvider,
+                                  initialPlant: plant
+                              ),
+                              child: const AddPlantScreen(),
+                            );
+                          },
+                        ),
+                      );
                     } else if (value == "löschen") {
                       //delete functionality
                     }
@@ -60,7 +82,7 @@ class PlantCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Pflanzi',
+                  plant.name,
                   style: TextStyle(
                     fontSize: 12,
                     color: Theme.of(context).colorScheme.onPrimary,
@@ -77,7 +99,7 @@ class PlantCard extends StatelessWidget {
                     ),
                     SizedBox(width: 2),
                     Text(
-                      ' -',
+                      "-",
                       style: TextStyle(
                         fontSize: 11,
                         color: Theme.of(context).colorScheme.onPrimary,
