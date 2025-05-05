@@ -1,46 +1,71 @@
-name: iOS Release
+name: Custom Auto Tagging
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
 
 jobs:
-  ios-build-deploy:
-    name: Build and Deploy iOS
-    runs-on: macos-latest
+  auto-tag:
+    name: Auto Increment Tag
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          fetch-depth: 0
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Set version from Git tag
+      - name: Get latest tag
+        id: get_tag
         run: |
-          TAG_VERSION=${GITHUB_REF#refs/tags/v}
-          echo "Setting version to $TAG_VERSION"
-          sed -i '' "s/^version:.*/version: ${TAG_VERSION}+${GITHUB_RUN_NUMBER}/" pubspec.yaml
-          cat pubspec.yaml
+          git fetch --tags
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` || echo "v0.0.0+0")
+          echo "Latest tag: $latest_tag"
+          echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
 
-      - name: Run tests
-        run: flutter test
-
-      - name: Build iOS App
-        run: flutter build ipa --release
-
-      - name: Upload to TestFlight
-        env:
-          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_KEY_ID }}
-          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_ISSUER_ID }}
-          APP_STORE_CONNECT_API_PRIVATE_KEY: ${{ secrets.APP_STORE_PRIVATE_KEY }}
+      - name: Determine new version
+        id: bump
         run: |
-          xcrun altool --upload-app -f build/ios/ipa/Runner.ipa -t ios \
-            --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
-            --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID"
+          branch="${GITHUB_REF#refs/heads/}"
+          old_tag="${{ steps.get_tag.outputs.latest_tag }}"
+
+          echo "Current branch: $branch"
+          echo "Old tag: $old_tag"
+
+          # Remove 'v' prefix
+          old_tag=${old_tag#v}
+
+          # Split into version and build parts
+          IFS='+' read -r version build <<< "$old_tag"
+          IFS='.' read -r major minor patch <<< "$version"
+
+          # Default values
+          major=${major:-0}
+          minor=${minor:-0}
+          patch=${patch:-0}
+          build=${build:-0}
+
+          if [ "$branch" = "main" ]; then
+            major=$((major + 1))
+            minor=0
+            patch=0
+            build=$((build + 1))
+          else
+            echo "Unsupported branch for tagging!"
+            exit 1
+          fi
+
+          new_tag="v${major}.${minor}.${patch}+${build}"
+          echo "New tag: $new_tag"
+          echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
+
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag ${{ steps.bump.outputs.new_tag }}
+          git push origin ${{ steps.bump.outputs.new_tag }}
