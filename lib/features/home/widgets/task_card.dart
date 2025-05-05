@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 
-class TaskCard extends StatelessWidget {
+class TaskCard extends StatefulWidget {
   final String imageUrl;
 
   const TaskCard({super.key, required this.imageUrl});
+
+  @override
+  _TaskCardState createState() => _TaskCardState();
+}
+
+class _TaskCardState extends State<TaskCard> {
+  bool isWatered = false;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +28,7 @@ class TaskCard extends StatelessWidget {
                 bottomLeft: Radius.circular(8),
               ),
               child: Image.network(
-                imageUrl,
+                widget.imageUrl,
                 width: 90,
                 height: 90,
                 fit: BoxFit.cover,
@@ -81,7 +88,9 @@ class TaskCard extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Icon(Icons.check_box_outlined);
+                setState(() {
+                  isWatered = !isWatered;
+                });
               },
               style: ElevatedButton.styleFrom(
                 shape: CircleBorder(),
@@ -89,7 +98,10 @@ class TaskCard extends StatelessWidget {
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 padding: EdgeInsets.all(16),
               ),
-              child: Icon(Icons.water_drop_outlined),
+              child: Icon(
+                isWatered ? Icons.check_outlined : Icons.water_drop_outlined,
+                size: 18,
+              ),
             ),
             SizedBox(width: 5),
           ],
