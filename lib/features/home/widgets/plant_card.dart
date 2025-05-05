@@ -119,7 +119,40 @@ class PlantCard extends StatelessWidget {
               ),
               SizedBox(height: 6),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  final confirmDeletion = await showDialog<bool>(
+                    context: context,
+                    builder:
+                        (con) => AlertDialog(
+                          title: Text(
+                            "Pflanzenname löschen",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          content: Text(
+                            "Willst du Pflanzenname wirklich löschen?",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          actions: [
+                            Row(
+                              children: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(con, false),
+                                  child: Text("Abbrechen"),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(con, false),
+                                  child: Text("Pflanze löschen"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.zero,
                   minimumSize: Size(60, 32),
