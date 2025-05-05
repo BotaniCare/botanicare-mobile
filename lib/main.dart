@@ -1,5 +1,4 @@
-import 'package:botanicare/features/home/view/home_screen.dart';
-import 'package:botanicare/features/home/viewmodel/home_screen_view_model.dart';
+import 'package:botanicare/features/home/viewmodel/task_screen_view_model.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
 import 'package:botanicare/features/home/view/plant_screen.dart';
@@ -8,6 +7,9 @@ import 'package:botanicare/features/home/view/settings_screen.dart';
 import 'package:botanicare/features/home/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+final GlobalKey<NavigatorState> navigatorStateRoom =
+    GlobalKey<NavigatorState>();
 
 void main() {
   runApp(const BotaniCareMobileApp());
@@ -32,7 +34,7 @@ class BotaniCareMobileApp extends StatelessWidget {
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       home: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => HomeScreenViewModel()),
+          ChangeNotifierProvider(create: (context) => TaskScreenViewModel()),
         ],
         child: const Scaffold(body: BotaniCareHome()),
       ),
@@ -51,10 +53,9 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    HomeScreen(),
-    PlantScreen(),
     TasksScreen(),
-    RoomScreen(),
+    PlantScreen(),
+    RoomScreen(navigatorStateRoom: navigatorStateRoom),
     SettingsScreen(),
   ];
 
@@ -67,21 +68,28 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Theme.of(context).colorScheme.secondary,
         onTap: (index) {
+          if (index == 2) {
+            navigatorStateRoom.currentState?.popUntil(
+              (route) => route.isFirst,
+            ); //um wieder auf erste Seite von Räume zu kommen
+          }
           setState(() {
             _currentIndex = index;
           });
         },
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.task_alt),
+            label: 'Aufgaben',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_florist),
-            label: 'Plants',
+            label: 'Pflanzen',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.task_alt), label: 'Tasks'),
-          BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Rooms'),
+          BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Räume'),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Settings',
+            label: 'Einstellungen',
           ),
         ],
       ),
