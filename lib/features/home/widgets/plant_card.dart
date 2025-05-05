@@ -80,25 +80,30 @@ class PlantCard extends StatelessWidget {
           ),
 
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(48, 30),
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size(60, 32),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 ),
-                child: Icon(Icons.edit),
+                child: Icon(Icons.edit, size: 18),
               ),
-
+              SizedBox(height: 6),
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(48, 30),
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size(60, 32),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 ),
-                child: Icon(Icons.delete_forever),
+                child: Icon(Icons.delete_forever, size: 18),
               ),
             ],
           ),
