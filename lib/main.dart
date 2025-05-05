@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'features/home/viewmodel/task_screen_view_model.dart';
 import 'features/home/viewmodel/plant_provider.dart';
 
+final GlobalKey<NavigatorState> navigatorStateRoom =
+    GlobalKey<NavigatorState>();
 void main() {
   runApp(const BotaniCareMobileApp());
 }
@@ -54,29 +56,43 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> pages = [
-      PlantScreen(),
+    final List<Widget> _pages = [
       TasksScreen(),
-      RoomScreen(),
+      PlantScreen(),
+      RoomScreen(navigatorStateRoom: navigatorStateRoom),
       SettingsScreen(),
     ];
 
     return Scaffold(
-      body: pages[_currentIndex],
+      body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Theme.of(context).colorScheme.secondary,
         onTap: (index) {
+          if (index == 2) {
+            navigatorStateRoom.currentState?.popUntil(
+              (route) => route.isFirst,
+            ); //um wieder auf erste Seite von Räume zu kommen
+          }
           setState(() {
             _currentIndex = index;
           });
         },
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.local_florist), label: 'Plants',),
-          BottomNavigationBarItem(icon: Icon(Icons.task_alt), label: 'Tasks'),
-          BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Rooms'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings',),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.task_alt),
+            label: 'Aufgaben',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_florist),
+            label: 'Pflanzen',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Räume'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Einstellungen',
+          ),
         ],
       ),
     );

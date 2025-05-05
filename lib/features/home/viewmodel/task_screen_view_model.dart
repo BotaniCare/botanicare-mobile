@@ -1,3 +1,3 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class TaskScreenViewModel extends ChangeNotifier {}
+class TaskScreenViewModel with ChangeNotifier {}

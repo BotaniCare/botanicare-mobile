@@ -4,7 +4,7 @@ import '../models/plant.dart';
 
 class PlantProvider extends ChangeNotifier {
   final List<Plant> _plants = List.generate(
-    7,
+    3,
         (index) => Plant(
       id: index,
       name: "Pflanzi",
