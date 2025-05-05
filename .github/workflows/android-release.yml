@@ -40,9 +40,9 @@ jobs:
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           if [[ "$TAG_NAME" == *-beta ]]; then
-            echo "track=beta" >> $GITHUB_OUTPUT
+            echo "track=alpha" >> $GITHUB_OUTPUT
           else
-            echo "track=production" >> $GITHUB_OUTPUT
+            echo "track=alpha" >> $GITHUB_OUTPUT
           fi
 
       - name: Upload to Play Store
