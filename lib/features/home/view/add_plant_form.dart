@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../models/room.dart';
 import '../viewmodel/add_plant_view_model.dart';
 
 class AddPlantScreen extends StatefulWidget {
@@ -27,7 +28,15 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
       text: vm.isEditing ? vm.plant.type : '',
     );
     _roomController = TextEditingController(
-      text: vm.isEditing ? vm.plant.room : '',
+      text:
+          vm.isEditing
+              ? vm.roomProvider.rooms
+                  .firstWhere(
+                    (room) => room.id == vm.plant.roomId,
+                    orElse: () => Room(id: -1, roomName: ""),
+                  )
+                  .roomName
+              : '',
     );
   }
 
@@ -135,9 +144,18 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 context,
                 label: 'Raum',
                 hint: 'Raum wählen oder neuen eingeben',
-                options: vm.rooms,
+                options: vm.rooms.map((room) => room.roomName).toList(),
                 controller: _roomController,
-                onSelected: vm.setRoom,
+                onSelected: (roomName) {
+                  final room = vm.rooms.firstWhere(
+                      (room) => room.roomName == roomName,
+                    orElse: () =>  Room(id: -1, roomName: ''),
+                  );
+                  
+                  if (room.id != -1) {
+                    vm.setRoom(room.id);
+                  }
+                },
                 onSubmitted: (room) {
                   if (room.trim().isEmpty) {
                     _showSnackBar(
@@ -146,7 +164,8 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                       isError: true,
                     );
                   } else {
-                    vm.addRoomIfNew(room);
+                    //TODO
+                    //vm.addRoomIfNew(room);
                   }
                 },
               ),

@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import '../models/plant_defaults.dart';
 import '../../home/models/plant.dart';
 import '../../home/viewmodel/plant_provider.dart';
+import '../models/room.dart';
+import '../view/room_provider.dart';
 
 class AddPlantViewModel extends ChangeNotifier {
   final PlantProvider plantProvider;
   final bool isEditing;
+  final RoomProvider roomProvider;
 
   // Internal state
   late Plant _plant;
-  final List<String> _rooms = ['Wohnzimmer', 'Küche', 'Balkon'];
 
   // Preset defaults
   final List<PlantDefaults> _plantDefaults = [
@@ -23,15 +25,14 @@ class AddPlantViewModel extends ChangeNotifier {
   AddPlantViewModel({
     required this.isEditing,
     required this.plantProvider,
+    required this.roomProvider,
     required Plant initialPlant,
   }) {
     _plant = initialPlant;
   }
 
   Plant get plant => _plant;
-
-  List<String> get rooms => List.unmodifiable(_rooms);
-
+  List<Room> get rooms => roomProvider.rooms;
   List<String> get plantTypesFromDb => _plantDefaults.map((p) => p.type).toList();
 
   void setType(String newType) {
@@ -48,25 +49,26 @@ class AddPlantViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setRoom(String room) {
-    _plant.room = room;
+  void setRoom(int roomId) {
+    _plant.roomId = roomId;
     notifyListeners();
   }
 
-  void addRoomIfNew(String room) {
-    if (!_rooms.contains(room)) {
+  void addRoomIfNew(int roomId) {
+    /*if (!_rooms.contains(room)) {
       _rooms.add(room);
       _plant.room = room;
       notifyListeners();
-    }
+    }*/
+    notifyListeners();
+    //TODO: add Room through Room Provider
   }
 
-  void removeRoom(String room) {
-    _rooms.remove(room);
-    if (_plant.room == room) {
-      _plant.room = null;
+  void removeRoom(int roomId) {
+    if (_plant.roomId == roomId) {
+      _plant.roomId = null;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   void setImage(File image) {
@@ -103,7 +105,6 @@ class AddPlantViewModel extends ChangeNotifier {
     if (_plant.name.isEmpty) return 'Bitte füge einen Namen hinzu';
     if (_plant.image == null) return 'Bitte füge ein Bild hinzu.';
     if (_plant.type.trim().isEmpty) return 'Bitte gib eine Pflanzenart ein oder wähle eine.';
-    if (_plant.room == null || _plant.room!.trim().isEmpty) return 'Bitte wähle oder gib einen Raum ein.';
     return null; // no error
   }
 

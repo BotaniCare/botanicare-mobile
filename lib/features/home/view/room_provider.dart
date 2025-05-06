@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:botanicare/features/home/models/room.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -10,24 +8,27 @@ class RoomProvider extends ChangeNotifier {
     Room(
       id: 0,
       roomName: "Wohnzimmer",
-      roomPlants: [],
     ),
 
     Room(
       id: 1,
+      roomName: "Schlafzimmer",
+    ),
+
+    Room(
+      id: 2,
       roomName: "Küche",
-      roomPlants: [],
     ),
   ];
 
   List<Room> get rooms => _rooms;
 
-  void sortPlantsByRoom(List<Plant> plants) {
-    for (var room in _rooms) {
-      room.roomPlants.clear();
-      room.roomPlants.addAll(plants.where((plant) => plant.roomId == room.id));
-    }
-    notifyListeners();
+  List<Plant> getPlantsByRoom(List<Plant> plants, int roomId) {
+    return plants.where((plant) => plant.roomId == roomId).toList();
+  }
+
+  List<Plant> getPlantsWithNoRoom(List<Plant> plants) {
+    return plants.where((plant) => plant.roomId == null).toList();
   }
 
   deleteRoom(int id) {

@@ -1,8 +1,8 @@
 import 'package:botanicare/features/home/models/plant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../view/add_plant_form.dart';
+import '../view/room_provider.dart';
 import '../viewmodel/add_plant_view_model.dart';
 import '../viewmodel/plant_provider.dart';
 
@@ -99,14 +99,19 @@ class PlantCard extends StatelessWidget {
                           context,
                           listen: false,
                         );
-                        return ChangeNotifierProvider(
-                          create:
-                              (_) => AddPlantViewModel(
-                                isEditing: true,
-                                plantProvider: plantProvider,
-                                initialPlant: plant,
-                              ),
-                          child: const AddPlantScreen(),
+                        return Consumer<RoomProvider>(
+                          builder: (context, roomProvider, _) {
+                            return ChangeNotifierProvider(
+                              create:
+                                  (_) => AddPlantViewModel(
+                                    isEditing: true,
+                                    plantProvider: plantProvider,
+                                    roomProvider: roomProvider,
+                                    initialPlant: plant,
+                                  ),
+                              child: const AddPlantScreen(),
+                            );
+                          },
                         );
                       },
                     ),
@@ -129,7 +134,7 @@ class PlantCard extends StatelessWidget {
                     builder:
                         (con) => AlertDialog(
                           title: Text(
-                            "Pflanzenname löschen",
+                            "${plant.name} entfernen",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -137,7 +142,7 @@ class PlantCard extends StatelessWidget {
                             ),
                           ),
                           content: Text(
-                            "Willst du Pflanzenname wirklich löschen?",
+                            "Willst du ${plant.name} wirklich entfernen?",
                             style: TextStyle(fontSize: 14),
                           ),
                           actions: [
@@ -166,7 +171,7 @@ class PlantCard extends StatelessWidget {
                       SnackBar(
                         content: Text("${plant.name} 🪴 wurde gelöscht."),
                         behavior: SnackBarBehavior.floating,
-                        duration: const Duration(seconds: 2),
+                        duration: const Duration(milliseconds: 500),
                       ),
                     );
                   }

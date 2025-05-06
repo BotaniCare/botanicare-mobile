@@ -31,6 +31,33 @@ class PlantProvider extends ChangeNotifier {
       roomId: 0,
       image: File(''), // Placeholder
     ),
+    Plant(
+      id: 3,
+      name: "Maple",
+      type: "Monstera",
+      waterNeed: "hoch",
+      sunlight: "sonnig",
+      roomId: 2,
+      image: File(''), // Placeholder
+    ),
+    Plant(
+      id: 4,
+      name: "Raumlose Pflanze",
+      type: "Monstera",
+      waterNeed: "hoch",
+      sunlight: "sonnig",
+      roomId: null,
+      image: File(''), // Placeholder
+    ),
+    Plant(
+      id: 5,
+      name: "raumlose Pflanze 1",
+      type: "Monstera",
+      waterNeed: "hoch",
+      sunlight: "sonnig",
+      roomId: null,
+      image: File(''), // Placeholder
+    ),
   ];
 
   List<Plant> get plants => _plants;

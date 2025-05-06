@@ -1,4 +1,6 @@
+import 'package:botanicare/features/home/view/room_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/room_card.dart';
 
@@ -7,18 +9,24 @@ class RoomSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final roomProvider = Provider.of<RoomProvider>(context, listen: true);
+    final roomList = roomProvider.rooms;
+
     return Scaffold(
       body: ListView(
         children: [
-          RoomCard(
-            roomName: "Wohnzimmer",
-            imageUrl:
-                "https://cdn.pixabay.com/photo/2016/09/19/17/20/home-1680800_1280.jpg",
-          ),
-          RoomCard(
-            roomName: "Küche",
-            imageUrl:
-                "https://cdn.pixabay.com/photo/2024/12/24/10/04/kitchen-9288111_1280.jpg",
+          ...roomList.map(
+            (room) => RoomCard(
+              room: room,
+              imageUrl:
+                  room.id == 0
+                      ? "https://cdn.pixabay.com/photo/2016/09/19/17/20/home-1680800_1280.jpg"
+                      : room.id == 1
+                      ? "https://cdn.pixabay.com/photo/2021/12/22/16/57/room-6887944_1280.jpg"
+                      : room.id == 2
+                      ? "https://cdn.pixabay.com/photo/2017/03/22/17/39/kitchen-2165756_1280.jpg"
+                      : "https://cdn.pixabay.com/photo/2017/08/06/22/20/interior-2596976_1280.jpg",
+            ),
           ),
         ],
       ),
