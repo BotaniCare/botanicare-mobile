@@ -1,3 +1,4 @@
+import 'package:botanicare/features/home/view/plant_selection_screen.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
 import 'package:botanicare/features/home/view/plant_screen.dart';
@@ -10,8 +11,9 @@ import 'package:provider/provider.dart';
 import 'features/home/viewmodel/task_screen_view_model.dart';
 import 'features/home/viewmodel/plant_provider.dart';
 
-final GlobalKey<NavigatorState> navigatorStateRoom =
-    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorStateRoom = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorStatePlants = GlobalKey<NavigatorState>();
+
 void main() {
   runApp(const BotaniCareMobileApp());
 }
@@ -58,7 +60,7 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
   Widget build(BuildContext context) {
     final List<Widget> _pages = [
       TasksScreen(),
-      PlantScreen(),
+      PlantSelectionScreen(navigatorStateRoom: navigatorStatePlants),
       RoomScreen(navigatorStateRoom: navigatorStateRoom),
       SettingsScreen(),
     ];

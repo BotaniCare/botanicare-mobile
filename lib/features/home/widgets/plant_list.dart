@@ -1,3 +1,4 @@
+import 'package:botanicare/features/home/view/plant_detail_screen.dart';
 import 'package:botanicare/features/home/viewmodel/plant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,8 +14,18 @@ class PlantsList extends StatelessWidget {
     return ListView.builder(
         itemCount: plants.length,
         itemBuilder: (context, index) {
-          return PlantCard(plant: plants[index],
-            imageUrl: 'https://cdn.pixabay.com/photo/2023/09/15/12/43/living-room-8254772_1280.jpg');
+          return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PlantDetailScreen(plant: plants[index])));
+              },
+              child: PlantCard(
+                  plant: plants[index],
+                  imageUrl: 'https://cdn.pixabay.com/photo/2023/09/15/12/43/living-room-8254772_1280.jpg'
+              ),
+          );
         }
     );
   }
