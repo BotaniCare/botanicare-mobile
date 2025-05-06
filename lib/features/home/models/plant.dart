@@ -6,7 +6,7 @@ class Plant {
   String type;
   String waterNeed;
   String sunlight;
-  String? room;
+  int? roomId;
   File? image;
 
   Plant({
@@ -15,7 +15,7 @@ class Plant {
     required this.type,
     required this.waterNeed,
     required this.sunlight,
-    required this.room,
+    required this.roomId,
     this.image,
   });
 
@@ -26,7 +26,7 @@ class Plant {
       'type': type,
       'waterNeed': waterNeed,
       'sunlight': sunlight,
-      'room': room,
+      'room': roomId,
       'imagePath': image,
     };
   }

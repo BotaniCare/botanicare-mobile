@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class TaskCard extends StatefulWidget {
   final String imageUrl;
+  final String plantName;
 
-  const TaskCard({super.key, required this.imageUrl});
+  const TaskCard({super.key, required this.imageUrl, required this.plantName});
 
   @override
   _TaskCardState createState() => _TaskCardState();
@@ -41,7 +42,7 @@ class _TaskCardState extends State<TaskCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Pflanzenname",
+                      widget.plantName,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,

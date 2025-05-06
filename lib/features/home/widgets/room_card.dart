@@ -1,11 +1,13 @@
-import 'package:botanicare/features/home/view/room_detail_screen.dart';
+import 'package:botanicare/features/home/view/room_display_plant_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../models/room.dart';
+
 class RoomCard extends StatelessWidget {
-  final String roomName;
+  final Room room;
   final String imageUrl;
 
-  const RoomCard({super.key, required this.roomName, required this.imageUrl});
+  const RoomCard({super.key, required this.room, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class RoomCard extends StatelessWidget {
           onTap:
               () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => RoomDetailScreen(roomName: roomName),
+                  builder: (_) => RoomDisplayPlantScreen(room: room),
                 ),
               ),
           child: Stack(
@@ -37,7 +39,7 @@ class RoomCard extends StatelessWidget {
                 alignment: Alignment.bottomLeft,
                 padding: EdgeInsets.all(12),
                 child: Text(
-                  roomName,
+                  room.roomName,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 20,
