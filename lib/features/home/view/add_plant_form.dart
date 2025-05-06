@@ -43,7 +43,6 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     if (pickedFile != null) {
       final image = File(pickedFile.path);
       context.read<AddPlantViewModel>().setImage(image);
-
     }
   }
 
@@ -62,13 +61,19 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
 
       _showSnackBar(
         context,
-        vm.isEditing ? 'Änderungen erfolgreich gespeichert! 🎉' : 'Pflanze erfolgreich gespeichert! 🎉',
+        vm.isEditing
+            ? 'Änderungen erfolgreich gespeichert! 🎉'
+            : 'Pflanze erfolgreich gespeichert! 🎉',
       );
-      Navigator.pop(context,true);
+      Navigator.pop(context, true);
     }
   }
 
-  void _showSnackBar(BuildContext context, String message, {bool isError = false}) {
+  void _showSnackBar(
+    BuildContext context,
+    String message, {
+    bool isError = false,
+  }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -83,7 +88,9 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   Widget build(BuildContext context) {
     final vm = context.watch<AddPlantViewModel>();
     return Scaffold(
-      appBar: AppBar(title: Text(vm.isEditing ? 'Pflanze bearbeiten' : 'Pflanze hinzufügen')),
+      appBar: AppBar(
+        title: Text(vm.isEditing ? 'Pflanze bearbeiten' : 'Pflanze hinzufügen'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -92,7 +99,11 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             children: [
               _buildImagePicker(context, vm),
               const SizedBox(height: 24),
-              _buildTextField('Name', initialValue: vm.isEditing ? vm.plant.name : '', onSaved: vm.updateName),
+              _buildTextField(
+                'Name',
+                initialValue: vm.isEditing ? vm.plant.name : '',
+                onSaved: vm.updateName,
+              ),
               const SizedBox(height: 16),
               _buildAutocomplete(
                 context,
@@ -101,11 +112,24 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 controller: _typeController,
                 onSelected: vm.setType,
               ),
-              _buildTextField('Eigene Art (optional)', onChanged: vm.updateCustomType),
+              _buildTextField(
+                'Eigene Art (optional)',
+                onChanged: vm.updateCustomType,
+              ),
               const SizedBox(height: 16),
-              _buildDropdown('Wasserbedarf', ['gering', 'normal', 'hoch'], vm.plant.waterNeed, vm.updateWaterNeed),
+              _buildDropdown(
+                'Wasserbedarf',
+                ['gering', 'normal', 'hoch'],
+                vm.plant.waterNeed,
+                vm.updateWaterNeed,
+              ),
               const SizedBox(height: 16),
-              _buildDropdown('Sonneneinstrahlung', ['sonnig', 'teilweise sonnig', 'nicht sonnig'], vm.plant.sunlight, vm.updateSunlight),
+              _buildDropdown(
+                'Sonneneinstrahlung',
+                ['sonnig', 'teilweise sonnig', 'nicht sonnig'],
+                vm.plant.sunlight,
+                vm.updateSunlight,
+              ),
               const SizedBox(height: 16),
               _buildAutocomplete(
                 context,
@@ -116,7 +140,11 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 onSelected: vm.setRoom,
                 onSubmitted: (room) {
                   if (room.trim().isEmpty) {
-                    _showSnackBar(context, 'Bitte gib einen Raumnamen ein.', isError: true);
+                    _showSnackBar(
+                      context,
+                      'Bitte gib einen Raumnamen ein.',
+                      isError: true,
+                    );
                   } else {
                     vm.addRoomIfNew(room);
                   }
@@ -125,7 +153,9 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () => _saveForm(context),
-                child: Text(vm.isEditing ? 'Änderungen speichern' : 'Speichern'),
+                child: Text(
+                  vm.isEditing ? 'Änderungen speichern' : 'Speichern',
+                ),
               ),
             ],
           ),
@@ -144,12 +174,13 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Theme.of(context).colorScheme.secondary),
         ),
-        child: vm.plant.image != null
-            ? ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.file(vm.plant.image!, fit: BoxFit.cover),
-        )
-            : const Center(child: Text("Bild hinzufügen")),
+        child:
+            vm.plant.image != null
+                ? ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.file(vm.plant.image!, fit: BoxFit.cover),
+                )
+                : const Center(child: Text("Bild hinzufügen")),
       ),
     );
   }
@@ -157,26 +188,32 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   void _showImageSourceSelector(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (_) => SafeArea(
-        child: Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Aus Galerie auswählen'),
-              onTap: () => _pickImage(context, ImageSource.gallery),
+      builder:
+          (_) => SafeArea(
+            child: Wrap(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: const Text('Aus Galerie auswählen'),
+                  onTap: () => _pickImage(context, ImageSource.gallery),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text('Foto aufnehmen'),
+                  onTap: () => _pickImage(context, ImageSource.camera),
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('Foto aufnehmen'),
-              onTap: () => _pickImage(context, ImageSource.camera),
-            ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 
-  Widget _buildTextField(String label, {String? initialValue, void Function(String)? onChanged, void Function(String)? onSaved}) {
+  Widget _buildTextField(
+    String label, {
+    String? initialValue,
+    void Function(String)? onChanged,
+    void Function(String)? onSaved,
+  }) {
     return TextFormField(
       initialValue: initialValue,
       decoration: InputDecoration(labelText: label),
@@ -186,23 +223,35 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   }
 
   Widget _buildAutocomplete(
-      BuildContext context, {
-        required String label,
-        String? hint,
-        required List<String> options,
-        required TextEditingController controller,
-        required void Function(String) onSelected,
-        void Function(String)? onSubmitted,
-      }) {
+    BuildContext context, {
+    required String label,
+    String? hint,
+    required List<String> options,
+    required TextEditingController controller,
+    required void Function(String) onSelected,
+    void Function(String)? onSubmitted,
+  }) {
     return Autocomplete<String>(
-      optionsBuilder: (textEditingValue) => options.where(
-            (option) => option.toLowerCase().contains(textEditingValue.text.toLowerCase()),
-      ),
+      optionsBuilder:
+          (textEditingValue) => options.where(
+            (option) => option.toLowerCase().contains(
+              textEditingValue.text.toLowerCase(),
+            ),
+          ),
       onSelected: onSelected,
-      fieldViewBuilder: (context, fieldController, focusNode, onEditingComplete) {
+      fieldViewBuilder: (
+        context,
+        fieldController,
+        focusNode,
+        onEditingComplete,
+      ) {
         fieldController.text = controller.text;
-        fieldController.selection = TextSelection.fromPosition(TextPosition(offset: fieldController.text.length));
-        fieldController.addListener(() => controller.text = fieldController.text);
+        fieldController.selection = TextSelection.fromPosition(
+          TextPosition(offset: fieldController.text.length),
+        );
+        fieldController.addListener(
+          () => controller.text = fieldController.text,
+        );
 
         return TextFormField(
           controller: fieldController,
@@ -215,11 +264,19 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     );
   }
 
-  Widget _buildDropdown(String label, List<String> items, String value, void Function(String) onChanged) {
+  Widget _buildDropdown(
+    String label,
+    List<String> items,
+    String value,
+    void Function(String) onChanged,
+  ) {
     return DropdownButtonFormField<String>(
       value: value,
       decoration: InputDecoration(labelText: label),
-      items: items.map((val) => DropdownMenuItem(value: val, child: Text(val))).toList(),
+      items:
+          items
+              .map((val) => DropdownMenuItem(value: val, child: Text(val)))
+              .toList(),
       onChanged: (val) => onChanged(val!),
     );
   }

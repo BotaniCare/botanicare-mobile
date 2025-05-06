@@ -1,3 +1,4 @@
+import 'package:botanicare/features/home/view/room_provider.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
 import 'package:botanicare/features/home/view/plant_screen.dart';
@@ -12,6 +13,7 @@ import 'features/home/viewmodel/plant_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorStateRoom =
     GlobalKey<NavigatorState>();
+
 void main() {
   runApp(const BotaniCareMobileApp());
 }
@@ -37,6 +39,7 @@ class BotaniCareMobileApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (context) => TaskScreenViewModel()),
           ChangeNotifierProvider(create: (context) => PlantProvider()),
+          ChangeNotifierProvider(create: (context) => RoomProvider()),
         ],
         child: const Scaffold(body: BotaniCareHome()),
       ),

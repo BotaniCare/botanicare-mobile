@@ -33,7 +33,7 @@ class PlantScreen extends StatelessWidget {
                           type: 'Monstera',
                           waterNeed: 'hoch',
                           sunlight: 'nicht sonnig',
-                          room: ''
+                          roomId: ''
                       )
                   ),
                   child: const AddPlantScreen(),

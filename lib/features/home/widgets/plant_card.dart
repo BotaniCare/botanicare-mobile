@@ -95,13 +95,17 @@ class PlantCard extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (_) {
-                        final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+                        final plantProvider = Provider.of<PlantProvider>(
+                          context,
+                          listen: false,
+                        );
                         return ChangeNotifierProvider(
-                          create: (_) => AddPlantViewModel(
-                              isEditing: true,
-                              plantProvider: plantProvider,
-                              initialPlant: plant
-                          ),
+                          create:
+                              (_) => AddPlantViewModel(
+                                isEditing: true,
+                                plantProvider: plantProvider,
+                                initialPlant: plant,
+                              ),
                           child: const AddPlantScreen(),
                         );
                       },
@@ -144,7 +148,7 @@ class PlantCard extends StatelessWidget {
                                   child: Text("Abbrechen"),
                                 ),
                                 TextButton(
-                                  onPressed: () => Navigator.pop(con, false),
+                                  onPressed: () => Navigator.pop(con, true),
                                   child: Text("Pflanze löschen"),
                                 ),
                               ],
@@ -152,6 +156,20 @@ class PlantCard extends StatelessWidget {
                           ],
                         ),
                   );
+
+                  if (confirmDeletion == true && context.mounted) {
+                    Provider.of<PlantProvider>(
+                      context,
+                      listen: false,
+                    ).deletePlant(plant.id);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("${plant.name} 🪴 wurde gelöscht."),
+                        behavior: SnackBarBehavior.floating,
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.zero,

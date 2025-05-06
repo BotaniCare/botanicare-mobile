@@ -3,18 +3,35 @@ import 'package:flutter/material.dart';
 import '../models/plant.dart';
 
 class PlantProvider extends ChangeNotifier {
-  final List<Plant> _plants = List.generate(
-    3,
-        (index) => Plant(
-      id: index,
+  final List<Plant> _plants = [
+    Plant(
+      id: 0,
       name: "Pflanzi",
       type: "Monstera",
       waterNeed: "hoch",
       sunlight: "sonnig",
-      room: 'Balkon',
+      roomId: 0,
       image: File(''), // Placeholder
     ),
-  );
+    Plant(
+      id: 1,
+      name: "Pflanzinchen",
+      type: "Monstera",
+      waterNeed: "hoch",
+      sunlight: "sonnig",
+      roomId: 1,
+      image: File(''), // Placeholder
+    ),
+    Plant(
+      id: 2,
+      name: "Franz die Pflanze",
+      type: "Monstera",
+      waterNeed: "hoch",
+      sunlight: "sonnig",
+      roomId: 0,
+      image: File(''), // Placeholder
+    ),
+  ];
 
   List<Plant> get plants => _plants;
 
@@ -26,6 +43,11 @@ class PlantProvider extends ChangeNotifier {
 
   void updatePlant(Plant plant) {
     _plants[_plants.indexWhere((element) => element.id == plant.id)] = plant;
+    notifyListeners();
+  }
+
+  void deletePlant(int id) {
+    _plants.removeWhere((deletedPlant) => deletedPlant.id == id);
     notifyListeners();
   }
 
