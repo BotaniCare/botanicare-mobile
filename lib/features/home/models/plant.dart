@@ -7,6 +7,7 @@ class Plant {
   String waterNeed;
   String sunlight;
   int? roomId;
+  bool isWatered;
   File? image;
 
   Plant({
@@ -16,6 +17,7 @@ class Plant {
     required this.waterNeed,
     required this.sunlight,
     required this.roomId,
+    required this.isWatered,
     this.image,
   });
 
