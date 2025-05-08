@@ -1,17 +1,21 @@
+import 'dart:async';
+
+import 'package:botanicare/features/home/viewmodel/task_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../models/task.dart';
 
 class TaskCard extends StatefulWidget {
   final String imageUrl;
-  final String plantName;
+  final Task task;
 
-  const TaskCard({super.key, required this.imageUrl, required this.plantName});
-
+  const TaskCard({super.key, required this.imageUrl, required this.task});
   @override
   _TaskCardState createState() => _TaskCardState();
 }
 
 class _TaskCardState extends State<TaskCard> {
-  bool isWatered = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,7 @@ class _TaskCardState extends State<TaskCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.plantName,
+                      widget.task.plant.name,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
@@ -88,10 +92,12 @@ class _TaskCardState extends State<TaskCard> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 setState(() {
-                  isWatered = !isWatered;
+                  widget.task.plant.isWatered = !widget.task.plant.isWatered;
                 });
+                await Future.delayed(const Duration(seconds: 1));
+                Provider.of<TaskProvider>(context, listen: false).deleteTask(widget.task.id);
               },
               style: ElevatedButton.styleFrom(
                 shape: CircleBorder(),
@@ -100,7 +106,7 @@ class _TaskCardState extends State<TaskCard> {
                 padding: EdgeInsets.all(16),
               ),
               child: Icon(
-                isWatered ? Icons.check_outlined : Icons.water_drop_outlined,
+                widget.task.plant.isWatered ? Icons.check_outlined : Icons.water_drop_outlined,
                 size: 18,
               ),
             ),

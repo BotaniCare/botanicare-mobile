@@ -11,6 +11,7 @@ class PlantProvider extends ChangeNotifier {
       waterNeed: "hoch",
       sunlight: "sonnig",
       roomId: 0,
+      isWatered: false,
       image: File(''), // Placeholder
     ),
     Plant(
@@ -20,6 +21,7 @@ class PlantProvider extends ChangeNotifier {
       waterNeed: "hoch",
       sunlight: "sonnig",
       roomId: 1,
+      isWatered: false,
       image: File(''), // Placeholder
     ),
     Plant(
@@ -29,6 +31,7 @@ class PlantProvider extends ChangeNotifier {
       waterNeed: "hoch",
       sunlight: "sonnig",
       roomId: 0,
+      isWatered: false,
       image: File(''), // Placeholder
     ),
     Plant(
@@ -38,6 +41,7 @@ class PlantProvider extends ChangeNotifier {
       waterNeed: "hoch",
       sunlight: "sonnig",
       roomId: 2,
+      isWatered: false,
       image: File(''), // Placeholder
     ),
     Plant(
@@ -47,6 +51,7 @@ class PlantProvider extends ChangeNotifier {
       waterNeed: "hoch",
       sunlight: "sonnig",
       roomId: null,
+      isWatered: false,
       image: File(''), // Placeholder
     ),
     Plant(
@@ -56,6 +61,7 @@ class PlantProvider extends ChangeNotifier {
       waterNeed: "hoch",
       sunlight: "sonnig",
       roomId: null,
+      isWatered: false,
       image: File(''), // Placeholder
     ),
   ];

@@ -4,6 +4,8 @@ import 'package:botanicare/features/home/widgets/task_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../viewmodel/task_provider.dart';
+
 class TasksScreen extends StatelessWidget {
   const TasksScreen({super.key});
 
@@ -13,7 +15,9 @@ class TasksScreen extends StatelessWidget {
     final roomList = roomProvider.rooms;
     final plantProvider = Provider.of<PlantProvider>(context, listen: true);
     final plantList = plantProvider.plants;
-    final plantsWithNoRoom = roomProvider.getPlantsWithNoRoom(plantList);
+    final taskProvider = Provider.of<TaskProvider>(context, listen: true);
+    final taskList = taskProvider.addTask(plantList);
+    final plantsWithNoRoom = taskList.where((task) => task.plant.roomId == null);
 
     return Scaffold(
       appBar: AppBar(title: Text("BotaniCare")),
@@ -21,10 +25,8 @@ class TasksScreen extends StatelessWidget {
         children: [
           SizedBox(height: 5),
           ...roomList.map((room) {
-            final plantsInRoom = roomProvider.getPlantsByRoom(
-              plantList,
-              room.id,
-            );
+            final plantsInRoom =
+                taskList.where((task) => task.plant.roomId == room.id).toList();
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -41,10 +43,10 @@ class TasksScreen extends StatelessWidget {
                   ),
                 ),
                 ...plantsInRoom.map(
-                  (plant) => TaskCard(
+                  (task) => TaskCard(
                     imageUrl:
                         "https://cdn.pixabay.com/photo/2023/09/15/12/43/living-room-8254772_1280.jpg",
-                    plantName: plant.name,
+                    task: task,
                   ),
                 ),
                 SizedBox(height: 7),
@@ -68,10 +70,10 @@ class TasksScreen extends StatelessWidget {
                   ),
                 ),
                 ...plantsWithNoRoom.map(
-                  (plant) => TaskCard(
+                  (task) => TaskCard(
                     imageUrl:
                         "https://cdn.pixabay.com/photo/2020/01/16/16/31/cactus-4771078_1280.jpg",
-                    plantName: plant.name,
+                    task: task,
                   ),
                 ),
               ],

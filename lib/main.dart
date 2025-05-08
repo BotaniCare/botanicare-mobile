@@ -8,6 +8,7 @@ import 'package:botanicare/features/home/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'features/home/viewmodel/task_provider.dart';
 import 'features/home/viewmodel/task_screen_view_model.dart';
 import 'features/home/viewmodel/plant_provider.dart';
 
@@ -40,6 +41,7 @@ class BotaniCareMobileApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => TaskScreenViewModel()),
           ChangeNotifierProvider(create: (context) => PlantProvider()),
           ChangeNotifierProvider(create: (context) => RoomProvider()),
+          ChangeNotifierProvider(create: (context) => TaskProvider()),
         ],
         child: const Scaffold(body: BotaniCareHome()),
       ),

@@ -58,6 +58,7 @@ class PlantScreen extends StatelessWidget {
                               waterNeed: 'hoch',
                               sunlight: 'nicht sonnig',
                               roomId: 0,
+                              isWatered: false,
                             ),
                           ),
                       child: const AddPlantScreen(),
