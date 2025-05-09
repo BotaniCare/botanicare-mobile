@@ -19,7 +19,8 @@ class RoomCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: GestureDetector(
           onTap:
-              () => Navigator.of(context).push(
+              () =>
+              Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => RoomDisplayPlantScreen(room: room),
                 ),
@@ -33,6 +34,71 @@ class RoomCard extends StatelessWidget {
                 fit: BoxFit.cover,
                 opacity: const AlwaysStoppedAnimation(.6),
               ),
+
+              Builder(
+                builder: (context) {
+                  if (room.id > 2) {
+                    return Container(
+                      height: 150,
+                      width: double.infinity,
+                      alignment: Alignment.topRight,
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          foregroundColor:
+                          Theme
+                              .of(context)
+                              .colorScheme
+                              .onPrimary,
+                          backgroundColor:
+                          Theme
+                              .of(context)
+                              .colorScheme
+                              .primary,
+                          padding: EdgeInsets.all(10),
+                        ),
+                        child: Icon(Icons.edit, size: 23),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
+              ),
+
+              Builder(
+                builder: (context) {
+                  if (room.id > 2) {
+                    return Container(
+                      height: 150,
+                      width: double.infinity,
+                      alignment: Alignment.topRight,
+                      padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          foregroundColor:
+                          Theme
+                              .of(context)
+                              .colorScheme
+                              .onPrimary,
+                          backgroundColor:
+                          Theme
+                              .of(context)
+                              .colorScheme
+                              .primary,
+                          padding: EdgeInsets.all(10),
+                        ),
+                        child: Icon(Icons.delete_forever, size: 23),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
+              ),
+
               Container(
                 height: 150,
                 width: double.infinity,
@@ -41,7 +107,10 @@ class RoomCard extends StatelessWidget {
                 child: Text(
                   room.roomName,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
+                    color: Theme
+                        .of(context)
+                        .colorScheme
+                        .onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
