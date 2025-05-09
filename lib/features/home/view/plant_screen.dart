@@ -38,32 +38,24 @@ class PlantScreen extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (_) {
-                final plantProvider = Provider.of<PlantProvider>(
-                  context,
-                  listen: false,
-                );
-                return Consumer<RoomProvider>(
-                  builder: (context, roomProvider, _) {
-                    return ChangeNotifierProvider(
-                      create:
-                          (_) => AddPlantViewModel(
-                            isEditing: false,
-                            plantProvider: plantProvider,
-                            roomProvider: roomProvider,
-                            initialPlant: Plant(
-                              id: 0,
-                              // will be provided in plantProvider correctly
-                              name: '',
-                              type: 'Monstera',
-                              waterNeed: 'hoch',
-                              sunlight: 'nicht sonnig',
-                              roomId: 0,
-                              isWatered: false,
-                            ),
-                          ),
-                      child: const AddPlantScreen(),
-                    );
-                  },
+                final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+                final roomProvider = Provider.of<RoomProvider>(context, listen: false);
+                return ChangeNotifierProvider(
+                  create: (_) => AddPlantViewModel(
+                      isEditing: false,
+                      plantProvider: plantProvider,
+                      roomProvider: roomProvider,
+                      initialPlant: Plant(
+                          id: 0, // will be provided in plantProvider correctly
+                          name: '',
+                          type: 'Monstera',
+                          waterNeed: 'hoch',
+                          sunlight: 'nicht sonnig',
+                          roomId: null,
+                          isWatered: true
+                      ),
+                  ),
+                  child: const AddPlantScreen(),
                 );
               },
             ),

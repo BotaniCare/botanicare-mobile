@@ -95,23 +95,16 @@ class PlantCard extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (_) {
-                        final plantProvider = Provider.of<PlantProvider>(
-                          context,
-                          listen: false,
-                        );
-                        return Consumer<RoomProvider>(
-                          builder: (context, roomProvider, _) {
-                            return ChangeNotifierProvider(
-                              create:
-                                  (_) => AddPlantViewModel(
-                                    isEditing: true,
-                                    plantProvider: plantProvider,
-                                    roomProvider: roomProvider,
-                                    initialPlant: plant,
-                                  ),
-                              child: const AddPlantScreen(),
-                            );
-                          },
+                        final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+                        final roomProvider = Provider.of<RoomProvider>(context, listen: false);
+                        return ChangeNotifierProvider(
+                          create: (_) => AddPlantViewModel(
+                            isEditing: true,
+                            plantProvider: plantProvider,
+                            roomProvider: roomProvider,
+                            initialPlant: plant,
+                          ),
+                          child: const AddPlantScreen(),
                         );
                       },
                     ),
