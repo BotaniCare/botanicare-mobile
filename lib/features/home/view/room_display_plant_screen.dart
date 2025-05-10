@@ -37,7 +37,7 @@ class RoomDisplayPlantScreen extends StatelessWidget {
               : [
                 Column(
                   children: [
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.35),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.33),
                     Text(
                       "Hier gibt es noch keine Pflanzen :(",
                       textAlign: TextAlign.center,
