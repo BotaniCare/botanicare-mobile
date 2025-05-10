@@ -13,6 +13,7 @@ class RoomSelectionScreen extends StatelessWidget {
     final roomList = roomProvider.rooms;
 
     return Scaffold(
+      appBar: AppBar(title: Text('Räume')),
       body: ListView(
         children: [
           ...roomList.map(
@@ -28,6 +29,8 @@ class RoomSelectionScreen extends StatelessWidget {
                       : "https://cdn.pixabay.com/photo/2017/08/02/01/01/living-room-2569325_1280.jpg",
             ),
           ),
+          //bottom margin to prevent actionButton overlap
+          SizedBox(height: 73),
         ],
       ),
     );
