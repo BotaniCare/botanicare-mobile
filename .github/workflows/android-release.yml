@@ -42,7 +42,7 @@ jobs:
           if [[ "$TAG_NAME" == *-beta ]]; then
             echo "track=alpha" >> $GITHUB_OUTPUT
           else
-            echo "track=alpha" >> $GITHUB_OUTPUT
+            echo "track=beta" >> $GITHUB_OUTPUT
           fi
 
       - name: Upload to Play Store
