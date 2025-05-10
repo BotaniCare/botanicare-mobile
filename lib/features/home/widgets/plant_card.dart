@@ -2,7 +2,7 @@ import 'package:botanicare/features/home/models/plant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../view/add_plant_form.dart';
-import '../view/room_provider.dart';
+import '../viewmodel/room_provider.dart';
 import '../viewmodel/add_plant_view_model.dart';
 import '../viewmodel/plant_provider.dart';
 
@@ -164,7 +164,7 @@ class PlantCard extends StatelessWidget {
                       SnackBar(
                         content: Text("${plant.name} 🪴 wurde gelöscht."),
                         behavior: SnackBarBehavior.floating,
-                        duration: const Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 450),
                       ),
                     );
                   }
