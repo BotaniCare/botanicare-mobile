@@ -38,7 +38,7 @@ class PlantDetailScreen extends StatelessWidget {
               ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.fromLTRB(25.0, 15.0, 25.0, 0.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
