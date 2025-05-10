@@ -1,4 +1,4 @@
-import 'package:botanicare/features/home/view/room_provider.dart';
+import 'package:botanicare/features/home/viewmodel/room_provider.dart';
 import 'package:botanicare/features/home/widgets/plant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -64,12 +64,4 @@ class RoomDisplayPlantScreen extends StatelessWidget {
       ),
     );
   }
-
-  // child: Text("Hier gibt es noch keine Pflanzen :("),
-  /*ElevatedButton(
-                          onPressed: () {
-                            //TODO: redirect to AddPlantScreen
-                          },
-                          child: Icon(Icons.add),
-                        ),*/
 }

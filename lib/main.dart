@@ -1,4 +1,4 @@
-import 'package:botanicare/features/home/view/room_provider.dart';
+import 'package:botanicare/features/home/viewmodel/room_provider.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
 import 'package:botanicare/features/home/view/plant_screen.dart';

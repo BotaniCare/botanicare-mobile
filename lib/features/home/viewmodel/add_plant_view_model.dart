@@ -5,7 +5,7 @@ import '../models/plant_defaults.dart';
 import '../../home/models/plant.dart';
 import '../../home/viewmodel/plant_provider.dart';
 import '../models/room.dart';
-import '../view/room_provider.dart';
+import 'room_provider.dart';
 
 class AddPlantViewModel extends ChangeNotifier {
   final PlantProvider plantProvider;
