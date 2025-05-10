@@ -2,7 +2,7 @@ import 'package:botanicare/features/home/models/plant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../view/add_plant_form.dart';
-import '../view/room_provider.dart';
+import '../viewmodel/room_provider.dart';
 import '../viewmodel/add_plant_view_model.dart';
 import '../viewmodel/plant_provider.dart';
 

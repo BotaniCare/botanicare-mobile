@@ -1,4 +1,4 @@
-import 'package:botanicare/features/home/view/room_provider.dart';
+import 'package:botanicare/features/home/viewmodel/room_provider.dart';
 import 'package:botanicare/features/home/viewmodel/plant_provider.dart';
 import 'package:botanicare/features/home/widgets/task_card.dart';
 import 'package:flutter/material.dart';

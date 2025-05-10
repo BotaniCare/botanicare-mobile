@@ -12,7 +12,7 @@ class RoomScreen extends StatelessWidget {
       key: navigatorStateRoom,
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
-          builder: (context) => const RoomSelectionScreen(),
+          builder: (context) => RoomSelectionScreen(),
         );
       },
     );
