@@ -43,6 +43,7 @@ class RoomDisplayPlantScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 10),
