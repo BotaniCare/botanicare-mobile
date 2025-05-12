@@ -9,10 +9,14 @@ import 'package:botanicare/features/home/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'data/local/hive_helper.dart';
+
 final GlobalKey<NavigatorState> navigatorStateRoom =
     GlobalKey<NavigatorState>();
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveHelper.init();
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeNotifier(null),
