@@ -1,9 +1,10 @@
 import 'package:botanicare/features/home/viewmodel/task_screen_view_model.dart';
+import 'package:botanicare/features/settings/notifier/theme_notifier.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
 import 'package:botanicare/features/home/view/plant_screen.dart';
 import 'package:botanicare/features/home/view/room_screen.dart';
-import 'package:botanicare/features/home/view/settings_screen.dart';
+import 'package:botanicare/features/settings/view/settings_screen.dart';
 import 'package:botanicare/features/home/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,12 @@ final GlobalKey<NavigatorState> navigatorStateRoom =
     GlobalKey<NavigatorState>();
 
 void main() {
-  runApp(const BotaniCareMobileApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeNotifier(null),
+      child: const BotaniCareMobileApp(),
+    )
+  );
 }
 
 class BotaniCareMobileApp extends StatelessWidget {
@@ -20,24 +26,27 @@ class BotaniCareMobileApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = View.of(context).platformDispatcher.platformBrightness;
+    return Consumer<ThemeNotifier>(
+      builder: (context, themeNotifier, child) {
+        // Retrieves the default theme for the platform
+        // TextTheme textTheme = Theme.of(context).textTheme;
 
-    // Retrieves the default theme for the platform
-    // TextTheme textTheme = Theme.of(context).textTheme;
-
-    // Use with Google Fonts package to use downloadable fonts
-    TextTheme textTheme = createTextTheme(context, "Inter Tight", "Inter");
-    MaterialTheme theme = MaterialTheme(textTheme);
-    return MaterialApp(
-      title: 'BotaniCare',
-      themeMode: ThemeMode.system,
-      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => TaskScreenViewModel()),
-        ],
-        child: const Scaffold(body: BotaniCareHome()),
-      ),
+        // Use with Google Fonts package to use downloadable fonts
+        TextTheme textTheme = createTextTheme(context, "Inter Tight", "Inter");
+        MaterialTheme theme = MaterialTheme(textTheme);
+        return MaterialApp(
+          title: 'BotaniCare',
+          themeMode: themeNotifier.effectiveThemeMode,
+          theme: theme.light(), // Your light theme
+          darkTheme: theme.dark(), // Your dark theme
+          home: MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (context) => TaskScreenViewModel()),
+            ],
+            child: const Scaffold(body: BotaniCareHome()),
+          ),
+        );
+      },
     );
   }
 }
