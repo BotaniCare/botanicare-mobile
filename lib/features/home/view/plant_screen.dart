@@ -39,7 +39,7 @@ class PlantScreen extends StatelessWidget {
             MaterialPageRoute(
               builder: (_) {
                 final plantProvider = Provider.of<PlantProvider>(context, listen: false);
-                final roomProvider = Provider.of<RoomProvider>(context, listen: false);
+                final roomProvider = Provider.of<RoomProvider>(context, listen: true);
                 return ChangeNotifierProvider(
                   create: (_) => AddPlantViewModel(
                       isEditing: false,
