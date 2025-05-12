@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodel/add_room_view_model.dart';
+import '../viewmodel/plant_provider.dart';
 import '../widgets/add_button.dart';
 import '../widgets/room_card.dart';
 import 'add_room_form.dart';
@@ -19,6 +20,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     final roomProvider = Provider.of<RoomProvider>(context, listen: true);
+    final plantProvider = Provider.of<PlantProvider>(context, listen: true);
 
     return Scaffold(
       // ToDo: Reload after adding rooms
@@ -38,7 +40,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
             MaterialPageRoute(
               builder: (_) {
                 return ChangeNotifierProvider(
-                  create: (_) => AddRoomViewModel(roomProvider: roomProvider),
+                  create: (_) => AddRoomViewModel(roomProvider: roomProvider, plantProvider: plantProvider),
                   child: const AddRoomForm(),
                 );
               },

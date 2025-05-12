@@ -1,5 +1,6 @@
 import 'package:botanicare/features/home/models/room.dart';
 import 'package:botanicare/features/home/models/room_form.dart';
+import 'package:botanicare/features/home/viewmodel/plant_provider.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/plant.dart';
@@ -46,16 +47,16 @@ class RoomProvider extends ChangeNotifier {
 
   List<RoomDisplay> get roomsDisplay => _roomsDisplay;
 
-  deleteRoom(int id) {
+  addRoom(){
+
+  }
+
+  deleteRoom(int id, PlantProvider plantProvider) {
     _rooms.removeWhere((room) => room.id == id);
     _roomsDisplay.removeWhere((room) => room.id == id);
     notifyListeners();
-  }
 
-  deleteRoomByName(String name) {
-    _rooms.removeWhere((room) => room.roomName == name);
-    _roomsDisplay.removeWhere((room) => room.roomName == name);
-    notifyListeners();
+    plantProvider.removeRoomFromPlants(id);
   }
 
   bool roomExists(String roomName) {
@@ -74,9 +75,11 @@ class RoomProvider extends ChangeNotifier {
     }
   }
 
-  void removeDefaultRoomIfExists(RoomDefault defaultRoom) {
-    if(roomExists(defaultRoom.roomName)) {
-      deleteRoomByName(defaultRoom.roomName);
+  void removeDefaultRoomIfExists(RoomDefault defaultRoom, PlantProvider plantProvider) {
+    for(final room in rooms) {
+      if(room.roomName == defaultRoom.roomName) {
+        deleteRoom(room.id, plantProvider);
+      }
     }
   }
 }

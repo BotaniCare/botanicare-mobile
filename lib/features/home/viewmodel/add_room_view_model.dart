@@ -1,4 +1,5 @@
 import 'package:botanicare/features/home/models/room_form.dart';
+import 'package:botanicare/features/home/viewmodel/plant_provider.dart';
 import 'package:botanicare/features/home/viewmodel/room_provider.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +7,8 @@ import '../models/room_display.dart';
 
 class AddRoomViewModel extends ChangeNotifier {
   final RoomProvider roomProvider;
+  final PlantProvider plantProvider;
+
   late List<RoomDisplay> rooms;
   List<RoomDefault> defaultRooms = [
     RoomDefault(id: 0, imageUrl: "https://cdn.pixabay.com/photo/2016/09/19/17/20/home-1680800_1280.jpg", roomName: "Wohnzimmer", checked: false),
@@ -14,7 +17,7 @@ class AddRoomViewModel extends ChangeNotifier {
   ];
   String otherRoomUrl = "https://cdn.pixabay.com/photo/2017/08/06/22/20/interior-2596976_1280.jpg";
 
-  AddRoomViewModel({required this.roomProvider}) {
+  AddRoomViewModel({required this.roomProvider, required this.plantProvider}) {
     rooms = this.roomProvider.roomsDisplay;
     for(final room in rooms) {
       for(var i=0; i< defaultRooms.length; i++) {
@@ -30,7 +33,7 @@ class AddRoomViewModel extends ChangeNotifier {
         if(defaultRooms[x].checked) {
             roomProvider.addDefaultRoomIfNotExists(defaultRooms[x]);
         } else {
-            roomProvider.removeDefaultRoomIfExists(defaultRooms[x]);
+            roomProvider.removeDefaultRoomIfExists(defaultRooms[x], plantProvider);
             // ToDo: Add Snackbar to confirm, that the room should be deleted
         }
       }
