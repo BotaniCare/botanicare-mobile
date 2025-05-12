@@ -18,12 +18,7 @@ class AddRoomViewModel extends ChangeNotifier {
   void saveForm(){
       if(newRoomIsValid(newRoom)){
          if (!(roomNameExists(newRoom!))){
-            roomProvider.addRoom(
-              Room(
-                id:0,
-                roomName: newRoom!,
-              )
-            );
+            roomProvider.addRoom(newRoom!);
          }
       }
   }

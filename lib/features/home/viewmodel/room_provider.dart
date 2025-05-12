@@ -28,9 +28,11 @@ class RoomProvider extends ChangeNotifier {
     return plants.where((plant) => plant.roomId == null).toList();
   }
 
-  addRoom(Room room){
-      _rooms.add(Room(id: _rooms.length, roomName: room.roomName));
-      notifyListeners();
+  addRoom(String name){
+      if(!roomExists(name)){
+        _rooms.add(Room(id: _rooms.length, roomName: name));
+        notifyListeners();
+      }
   }
 
   deleteRoom(int id, PlantProvider plantProvider) {
