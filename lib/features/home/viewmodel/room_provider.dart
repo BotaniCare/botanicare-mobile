@@ -35,7 +35,10 @@ class RoomProvider extends ChangeNotifier {
     ),
   ];
 
-  List<Room> get rooms => _rooms;
+  List<Room> get rooms {
+    print(_rooms);
+    return _rooms;
+  }
 
   List<Plant> getPlantsByRoom(List<Plant> plants, int roomId) {
     return plants.where((plant) => plant.roomId == roomId).toList();
@@ -47,8 +50,11 @@ class RoomProvider extends ChangeNotifier {
 
   List<RoomDisplay> get roomsDisplay => _roomsDisplay;
 
-  addRoom(){
-
+  addRoom(RoomDefault roomDefault){
+      _rooms.add(Room(id: _rooms.length, roomName: roomDefault.roomName));
+      _roomsDisplay.add(RoomDisplay(id: _rooms.length, roomName: roomDefault.roomName, imageUrl: roomDefault.imageUrl));
+      print("Raum wurde hinzugef[gt");
+      notifyListeners();
   }
 
   deleteRoom(int id, PlantProvider plantProvider) {

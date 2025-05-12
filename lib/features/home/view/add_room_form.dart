@@ -14,6 +14,21 @@ class AddRoomForm extends StatefulWidget {
 class _AddRoomFormState extends State<AddRoomForm> {
   final _formKey = GlobalKey<FormState>();
 
+  void _showSnackBar(
+      BuildContext context,
+      String message, {
+        bool isError = false,
+      }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Theme.of(context).colorScheme.error : null,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AddRoomViewModel>();
@@ -42,11 +57,22 @@ class _AddRoomFormState extends State<AddRoomForm> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: "Raumname eingeben"),
+                  onSaved: (String? value){
+                      vm.newRoom = value;
+                  },
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
-                      // ToDo: Add Validation
+                      _formKey.currentState!.save();
+                      if (_formKey.currentState!.validate()) {
+                        final error = vm.validateForm();
+                        if (error != null) {
+                          _showSnackBar(context, error, isError: true);
+                          return;
+                        }
+                      }
+
                       vm.saveForm();
                       Navigator.pop(context, true);
                   },
