@@ -29,7 +29,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
           itemBuilder: (BuildContext context, int index) {
             return RoomCard(
               room: roomProvider.rooms[index],
-              imageUrl: roomProvider.roomsDisplay[index].imageUrl,
+              imageUrl: "https://cdn.pixabay.com/photo/2017/08/06/22/20/interior-2596976_1280.jpg",
             );
           }
       ),

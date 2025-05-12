@@ -32,7 +32,6 @@ class _AddRoomFormState extends State<AddRoomForm> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AddRoomViewModel>();
-    List<RoomDefault> roomsDefault = vm.defaultRooms;
 
     return Scaffold(
         appBar: AppBar(title: Text("Raum hinzufügen")),
@@ -43,18 +42,6 @@ class _AddRoomFormState extends State<AddRoomForm> {
             key: _formKey,
             child: ListView(
               children: [
-                ...roomsDefault.map(
-                  (room) =>
-                  CheckboxListTile(
-                      title: Text(room.roomName),
-                      value: room.checked,
-                      onChanged: (value) {
-                        setState(() {
-                          room.checked = value!;
-                        });
-                      }
-                  ),
-                ),
                 TextFormField(
                   decoration: InputDecoration(labelText: "Raumname eingeben"),
                   onSaved: (String? value){
@@ -72,7 +59,6 @@ class _AddRoomFormState extends State<AddRoomForm> {
                           return;
                         }
                       }
-
                       vm.saveForm();
                       Navigator.pop(context, true);
                   },
@@ -81,7 +67,6 @@ class _AddRoomFormState extends State<AddRoomForm> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                const Text("Info: Beim Löschen eines Raums verlieren die enthaltenen Pflanzen ihre Raumzuordnung."),
               ],
             ),
           ),
