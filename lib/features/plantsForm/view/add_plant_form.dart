@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../models/room.dart';
+import '../../../core/models/room.dart';
 import '../viewmodel/add_plant_view_model.dart';
 
 class AddPlantScreen extends StatefulWidget {

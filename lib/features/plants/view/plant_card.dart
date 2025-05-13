@@ -1,10 +1,10 @@
-import 'package:botanicare/features/home/models/plant.dart';
+import 'package:botanicare/core/models/plant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../view/add_plant_form.dart';
-import '../viewmodel/room_provider.dart';
-import '../viewmodel/add_plant_view_model.dart';
-import '../viewmodel/plant_provider.dart';
+import '../../plantsForm/view/add_plant_form.dart';
+import '../../../core/services/room_provider.dart';
+import '../../plantsForm/viewmodel/add_plant_view_model.dart';
+import '../../../core/services/plant_provider.dart';
 
 class PlantCard extends StatelessWidget {
   final Plant plant;

@@ -1,10 +1,10 @@
-import 'package:botanicare/features/home/viewmodel/room_provider.dart';
-import 'package:botanicare/features/home/viewmodel/plant_provider.dart';
-import 'package:botanicare/features/home/widgets/task_card.dart';
+import 'package:botanicare/core/services/room_provider.dart';
+import 'package:botanicare/core/services/plant_provider.dart';
+import 'package:botanicare/features/tasks/view/task_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../viewmodel/task_provider.dart';
+import '../../../core/services/task_provider.dart';
 
 class TasksScreen extends StatelessWidget {
   const TasksScreen({super.key});

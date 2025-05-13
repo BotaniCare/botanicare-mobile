@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:botanicare/features/home/viewmodel/task_provider.dart';
+import 'package:botanicare/core/services/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/task.dart';
+import '../../../core/models/task.dart';
 
 class TaskCard extends StatefulWidget {
   final String imageUrl;

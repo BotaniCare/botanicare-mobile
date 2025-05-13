@@ -1,4 +1,4 @@
-import 'package:botanicare/features/home/models/plant.dart';
+import 'package:botanicare/core/models/plant.dart';
 
 class Task {
   int id;

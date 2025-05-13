@@ -1,4 +1,4 @@
-import 'package:botanicare/features/home/models/room.dart';
+import 'package:botanicare/core/models/room.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/plant.dart';

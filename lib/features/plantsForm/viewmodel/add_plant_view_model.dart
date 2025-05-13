@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-import '../models/plant_defaults.dart';
-import '../../home/models/plant.dart';
-import '../../home/viewmodel/plant_provider.dart';
-import '../models/room.dart';
-import 'room_provider.dart';
+import '../../../core/models/plant_defaults.dart';
+import '../../../core/models/plant.dart';
+import '../../../core/services/plant_provider.dart';
+import '../../../core/models/room.dart';
+import '../../../core/services/room_provider.dart';
 
 class AddPlantViewModel extends ChangeNotifier {
   final PlantProvider plantProvider;

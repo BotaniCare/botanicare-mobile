@@ -1,7 +1,7 @@
-import 'package:botanicare/features/home/viewmodel/plant_provider.dart';
+import 'package:botanicare/core/services/plant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../widgets/plant_card.dart';
+import 'plant_card.dart';
 
 class PlantsList extends StatelessWidget {
   const PlantsList({super.key});
