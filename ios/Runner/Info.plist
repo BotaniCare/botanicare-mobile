@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Botanicare</string>
+	<string>BotaniCare</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+    <string>Wir benötigen Zugriff auf die Kamera, um Pflanzen zu fotografieren.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Wir benötigen Zugriff auf deine Galerie, um Pflanzenbilder auszuwählen.</string>
 </dict>
 </plist>

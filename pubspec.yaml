@@ -35,6 +35,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   provider: ^6.1.4
+  google_fonts: ^6.2.1
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +48,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+
+  # flutter_launcher_icons is used to generate app launcher icons for different platforms.
+  flutter_launcher_icons: ^0.14.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -88,3 +93,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/botanicare-logo.png"
+  adaptive_icon_background: "#c2e0b5"
+  adaptive_icon_foreground: "assets/botanicare-logo.png"
+
+

@@ -1,0 +1,16 @@
+Index: .idea/botanicare-mobile.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<module type=\"JAVA_MODULE\" version=\"4\">\n  <component name=\"NewModuleRootManager\" inherit-compiler-output=\"true\">\n    <exclude-output />\n    <content url=\"file://$MODULE_DIR$\">\n      <excludeFolder url=\"file://$MODULE_DIR$/.dart_tool\" />\n      <excludeFolder url=\"file://$MODULE_DIR$/.pub\" />\n      <excludeFolder url=\"file://$MODULE_DIR$/build\" />\n    </content>\n    <orderEntry type=\"inheritedJdk\" />\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\n    <orderEntry type=\"library\" name=\"Dart SDK\" level=\"project\" />\n  </component>\n</module>
+===================================================================
+diff --git a/.idea/botanicare-mobile.iml b/.idea/botanicare-mobile.iml
+--- a/.idea/botanicare-mobile.iml	(revision d4e9eafa68360902eb6183b62456b4fdf90159a8)
++++ b/.idea/botanicare-mobile.iml	(date 1744622658766)
+@@ -10,5 +10,6 @@
+     <orderEntry type="inheritedJdk" />
+     <orderEntry type="sourceFolder" forTests="false" />
+     <orderEntry type="library" name="Dart SDK" level="project" />
++    <orderEntry type="library" name="Dart Packages" level="project" />
+   </component>
+ </module>
+\ No newline at end of file
