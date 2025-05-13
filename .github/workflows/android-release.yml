@@ -3,7 +3,7 @@ name: Android Release
 on:
   push:
     tags:
-      - 'v0.**'
+      - 'v*.**'
 
 jobs:
   android-build-deploy:
