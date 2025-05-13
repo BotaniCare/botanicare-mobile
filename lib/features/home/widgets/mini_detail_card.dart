@@ -11,7 +11,12 @@ class MiniDetailCard extends StatelessWidget {
   final String description;
   final IconData icon;
 
-  const MiniDetailCard({super.key, required this.icon, required this.title, required this.description});
+  const MiniDetailCard({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.description,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,26 +29,37 @@ class MiniDetailCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(6.0),
-              child: Icon(icon, color: Theme.of(context).colorScheme.secondary),
+              child: Icon(
+                icon,
+                size: 21,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),),
-                Text(
-                  description,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Theme.of(context).colorScheme.primary,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                  Text(
+                    description,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
