@@ -81,8 +81,15 @@ class PlantDetailScreen extends StatelessWidget {
             child: Stack(
               children: [
                 GridView.count(
+                  padding: EdgeInsets.all(8.0),
+                  //Spaltenanzahl im Grid
                   crossAxisCount: 2,
-                  childAspectRatio: 2 / 1,
+                  //horizontaler Space zwischen den Spalten
+                  crossAxisSpacing: 2,
+                  //vertikaler Space zwischen den Zeilen
+                  mainAxisSpacing: 2,
+                  //breite zu höhe
+                  childAspectRatio: 2.0,
                   children: [
                     MiniDetailCard(
                       icon: Icons.grass,
