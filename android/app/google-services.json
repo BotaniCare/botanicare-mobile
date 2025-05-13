@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "919606380071",
+    "project_id": "botanicare-18533",
+    "storage_bucket": "botanicare-18533.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919606380071:android:793589cbaecf670b54b002",
+        "android_client_info": {
+          "package_name": "com.example.botanicare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDT2hP2_XBPvPIanOqgC8jhs8bxFbVzA-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
