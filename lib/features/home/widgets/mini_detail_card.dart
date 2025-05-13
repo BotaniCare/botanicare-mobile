@@ -1,10 +1,4 @@
-import 'package:botanicare/features/home/models/plant.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../view/add_plant_form.dart';
-import '../viewmodel/add_plant_view_model.dart';
-import '../viewmodel/plant_provider.dart';
 
 class MiniDetailCard extends StatelessWidget {
   final String title;
@@ -25,7 +19,8 @@ class MiniDetailCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,

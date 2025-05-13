@@ -1,7 +1,6 @@
 import 'package:botanicare/features/home/view/plant_selection_screen.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
-import 'package:botanicare/features/home/view/plant_screen.dart';
 import 'package:botanicare/features/home/view/room_screen.dart';
 import 'package:botanicare/features/home/view/settings_screen.dart';
 import 'package:botanicare/features/home/view/task_screen.dart';
@@ -58,7 +57,7 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       TasksScreen(),
       PlantSelectionScreen(navigatorStateRoom: navigatorStatePlants),
       RoomScreen(navigatorStateRoom: navigatorStateRoom),
@@ -66,7 +65,7 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
     ];
 
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Theme.of(context).colorScheme.primary,
