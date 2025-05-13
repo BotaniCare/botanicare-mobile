@@ -21,15 +21,40 @@ class PlantScreen extends StatelessWidget {
       appBar: AppBar(title: Text('Pflanzen')),
       body: ListView(
         children: [
-          ...plantList.map(
-            (plant) => PlantCard(
-              plant: plant,
-              imageUrl:
-                  "https://cdn.pixabay.com/photo/2019/06/17/08/24/pastel-4279379_1280.jpg",
+          if (plantList.isNotEmpty) ...[
+            ...plantList.map(
+              (plant) => PlantCard(
+                plant: plant,
+                imageUrl:
+                    "https://cdn.pixabay.com/photo/2019/06/17/08/24/pastel-4279379_1280.jpg",
+              ),
             ),
-          ),
-          //bottom margin to prevent actionButton overlap
-          if (plantList.isNotEmpty) SizedBox(height: 70),
+            //bottom margin to prevent actionButton overlap
+            SizedBox(height: 73),
+          ] else ...[
+            Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.30),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(35),
+                  ),
+                  child: Text(
+                    "Füge deine Pflanzen 🪴 hinzu,\nidem du auf das + unten rechts drückst",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
       floatingActionButton: AddButton(
@@ -52,9 +77,9 @@ class PlantScreen extends StatelessWidget {
                           waterNeed: 'hoch',
                           sunlight: 'nicht sonnig',
                           roomId: null,
-                          isWatered: true
+                          isWatered: true,
+                        ),
                       ),
-                  ),
                   child: const AddPlantScreen(),
                 );
               },

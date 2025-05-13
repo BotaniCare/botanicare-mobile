@@ -164,7 +164,7 @@ class PlantCard extends StatelessWidget {
                       SnackBar(
                         content: Text("${plant.name} 🪴 wurde gelöscht."),
                         behavior: SnackBarBehavior.floating,
-                        duration: const Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 450),
                       ),
                     );
                   }

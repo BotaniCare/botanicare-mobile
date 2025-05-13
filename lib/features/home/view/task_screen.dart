@@ -17,67 +17,101 @@ class TasksScreen extends StatelessWidget {
     final plantList = plantProvider.plants;
     final taskProvider = Provider.of<TaskProvider>(context, listen: true);
     final taskList = taskProvider.addTask(plantList);
-    final plantsWithNoRoom = taskList.where((task) => task.plant.roomId == null);
+    final plantsWithNoRoom = taskList.where(
+      (task) => task.plant.roomId == null,
+    );
 
     return Scaffold(
       appBar: AppBar(title: Text("BotaniCare")),
       body: ListView(
         children: [
-          SizedBox(height: 5),
-          ...roomList.map((room) {
-            final plantsInRoom =
-                taskList.where((task) => task.plant.roomId == room.id).toList();
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 10),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(13, 0, 0, 0),
-                  child: Text(
-                    room.roomName,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+          if (taskList.isNotEmpty) ...[
+            SizedBox(height: 5),
+            ...roomList
+                .where(
+                  (room) =>
+                      taskList.any((task) => task.plant.roomId == room.id),
+                )
+                .map((room) {
+                  final plantsInRoom =
+                      taskList
+                          .where((task) => task.plant.roomId == room.id)
+                          .toList();
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(13, 0, 0, 0),
+                        child: Text(
+                          room.roomName,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      ...plantsInRoom.map(
+                        (task) => TaskCard(
+                          imageUrl:
+                              "https://cdn.pixabay.com/photo/2023/09/15/12/43/living-room-8254772_1280.jpg",
+                          task: task,
+                        ),
+                      ),
+                      SizedBox(height: 7),
+                    ],
+                  );
+                }),
+            if (plantsWithNoRoom.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(13, 0, 0, 0),
+                    child: Text(
+                      "Pflanzen ohne Raum",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
-                ),
-                ...plantsInRoom.map(
-                  (task) => TaskCard(
-                    imageUrl:
-                        "https://cdn.pixabay.com/photo/2023/09/15/12/43/living-room-8254772_1280.jpg",
-                    task: task,
+                  ...plantsWithNoRoom.map(
+                    (task) => TaskCard(
+                      imageUrl:
+                          "https://cdn.pixabay.com/photo/2020/01/16/16/31/cactus-4771078_1280.jpg",
+                      task: task,
+                    ),
                   ),
-                ),
-                SizedBox(height: 7),
-              ],
-            );
-          }),
-          if (plantsWithNoRoom.isNotEmpty)
+                ],
+              ),
+          ] else ...[
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 10),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(13, 0, 0, 0),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.30),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(35),
+                  ),
                   child: Text(
-                    "Pflanzen ohne Raum",
+                    "Alle Pflanzen sind gegossen 🥳",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
                     ),
-                  ),
-                ),
-                ...plantsWithNoRoom.map(
-                  (task) => TaskCard(
-                    imageUrl:
-                        "https://cdn.pixabay.com/photo/2020/01/16/16/31/cactus-4771078_1280.jpg",
-                    task: task,
                   ),
                 ),
               ],
             ),
+          ],
         ],
       ),
     );

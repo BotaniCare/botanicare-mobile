@@ -5,23 +5,19 @@ import 'package:flutter/cupertino.dart';
 import '../models/plant.dart';
 
 class RoomProvider extends ChangeNotifier {
-  // dynamic list, which has to be saved in the database
   final List<Room> _rooms = [
-    Room(
-      id: 0,
-      roomName: "Wohnzimmer",
-    ),
+    Room(id: 0, roomName: "Wohnzimmer"),
 
-    Room(
-      id: 1,
-      roomName: "Schlafzimmer",
-    ),
+    Room(id: 1, roomName: "Schlafzimmer"),
+
+    Room(id: 2, roomName: "Küche"),
+
+    Room(id: 3, roomName: "Büro"),
+
+    Room(id: 4, roomName: "Gästezimmer"),
   ];
 
-  List<Room> get rooms {
-    print(_rooms);
-    return _rooms;
-  }
+  List<Room> get rooms => _rooms;
 
   List<Plant> getPlantsByRoom(List<Plant> plants, int roomId) {
     return plants.where((plant) => plant.roomId == roomId).toList();
@@ -50,12 +46,11 @@ class RoomProvider extends ChangeNotifier {
   deleteRoom(int id, PlantProvider plantProvider) {
     _rooms.removeWhere((room) => room.id == id);
     notifyListeners();
-
     plantProvider.removeRoomFromPlants(id);
   }
 
   bool roomExists(String roomName) {
-    for(final room in rooms) {
+    for(final room in _rooms) {
       if(room.roomName == roomName) {
         return true;
       }
