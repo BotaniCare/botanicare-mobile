@@ -37,12 +37,12 @@ class SettingAction {
 
 class SettingItem extends StatefulWidget {
   const SettingItem({
-    Key? key,
+    super.key,
     this.icon,
     required this.title,
     this.subtitle,
     this.action,
-  }) : super(key: key);
+  });
 
   final IconData? icon;
   final String title;
