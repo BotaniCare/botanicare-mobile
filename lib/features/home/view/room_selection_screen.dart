@@ -1,7 +1,7 @@
 import 'package:botanicare/features/home/viewmodel/room_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../../../assets/constants.dart';
 import '../widgets/room_card.dart';
 
 class RoomSelectionScreen extends StatelessWidget {
@@ -13,20 +13,32 @@ class RoomSelectionScreen extends StatelessWidget {
     final roomList = roomProvider.rooms;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Räume')),
+      appBar: AppBar(title: Text(Constants.roomScreenTitle)),
       body: ListView(
         children: [
           ...roomList.map(
             (room) => RoomCard(
               room: room,
-              imageUrl:
-                  room.id == 0
-                      ? "https://cdn.pixabay.com/photo/2016/09/19/17/20/home-1680800_1280.jpg"
-                      : room.id == 1
-                      ? "https://cdn.pixabay.com/photo/2021/12/22/16/57/room-6887944_1280.jpg"
-                      : room.id == 2
-                      ? "https://cdn.pixabay.com/photo/2017/03/22/17/39/kitchen-2165756_1280.jpg"
-                      : "https://cdn.pixabay.com/photo/2017/08/02/01/01/living-room-2569325_1280.jpg",
+              imagePath:
+                  room.roomName.toLowerCase() ==
+                          Constants.livingroom.toLowerCase()
+                      ? Constants.livingroomImage
+                      : room.roomName.toLowerCase() ==
+                          Constants.bedroom.toLowerCase()
+                      ? Constants.bedroomImage
+                      : room.roomName.toLowerCase() ==
+                          Constants.kitchen.toLowerCase()
+                      ? Constants.kitchenImage
+                      : room.roomName.toLowerCase() ==
+                          Constants.office.toLowerCase()
+                      ? Constants.officeImage
+                      : room.roomName.toLowerCase() ==
+                          Constants.bathroom.toLowerCase()
+                      ? Constants.bathroomImage
+                      : room.roomName.toLowerCase() ==
+                          Constants.balcony.toLowerCase()
+                      ? Constants.balconyImage
+                      : Constants.defaultImage,
             ),
           ),
           //bottom margin to prevent actionButton overlap
