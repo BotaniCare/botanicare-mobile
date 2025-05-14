@@ -24,6 +24,9 @@ class Constants {
   static const String balcony = "Balkon";
   static const String balconyImage = "assets/images/balcony.jpg";
   static const String defaultImage = "assets/images/default.jpg";
+  static const String emptyRoomMessage = "Hier gibt es noch keine Pflanzen :(";
+  static const String noRoomsCreated =
+      "Füge einen Raum hinzu,\nindem du auf das + unten rechts drückst";
 
   //Alert Dialog
   static const String alertDialogTitle = "{} entfernen";
