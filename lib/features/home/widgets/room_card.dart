@@ -2,7 +2,6 @@ import 'package:botanicare/features/home/view/room_display_plant_screen.dart';
 import 'package:botanicare/features/home/viewmodel/room_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../assets/constants.dart';
 import '../models/room.dart';
 
@@ -22,7 +21,8 @@ class RoomCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: GestureDetector(
           onTap:
-              () => Navigator.of(context).push(
+              () =>
+              Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => RoomDisplayPlantScreen(room: room),
                 ),
@@ -49,8 +49,14 @@ class RoomCard extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
                         foregroundColor:
-                            Theme.of(context).colorScheme.onPrimary,
-                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        Theme
+                            .of(context)
+                            .colorScheme
+                            .onPrimary,
+                        backgroundColor: Theme
+                            .of(context)
+                            .colorScheme
+                            .primary,
                         padding: EdgeInsets.all(10),
                       ),
                       child: Icon(Icons.edit, size: 23),
@@ -71,18 +77,26 @@ class RoomCard extends StatelessWidget {
                         final confirmDeletion = await showDialog<bool>(
                           context: context,
                           builder:
-                              (con) => AlertDialog(
+                              (con) =>
+                              AlertDialog(
                                 title: Text(
-                                  "${room.roomName} entfernen",
+                                  Constants.alertDialogTitle.replaceFirst(
+                                      "{}", room.roomName),
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color:
-                                        Theme.of(context).colorScheme.primary,
+                                    Theme
+                                        .of(context)
+                                        .colorScheme
+                                        .primary,
                                   ),
                                 ),
                                 content: Text(
-                                  Constants.deleteRoomAlertDialogContent,
+                                  Constants.alertDialogContent.replaceFirst(
+                                    "{}",
+                                    room.roomName,
+                                  ),
                                   style: TextStyle(fontSize: 14),
                                 ),
                                 actions: [
@@ -91,12 +105,13 @@ class RoomCard extends StatelessWidget {
                                       TextButton(
                                         onPressed:
                                             () => Navigator.pop(con, false),
-                                        child: Text("Abbrechen"),
+                                        child: Text(Constants.cancelDeletion),
                                       ),
                                       TextButton(
                                         onPressed:
                                             () => Navigator.pop(con, true),
-                                        child: Text("Raum löschen"),
+                                        child: Text(
+                                            Constants.confirmRoomDeletion),
                                       ),
                                     ],
                                   ),
@@ -113,7 +128,8 @@ class RoomCard extends StatelessWidget {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                "${room.roomName} 🛋️ wurde gelöscht.",
+                                Constants.deletionSnackBarMessage.replaceFirst(
+                                    "{}", room.roomName),
                               ),
                               behavior: SnackBarBehavior.floating,
                               duration: const Duration(milliseconds: 450),
@@ -124,8 +140,14 @@ class RoomCard extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
                         foregroundColor:
-                            Theme.of(context).colorScheme.onPrimary,
-                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        Theme
+                            .of(context)
+                            .colorScheme
+                            .onPrimary,
+                        backgroundColor: Theme
+                            .of(context)
+                            .colorScheme
+                            .primary,
                         padding: EdgeInsets.all(10),
                       ),
                       child: Icon(Icons.delete_forever, size: 23),
@@ -142,7 +164,10 @@ class RoomCard extends StatelessWidget {
                 child: Text(
                   room.roomName,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
+                    color: Theme
+                        .of(context)
+                        .colorScheme
+                        .onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),

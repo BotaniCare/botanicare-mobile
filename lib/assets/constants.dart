@@ -24,6 +24,11 @@ class Constants {
   static const String balcony = "Balkon";
   static const String balconyImage = "assets/images/balcony.jpg";
   static const String defaultImage = "assets/images/default.jpg";
-  static const String deleteRoomAlertDialogContent =
-      "Willst du diesen Raum wirklich löschen?";
+
+  //Alert Dialog
+  static const String alertDialogTitle = "{} entfernen";
+  static const String alertDialogContent = "Willst du {} wirklich löschen?";
+  static const String cancelDeletion = "Abbrechen";
+  static const String confirmRoomDeletion = "Raum löschen";
+  static const String deletionSnackBarMessage = "{} wurde gelöscht";
 }
