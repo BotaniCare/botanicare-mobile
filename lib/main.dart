@@ -8,6 +8,7 @@ import 'package:botanicare/features/home/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'features/home/assets/constants.dart';
 import 'features/home/viewmodel/task_provider.dart';
 import 'features/home/viewmodel/task_screen_view_model.dart';
 import 'features/home/viewmodel/plant_provider.dart';
@@ -33,7 +34,7 @@ class BotaniCareMobileApp extends StatelessWidget {
     TextTheme textTheme = createTextTheme(context, "Inter Tight", "Inter");
     MaterialTheme theme = MaterialTheme(textTheme);
     return MaterialApp(
-      title: 'BotaniCare',
+      title: Constants.appTitle,
       themeMode: ThemeMode.system,
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       home: MultiProvider(
@@ -87,16 +88,19 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.task_alt),
-            label: 'Aufgaben',
+            label: Constants.taskScreenTitle,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_florist),
-            label: 'Pflanzen',
+            label: Constants.plantScreenTitle,
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Räume'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.weekend),
+            label: Constants.roomScreenTitle,
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Einstellungen',
+            label: Constants.settingsScreenTitle,
           ),
         ],
       ),
