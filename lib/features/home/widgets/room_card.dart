@@ -8,9 +8,9 @@ import '../models/room.dart';
 
 class RoomCard extends StatelessWidget {
   final Room room;
-  final String imageUrl;
+  final String imagePath;
 
-  const RoomCard({super.key, required this.room, required this.imageUrl});
+  const RoomCard({super.key, required this.room, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +29,8 @@ class RoomCard extends StatelessWidget {
               ),
           child: Stack(
             children: [
-              Image.network(
-                imageUrl,
+              Image.asset(
+                imagePath,
                 height: 150,
                 width: double.infinity,
                 fit: BoxFit.cover,
