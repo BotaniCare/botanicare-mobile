@@ -1,4 +1,4 @@
-import 'package:botanicare/features/home/assets/constants.dart';
+import 'package:botanicare/assets/constants.dart';
 import 'package:botanicare/features/home/viewmodel/room_provider.dart';
 import 'package:botanicare/features/home/widgets/plant_card.dart';
 import 'package:flutter/material.dart';
