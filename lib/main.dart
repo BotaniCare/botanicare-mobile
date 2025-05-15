@@ -7,7 +7,7 @@ import 'package:botanicare/features/home/view/settings_screen.dart';
 import 'package:botanicare/features/home/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'assets/constants.dart';
+import 'constants.dart';
 import 'features/home/viewmodel/task_provider.dart';
 import 'features/home/viewmodel/task_screen_view_model.dart';
 import 'features/home/viewmodel/plant_provider.dart';

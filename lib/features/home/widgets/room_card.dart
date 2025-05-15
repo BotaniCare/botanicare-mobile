@@ -2,7 +2,7 @@ import 'package:botanicare/features/home/view/room_display_plant_screen.dart';
 import 'package:botanicare/features/home/viewmodel/room_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../assets/constants.dart';
+import '../../../constants.dart';
 import '../models/room.dart';
 
 class RoomCard extends StatelessWidget {
