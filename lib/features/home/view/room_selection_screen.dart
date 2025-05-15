@@ -1,8 +1,9 @@
-import 'package:botanicare/features/home/viewmodel/room_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../constants.dart';
-import '../widgets/room_card.dart';
+import '../../../core/services/room_provider.dart';
+import '../../rooms/view/room_card.dart';
+
 
 class RoomSelectionScreen extends StatelessWidget {
   const RoomSelectionScreen({super.key});
