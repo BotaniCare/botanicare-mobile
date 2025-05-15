@@ -1,4 +1,4 @@
-import 'package:botanicare/features/home/models/plant.dart';
+import 'package:botanicare/core/models/plant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../plantsForm/view/add_plant_form.dart';
