@@ -1,3 +1,4 @@
+import 'package:botanicare/assets/constants.dart';
 import 'package:botanicare/features/home/models/plant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -95,15 +96,22 @@ class PlantCard extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (_) {
-                        final plantProvider = Provider.of<PlantProvider>(context, listen: false);
-                        final roomProvider = Provider.of<RoomProvider>(context, listen: false);
+                        final plantProvider = Provider.of<PlantProvider>(
+                          context,
+                          listen: false,
+                        );
+                        final roomProvider = Provider.of<RoomProvider>(
+                          context,
+                          listen: false,
+                        );
                         return ChangeNotifierProvider(
-                          create: (_) => AddPlantViewModel(
-                            isEditing: true,
-                            plantProvider: plantProvider,
-                            roomProvider: roomProvider,
-                            initialPlant: plant,
-                          ),
+                          create:
+                              (_) => AddPlantViewModel(
+                                isEditing: true,
+                                plantProvider: plantProvider,
+                                roomProvider: roomProvider,
+                                initialPlant: plant,
+                              ),
                           child: const AddPlantScreen(),
                         );
                       },
@@ -127,7 +135,10 @@ class PlantCard extends StatelessWidget {
                     builder:
                         (con) => AlertDialog(
                           title: Text(
-                            "${plant.name} entfernen",
+                            Constants.alertDialogTitle.replaceFirst(
+                              "{}",
+                              plant.name,
+                            ),
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -135,7 +146,10 @@ class PlantCard extends StatelessWidget {
                             ),
                           ),
                           content: Text(
-                            "Willst du ${plant.name} wirklich entfernen?",
+                            Constants.alertDialogContent.replaceFirst(
+                              "{}",
+                              plant.name,
+                            ),
                             style: TextStyle(fontSize: 14),
                           ),
                           actions: [
@@ -143,11 +157,11 @@ class PlantCard extends StatelessWidget {
                               children: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(con, false),
-                                  child: Text("Abbrechen"),
+                                  child: Text(Constants.cancelDeletion),
                                 ),
                                 TextButton(
                                   onPressed: () => Navigator.pop(con, true),
-                                  child: Text("Pflanze löschen"),
+                                  child: Text(Constants.confirmPlantDeletion),
                                 ),
                               ],
                             ),
@@ -162,7 +176,12 @@ class PlantCard extends StatelessWidget {
                     ).deletePlant(plant.id);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("${plant.name} 🪴 wurde gelöscht."),
+                        content: Text(
+                          Constants.deletionSnackBarMessage.replaceFirst(
+                            "{}",
+                            plant.name,
+                          ),
+                        ),
                         behavior: SnackBarBehavior.floating,
                         duration: const Duration(milliseconds: 450),
                       ),

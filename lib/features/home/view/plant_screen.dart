@@ -44,7 +44,7 @@ class PlantScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(35),
                   ),
                   child: Text(
-                    "Füge deine Pflanzen 🪴 hinzu,\nidem du auf das + unten rechts drückst",
+                    Constants.noPlantsCreated,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface,
