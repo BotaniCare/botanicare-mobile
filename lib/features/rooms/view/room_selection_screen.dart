@@ -25,7 +25,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
     final roomList = roomProvider.rooms;
 
     return Scaffold(
-      appBar: AppBar(title: Text(Constants.roomScreenTitle)),
+      appBar: AppBar(title: Text(         Constants.roomScreenTitle)),
       body: ListView(
         children: [
           if (roomList.isNotEmpty) ...[
