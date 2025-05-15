@@ -3,8 +3,7 @@ import 'package:botanicare/features/plants/view/plant_list.dart';
 import 'package:botanicare/shared/ui/notification_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../../assets/constants.dart';
+import '../../../constants.dart';
 import '../../../core/models/plant.dart';
 import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 import '../../../core/services/plant_provider.dart';

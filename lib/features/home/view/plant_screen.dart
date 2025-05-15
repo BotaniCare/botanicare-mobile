@@ -1,13 +1,13 @@
 import 'package:botanicare/constants.dart';
-import 'package:botanicare/features/home/viewmodel/room_provider.dart';
-import 'package:botanicare/features/home/widgets/plant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/plant.dart';
-import '../viewmodel/add_plant_view_model.dart';
-import '../viewmodel/plant_provider.dart';
-import '../widgets/add_button.dart';
-import 'add_plant_form.dart';
+import '../../../core/models/plant.dart';
+import '../../../core/services/plant_provider.dart';
+import '../../../core/services/room_provider.dart';
+import '../../../shared/ui/add_button.dart';
+import '../../plants/view/plant_card.dart';
+import '../../plantsForm/view/add_plant_form.dart';
+import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 
 class PlantScreen extends StatelessWidget {
   const PlantScreen({super.key});
