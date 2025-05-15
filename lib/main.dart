@@ -1,20 +1,20 @@
-import 'package:botanicare/features/home/viewmodel/room_provider.dart';
+import 'package:botanicare/core/services/room_provider.dart';
+import 'package:botanicare/features/plants/view/plant_selection_screen.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
-import 'package:botanicare/features/home/view/plant_screen.dart';
-import 'package:botanicare/features/home/view/room_screen.dart';
-import 'package:botanicare/features/home/view/settings_screen.dart';
-import 'package:botanicare/features/home/view/task_screen.dart';
+import 'package:botanicare/features/rooms/view/room_screen.dart';
+import 'package:botanicare/features/seetings/view/settings_screen.dart';
+import 'package:botanicare/features/tasks/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'constants.dart';
-import 'features/home/viewmodel/task_provider.dart';
-import 'features/home/viewmodel/task_screen_view_model.dart';
-import 'features/home/viewmodel/plant_provider.dart';
+import 'assets/constants.dart';
+
+import 'core/services/task_provider.dart';
+import 'core/services/plant_provider.dart';
 
 //for nested navigation
-final GlobalKey<NavigatorState> navigatorStateRoom =
-    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorStateRoom = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorStatePlants = GlobalKey<NavigatorState>();
 
 void main() {
   runApp(const BotaniCareMobileApp());
@@ -39,7 +39,6 @@ class BotaniCareMobileApp extends StatelessWidget {
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       home: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => TaskScreenViewModel()),
           ChangeNotifierProvider(create: (context) => PlantProvider()),
           ChangeNotifierProvider(create: (context) => RoomProvider()),
           ChangeNotifierProvider(create: (context) => TaskProvider()),
@@ -62,16 +61,16 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       TasksScreen(),
-      PlantScreen(),
       //pass navigator state
+      PlantSelectionScreen(navigatorStatePlant: navigatorStatePlants),
       RoomScreen(navigatorStateRoom: navigatorStateRoom),
       SettingsScreen(),
     ];
 
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Theme.of(context).colorScheme.primary,
