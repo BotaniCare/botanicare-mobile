@@ -2,6 +2,7 @@ import 'package:botanicare/core/services/room_provider.dart';
 import 'package:botanicare/features/plants/view/plant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../assets/constants.dart';
 import '../../../core/models/room.dart';
 import '../../../core/services/plant_provider.dart';
 
@@ -36,7 +37,7 @@ class RoomDisplayPlantScreen extends StatelessWidget {
                   children: [
                     SizedBox(height: MediaQuery.of(context).size.height * 0.33),
                     Text(
-                      "Hier gibt es noch keine Pflanzen :(",
+                      Constants.emptyRoomMessage,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,

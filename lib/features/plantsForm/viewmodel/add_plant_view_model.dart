@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-import '../../../core/models/plant_defaults.dart';
 import '../../../core/models/plant.dart';
 import '../../../core/services/plant_provider.dart';
 import '../../../core/models/room.dart';
@@ -14,13 +13,7 @@ class AddPlantViewModel extends ChangeNotifier {
 
   // Internal state
   late Plant _plant;
-
-  // Preset defaults
-  final List<PlantDefaults> _plantDefaults = [
-    PlantDefaults(type: 'Ficus', waterNeed: 'normal', sunlight: 'teilweise sonnig'),
-    PlantDefaults(type: 'Monstera', waterNeed: 'hoch', sunlight: 'nicht sonnig'),
-    PlantDefaults(type: 'Aloe Vera', waterNeed: 'gering', sunlight: 'sonnig'),
-  ];
+  late String isWatered;
 
   AddPlantViewModel({
     required this.isEditing,
@@ -29,23 +22,25 @@ class AddPlantViewModel extends ChangeNotifier {
     required Plant initialPlant,
   }) {
     _plant = initialPlant;
+    if (_plant.isWatered) {
+      isWatered = "Ja";
+    }
+    isWatered = "Nein";
   }
 
   Plant get plant => _plant;
   List<Room> get rooms => roomProvider.rooms;
-  List<String> get plantTypesFromDb => _plantDefaults.map((p) => p.type).toList();
+
+  void updateIsWatered(String watered) {
+    isWatered = watered;
+    if (isWatered == "Ja") {
+      plant.isWatered = true;
+    }
+    plant.isWatered = false;
+  }
 
   void setType(String newType) {
     _plant.type = newType;
-
-    final match = _plantDefaults.firstWhere(
-          (e) => e.type == newType,
-      orElse: () => PlantDefaults(type: '', waterNeed: 'normal', sunlight: 'sonnig'),
-    );
-
-    _plant.waterNeed = match.waterNeed;
-    _plant.sunlight = match.sunlight;
-
     notifyListeners();
   }
 
@@ -54,14 +49,8 @@ class AddPlantViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addRoomIfNew(int roomId) {
-    /*if (!_rooms.contains(room)) {
-      _rooms.add(room);
-      _plant.room = room;
-      notifyListeners();
-    }*/
-    notifyListeners();
-    //TODO: add Room through Room Provider
+  int addRoomIfNew(String room) {
+    return roomProvider.addRoomReturnId(room);
   }
 
   void removeRoom(int roomId) {
@@ -96,15 +85,15 @@ class AddPlantViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateCustomType(String customType) {
-    _plant.type = customType;
+  void updateType(String type) {
+    _plant.type = type;
     notifyListeners();
   }
 
   String? validateForm() {
     if (_plant.name.isEmpty) return 'Bitte füge einen Namen hinzu';
     if (_plant.image == null) return 'Bitte füge ein Bild hinzu.';
-    if (_plant.type.trim().isEmpty) return 'Bitte gib eine Pflanzenart ein oder wähle eine.';
+    if (_plant.type.trim().isEmpty) return 'Bitte gib eine Pflanzenart ein';
     return null; // no error
   }
 

@@ -3,6 +3,7 @@ import 'package:botanicare/features/plants/view/plant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../assets/constants.dart';
 import '../../../core/models/plant.dart';
 import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 import '../../../core/services/plant_provider.dart';
@@ -18,7 +19,7 @@ class PlantScreen extends StatelessWidget {
     final plantList = plantProvider.plants;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Pflanzen')),
+      appBar: AppBar(title: Text(Constants.plantScreenTitle)),
       body: ListView(
         children: [
           if (plantList.isNotEmpty) ...[
@@ -63,23 +64,15 @@ class PlantScreen extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (_) {
-                final plantProvider = Provider.of<PlantProvider>(
-                  context,
-                  listen: false,
-                );
-                final roomProvider = Provider.of<RoomProvider>(
-                  context,
-                  listen: false,
-                );
+                final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+                final roomProvider = Provider.of<RoomProvider>(context, listen: true);
                 return ChangeNotifierProvider(
-                  create:
-                      (_) => AddPlantViewModel(
-                        isEditing: false,
-                        plantProvider: plantProvider,
-                        roomProvider: roomProvider,
-                        initialPlant: Plant(
-                          id: 0,
-                          // will be provided in plantProvider correctly
+                  create: (_) => AddPlantViewModel(
+                      isEditing: false,
+                      plantProvider: plantProvider,
+                      roomProvider: roomProvider,
+                      initialPlant: Plant(
+                          id: 0, // will be provided in plantProvider correctly
                           name: '',
                           type: 'Monstera',
                           waterNeed: 'hoch',

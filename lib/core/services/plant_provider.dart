@@ -87,4 +87,13 @@ class PlantProvider extends ChangeNotifier {
   int getNumberOfPlants() {
     return _plants.length;
   }
+
+  void removeRoomFromPlants(int roomId) {
+    for (var plant in _plants) {
+      if (plant.roomId == roomId) {
+        plant.roomId = null;
+      }
+    }
+    notifyListeners();
+  }
 }

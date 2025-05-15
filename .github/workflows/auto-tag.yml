@@ -1,0 +1,71 @@
+name: Custom Auto Tagging
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  auto-tag:
+    name: Auto Increment Tag
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` || echo "v0.0.0+0")
+          echo "Latest tag: $latest_tag"
+          echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
+
+      - name: Determine new version
+        id: bump
+        run: |
+          branch="${GITHUB_REF#refs/heads/}"
+          old_tag="${{ steps.get_tag.outputs.latest_tag }}"
+
+          echo "Current branch: $branch"
+          echo "Old tag: $old_tag"
+
+          # Remove 'v' prefix
+          old_tag=${old_tag#v}
+
+          # Split into version and build parts
+          IFS='+' read -r version build <<< "$old_tag"
+          IFS='.' read -r major minor patch <<< "$version"
+
+          # Default values
+          major=${major:-0}
+          minor=${minor:-0}
+          patch=${patch:-0}
+          build=${build:-0}
+
+          if [ "$branch" = "main" ]; then
+            major=$((major + 1))
+            minor=0
+            patch=0
+            build=$((build + 1))
+          else
+            echo "Unsupported branch for tagging!"
+            exit 1
+          fi
+
+          new_tag="v${major}.${minor}.${patch}+${build}"
+          echo "New tag: $new_tag"
+          echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
+
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag ${{ steps.bump.outputs.new_tag }}
+          git push origin ${{ steps.bump.outputs.new_tag }}

@@ -16,7 +16,6 @@ class AddPlantScreen extends StatefulWidget {
 
 class _AddPlantScreenState extends State<AddPlantScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _typeController;
   late TextEditingController _roomController;
 
   @override
@@ -24,25 +23,21 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     super.initState();
     final vm = Provider.of<AddPlantViewModel>(context, listen: false);
 
-    _typeController = TextEditingController(
-      text: vm.isEditing ? vm.plant.type : '',
-    );
     _roomController = TextEditingController(
       text:
-          vm.isEditing
-              ? vm.roomProvider.rooms
-                  .firstWhere(
-                    (room) => room.id == vm.plant.roomId,
-                    orElse: () => Room(id: -1, roomName: ""),
-                  )
-                  .roomName
-              : '',
+      vm.isEditing
+          ? vm.roomProvider.rooms
+          .firstWhere(
+            (room) => room.id == vm.plant.roomId,
+        orElse: () => Room(id: -1, roomName: ""),
+      )
+          .roomName
+          : '',
     );
   }
 
   @override
   void dispose() {
-    _typeController.dispose();
     _roomController.dispose();
     super.dispose();
   }
@@ -113,18 +108,18 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 initialValue: vm.isEditing ? vm.plant.name : '',
                 onSaved: vm.updateName,
               ),
-              const SizedBox(height: 16),
-              _buildAutocomplete(
-                context,
-                label: 'Art aus Datenbank',
-                options: vm.plantTypesFromDb,
-                controller: _typeController,
-                onSelected: vm.setType,
-              ),
               _buildTextField(
-                'Eigene Art (optional)',
-                onChanged: vm.updateCustomType,
+                'Art der Pflanze',
+                initialValue: vm.isEditing ? vm.plant.type : '',
+                onChanged: vm.updateType,
               ),
+              if(!vm.isEditing)
+                _buildDropdown(
+                  "Kürzlich gegossen",
+                  ['Ja', 'Nein'],
+                  vm.isWatered,
+                  vm.updateIsWatered,
+                ),
               const SizedBox(height: 16),
               _buildDropdown(
                 'Wasserbedarf',
@@ -140,7 +135,18 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 vm.updateSunlight,
               ),
               const SizedBox(height: 16),
-              _buildAutocomplete(
+              vm.isEditing
+                  ? _buildDropdown(
+                'Raum',
+                vm.rooms.map((r) => r.roomName).toList(),
+                vm.rooms.firstWhere((r) => r.id == vm.plant.roomId,
+                    orElse: () => vm.rooms.first).roomName,
+                    (selectedRoomName) {
+                  final room = vm.rooms.firstWhere((r) => r.roomName == selectedRoomName);
+                  vm.setRoom(room.id);
+                },
+              )
+                  : _buildAutocomplete(
                 context,
                 label: 'Raum',
                 hint: 'Raum wählen oder neuen eingeben',
@@ -148,25 +154,17 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 controller: _roomController,
                 onSelected: (roomName) {
                   final room = vm.rooms.firstWhere(
-                      (room) => room.roomName == roomName,
-                    orElse: () =>  Room(id: -1, roomName: ''),
+                        (room) => room.roomName == roomName,
+                    orElse: () => Room(id: -1, roomName: ''),
                   );
-                  
                   if (room.id != -1) {
                     vm.setRoom(room.id);
                   }
                 },
-                onSubmitted: (room) {
-                  if (room.trim().isEmpty) {
-                    _showSnackBar(
-                      context,
-                      'Bitte gib einen Raumnamen ein.',
-                      isError: true,
-                    );
-                  } else {
-                    //TODO
-                    //vm.addRoomIfNew(room);
-                  }
+                onSaved: (room) {
+                  if (room.trim().isEmpty) return;
+                  final roomId = vm.addRoomIfNew(room.trim());
+                  vm.setRoom(roomId);
                 },
               ),
               const SizedBox(height: 24),
@@ -248,7 +246,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     required List<String> options,
     required TextEditingController controller,
     required void Function(String) onSelected,
-    void Function(String)? onSubmitted,
+    required void Function(String) onSaved,
   }) {
     return Autocomplete<String>(
       optionsBuilder:
@@ -277,7 +275,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           focusNode: focusNode,
           decoration: InputDecoration(labelText: label, hintText: hint),
           onEditingComplete: onEditingComplete,
-          onFieldSubmitted: onSubmitted,
+          onSaved: onSaved != null ? (val) => onSaved(val!) : null,
         );
       },
     );
