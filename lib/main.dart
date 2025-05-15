@@ -59,7 +59,7 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       TasksScreen(),
       PlantScreen(),
       RoomScreen(navigatorStateRoom: navigatorStateRoom),
@@ -67,7 +67,7 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
     ];
 
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Theme.of(context).colorScheme.primary,

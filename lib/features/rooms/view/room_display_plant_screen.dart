@@ -3,10 +3,7 @@ import 'package:botanicare/features/plants/view/plant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/models/room.dart';
-import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 import '../../../core/services/plant_provider.dart';
-import '../../plants/view/plant_list.dart';
-import '../../plantsForm/view/add_plant_form.dart';
 
 class RoomDisplayPlantScreen extends StatelessWidget {
   const RoomDisplayPlantScreen({super.key, required this.room});
