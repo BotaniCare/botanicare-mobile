@@ -9,6 +9,8 @@ class Constants {
   //Task
 
   //Plant
+  static const String noPlantsCreated =
+      "Füge deine Pflanzen 🪴 hinzu,\nidem du auf das + unten rechts drückst";
 
   //Room
   static const String livingroom = "Wohnzimmer";
@@ -24,14 +26,15 @@ class Constants {
   static const String balcony = "Balkon";
   static const String balconyImage = "assets/images/balcony.jpg";
   static const String defaultImage = "assets/images/default.jpg";
-  static const String emptyRoomMessage = "Hier gibt es noch keine Pflanzen :(";
+  static const String emptyRoomMessage = "Sieht ziemlich leer aus hier 🍃";
   static const String noRoomsCreated =
-      "Füge einen Raum hinzu,\nindem du auf das + unten rechts drückst";
+      "Füge einen Raum 🛋️ hinzu,\nindem du auf das + unten rechts drückst";
 
   //Alert Dialog
   static const String alertDialogTitle = "{} entfernen";
   static const String alertDialogContent = "Willst du {} wirklich löschen?";
   static const String cancelDeletion = "Abbrechen";
   static const String confirmRoomDeletion = "Raum löschen";
-  static const String deletionSnackBarMessage = "{} wurde gelöscht";
+  static const String confirmPlantDeletion = "Pflanze löschen";
+  static const String deletionSnackBarMessage = "{} wurde gelöscht 🚮";
 }
