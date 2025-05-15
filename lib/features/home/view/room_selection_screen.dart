@@ -4,7 +4,6 @@ import '../../../constants.dart';
 import '../../../core/services/room_provider.dart';
 import '../../rooms/view/room_card.dart';
 
-
 class RoomSelectionScreen extends StatelessWidget {
   const RoomSelectionScreen({super.key});
 
