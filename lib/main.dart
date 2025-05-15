@@ -7,11 +7,12 @@ import 'package:botanicare/features/home/view/settings_screen.dart';
 import 'package:botanicare/features/home/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'assets/constants.dart';
 import 'features/home/viewmodel/task_provider.dart';
 import 'features/home/viewmodel/task_screen_view_model.dart';
 import 'features/home/viewmodel/plant_provider.dart';
 
+//for nested navigation
 final GlobalKey<NavigatorState> navigatorStateRoom =
     GlobalKey<NavigatorState>();
 
@@ -33,7 +34,7 @@ class BotaniCareMobileApp extends StatelessWidget {
     TextTheme textTheme = createTextTheme(context, "Inter Tight", "Inter");
     MaterialTheme theme = MaterialTheme(textTheme);
     return MaterialApp(
-      title: 'BotaniCare',
+      title: Constants.appTitle,
       themeMode: ThemeMode.system,
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       home: MultiProvider(
@@ -61,24 +62,26 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       TasksScreen(),
       PlantScreen(),
+      //pass navigator state
       RoomScreen(navigatorStateRoom: navigatorStateRoom),
       SettingsScreen(),
     ];
 
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Theme.of(context).colorScheme.secondary,
         onTap: (index) {
+          //if navigation bar item is room
           if (index == 2) {
             navigatorStateRoom.currentState?.popUntil(
               (route) => route.isFirst,
-            ); //um wieder auf erste Seite von Räume zu kommen
+            ); //navigate back to the room selection screen
           }
           setState(() {
             _currentIndex = index;
@@ -87,16 +90,19 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.task_alt),
-            label: 'Aufgaben',
+            label: Constants.taskScreenTitle,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_florist),
-            label: 'Pflanzen',
+            label: Constants.plantScreenTitle,
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Räume'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.weekend),
+            label: Constants.roomScreenTitle,
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Einstellungen',
+            label: Constants.settingsScreenTitle,
           ),
         ],
       ),

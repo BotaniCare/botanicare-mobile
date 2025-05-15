@@ -1,8 +1,8 @@
+import 'package:botanicare/assets/constants.dart';
 import 'package:botanicare/features/home/viewmodel/room_provider.dart';
 import 'package:botanicare/features/home/widgets/plant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../models/plant.dart';
 import '../viewmodel/add_plant_view_model.dart';
 import '../viewmodel/plant_provider.dart';
@@ -18,7 +18,7 @@ class PlantScreen extends StatelessWidget {
     final plantList = plantProvider.plants;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Pflanzen')),
+      appBar: AppBar(title: Text(Constants.plantScreenTitle)),
       body: ListView(
         children: [
           if (plantList.isNotEmpty) ...[

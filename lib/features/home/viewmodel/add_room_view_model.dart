@@ -2,8 +2,6 @@ import 'package:botanicare/features/home/viewmodel/plant_provider.dart';
 import 'package:botanicare/features/home/viewmodel/room_provider.dart';
 import 'package:flutter/material.dart';
 
-import '../models/room.dart';
-
 class AddRoomViewModel extends ChangeNotifier {
   final RoomProvider roomProvider;
   final PlantProvider plantProvider;

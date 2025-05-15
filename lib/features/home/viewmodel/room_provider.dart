@@ -7,14 +7,8 @@ import '../models/plant.dart';
 class RoomProvider extends ChangeNotifier {
   final List<Room> _rooms = [
     Room(id: 0, roomName: "Wohnzimmer"),
-
     Room(id: 1, roomName: "Schlafzimmer"),
-
     Room(id: 2, roomName: "Küche"),
-
-    Room(id: 3, roomName: "Büro"),
-
-    Room(id: 4, roomName: "Gästezimmer"),
   ];
 
   List<Room> get rooms => _rooms;
