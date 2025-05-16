@@ -28,6 +28,11 @@ class RoomService {
   }
 
   Future<void> addRoom(String roomName) async {
+    //check if roomName is Empty
+    if (roomName.trim().isEmpty) {
+      throw Exception("Ein Raum muss einen Namen haben.");
+    }
+
     final response = await http.post(
       Uri.parse("${Constants.baseURL}/rooms"),
       headers: {'Content-Type': 'application/json'},
@@ -43,7 +48,7 @@ class RoomService {
     final response = await http.delete(
       Uri.parse("${Constants.baseURL}/rooms/$roomName"),
     );
-    if (response.statusCode != 200) {
+    if (response.statusCode != 200 && response.statusCode != 204) {
       throw Exception("Raum konnte nicht gelöscht werden.");
     }
   }
