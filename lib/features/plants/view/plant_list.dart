@@ -22,8 +22,7 @@ class PlantsList extends StatelessWidget {
                         builder: (context) => PlantDetailScreen(plant: plants[index])));
               },
               child: PlantCard(
-                  plant: plants[index],
-                  imageUrl: 'https://cdn.pixabay.com/photo/2023/09/15/12/43/living-room-8254772_1280.jpg'
+                  plant: plants[index]
               ),
           );
         }

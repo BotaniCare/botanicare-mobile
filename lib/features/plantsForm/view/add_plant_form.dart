@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     super.initState();
     final vm = Provider.of<AddPlantViewModel>(context, listen: false);
 
-    _roomController = TextEditingController(
+    /*_roomController = TextEditingController(
       text:
       vm.isEditing
           ? vm.roomProvider.rooms
@@ -33,7 +34,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
       )
           .roomName
           : '',
-    );
+    );*/
   }
 
   @override
@@ -47,8 +48,8 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     final pickedFile = await ImagePicker().pickImage(source: source);
 
     if (pickedFile != null) {
-      final image = File(pickedFile.path);
-      viewModel.setImage(image);
+      final image = await pickedFile.readAsBytes();
+      viewModel.setImage(base64Encode(image));
     }
   }
 
@@ -134,11 +135,17 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               _buildDropdown(
                 'Sonneneinstrahlung',
                 ['sonnig', 'teilweise sonnig', 'nicht sonnig'],
-                vm.plant.sunlight,
+                vm.plant.sunLight,
                 vm.updateSunlight,
               ),
               const SizedBox(height: 16),
-              vm.isEditing
+              /*_buildDropdown(
+                  label,
+                  items,
+                  value,
+                  onChanged
+              )*/
+              /*vm.isEditing
                   ? _buildDropdown(
                 'Raum',
                 vm.rooms.map((r) => r.roomName).toList(),
@@ -169,7 +176,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                   final roomId = vm.addRoomIfNew(room.trim());
                   vm.setRoom(roomId);
                 },
-              ),
+              ),*/
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () => _saveForm(context),
@@ -198,7 +205,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             vm.plant.image != null
                 ? ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.file(vm.plant.image!, fit: BoxFit.cover),
+                  child: Image.memory(base64Decode(vm.plant.image!.bytes)),
                 )
                 : const Center(child: Text("Bild hinzufügen")),
       ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/models/room.dart';
-import '../../../assets/constants.dart';
+import '../../../core/constants/constants.dart';
 import '../../../core/services/plant_provider.dart';
 
 class RoomCard extends StatelessWidget {

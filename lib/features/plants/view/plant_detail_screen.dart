@@ -16,15 +16,6 @@ class PlantDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final plantProvider = Provider.of<PlantProvider>(
-      context,
-      listen: true,
-    );
-    final roomProvider = Provider.of<RoomProvider>(
-      context,
-      listen: true,
-    );
-
     return Scaffold(
       body: Column(
         children: [
@@ -62,8 +53,6 @@ class PlantDetailScreen extends StatelessWidget {
                             create:
                                 (_) => AddPlantViewModel(
                                   isEditing: true,
-                                  plantProvider: plantProvider,
-                                  roomProvider: roomProvider,
                                   initialPlant: plant,
                                 ),
                             child: const AddPlantScreen(),
@@ -117,12 +106,12 @@ class PlantDetailScreen extends StatelessWidget {
                     MiniDetailCard(
                       icon: Icons.sunny,
                       title: "Sonnenlicht",
-                      description: plant.sunlight,
+                      description: plant.sunLight,
                     ),
                     MiniDetailCard(
                       icon: Icons.sensor_door,
                       title: "Raum",
-                      description: roomProvider.getRoomName(plant.roomId),
+                      description: "TODO",
                     ),
                   ],
                 ),

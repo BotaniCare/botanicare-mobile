@@ -13,14 +13,6 @@ class RoomProvider extends ChangeNotifier {
 
   List<Room> get rooms => _rooms;
 
-  List<Plant> getPlantsByRoom(List<Plant> plants, int roomId) {
-    return plants.where((plant) => plant.roomId == roomId).toList();
-  }
-
-  List<Plant> getPlantsWithNoRoom(List<Plant> plants) {
-    return plants.where((plant) => plant.roomId == null).toList();
-  }
-
   addRoomReturnId(String name){
     if(!roomExists(name)){
       _rooms.add(Room(id: _rooms.length, roomName: name));
@@ -40,7 +32,6 @@ class RoomProvider extends ChangeNotifier {
   deleteRoom(int id, PlantProvider plantProvider) {
     _rooms.removeWhere((room) => room.id == id);
     notifyListeners();
-    plantProvider.removeRoomFromPlants(id);
   }
 
   bool roomExists(String roomName) {

@@ -46,7 +46,7 @@ class TaskCardState extends State<TaskCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.task.plant.name,
+                      "To Do Plant Name",
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
@@ -93,11 +93,11 @@ class TaskCardState extends State<TaskCard> {
             ),
             ElevatedButton(
               onPressed: () async {
-                setState(() {
+                /*setState(() {
                   widget.task.plant.isWatered = !widget.task.plant.isWatered;
                 });
                 Provider.of<TaskProvider>(context, listen: false).deleteTask(widget.task.id);
-                await Future.delayed(const Duration(seconds: 1));
+                await Future.delayed(const Duration(seconds: 1));*/
               },
               style: ElevatedButton.styleFrom(
                 shape: CircleBorder(),
@@ -106,7 +106,8 @@ class TaskCardState extends State<TaskCard> {
                 padding: EdgeInsets.all(16),
               ),
               child: Icon(
-                widget.task.plant.isWatered ? Icons.check_outlined : Icons.water_drop_outlined,
+                /*widget.task.plant.isWatered ? Icons.check_outlined : Icons.water_drop_outlined,*/
+                Icons.abc,
                 size: 18,
               ),
             ),

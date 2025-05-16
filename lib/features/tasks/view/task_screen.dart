@@ -17,14 +17,15 @@ class TasksScreen extends StatelessWidget {
     final plantProvider = Provider.of<PlantProvider>(context, listen: true);
     final plantList = plantProvider.plants;
     final taskProvider = Provider.of<TaskProvider>(context, listen: true);
-    final taskList = taskProvider.addTask(plantList);
-    final plantsWithNoRoom = taskList.where(
+    /*final taskList = taskProvider.addTask(plantList);*/
+    /*final plantsWithNoRoom = taskList.where(
       (task) => task.plant.roomId == null,
-    );
+    );*/
 
     return Scaffold(
       appBar: AppBar(title: Text("BotaniCare")),
-      body: ListView(
+      body: Center(child: Text("To Do"))
+      /*ListView(
         children: [
           if (taskList.isNotEmpty) ...[
             SizedBox(height: 5),
@@ -93,7 +94,7 @@ class TasksScreen extends StatelessWidget {
             NotificationText(text: "Alle Pflanzen sind gegossen 🥳")
           ],
         ],
-      ),
+      ),*/
     );
   }
 }

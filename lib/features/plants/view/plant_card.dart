@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:botanicare/core/models/plant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,9 +10,8 @@ import '../../../core/services/plant_provider.dart';
 
 class PlantCard extends StatelessWidget {
   final Plant plant;
-  final String imageUrl;
 
-  const PlantCard({super.key, required this.plant, required this.imageUrl});
+  const PlantCard({super.key, required this.plant});
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +27,9 @@ class PlantCard extends StatelessWidget {
               topLeft: Radius.circular(8),
               bottomLeft: Radius.circular(8),
             ),
-            child: Image.network(
-              imageUrl,
-              width: 90,
-              height: 97,
-              fit: BoxFit.cover,
-            ),
+            child: plant.image == null
+                ? Center(child: Text("Kein Bild gefunden"))
+                : Image.memory(base64Decode(plant.image!.bytes)),
           ),
           Expanded(
             child: Padding(
@@ -100,8 +98,6 @@ class PlantCard extends StatelessWidget {
                         return ChangeNotifierProvider(
                           create: (_) => AddPlantViewModel(
                             isEditing: true,
-                            plantProvider: plantProvider,
-                            roomProvider: roomProvider,
                             initialPlant: plant,
                           ),
                           child: const AddPlantScreen(),

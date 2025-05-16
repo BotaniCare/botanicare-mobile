@@ -34,4 +34,8 @@ class Constants {
   static const String cancelDeletion = "Abbrechen";
   static const String confirmRoomDeletion = "Raum löschen";
   static const String deletionSnackBarMessage = "{} wurde gelöscht";
+
+
+  static const String apiUrlPlants = "https://botanicare.mauricewoike.com:8443/plants";
+  static const String apiUrlRooms = "https://botanicare.mauricewoike.com:8443/rooms";
 }

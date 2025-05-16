@@ -3,7 +3,7 @@ import '../models/plant.dart';
 import '../models/task.dart';
 
 class TaskProvider extends ChangeNotifier {
-  final List<Task> _tasks = [];
+  /*final List<Task> _tasks = [];
 
   List<Task> get tasks => _tasks;
 
@@ -28,5 +28,5 @@ class TaskProvider extends ChangeNotifier {
   deleteTask(int id) {
     _tasks.removeWhere((task) => task.id == id);
     notifyListeners();
-  }
+  }*/
 }
