@@ -24,7 +24,7 @@ class PlantScreen extends StatelessWidget {
           ? PlantsList()
           : ListView(
             children: [
-              NotificationText(text: "Füge deine Pflanzen 🪴 hinzu,\nindem du auf das + unten rechts drückst")
+              NotificationText(text: Constants.noPlantsCreated)
           ]),
       floatingActionButton: AddButton(
         onPressed: () {

@@ -6,6 +6,8 @@ import '../../plantsForm/view/add_plant_form.dart';
 import '../../../core/services/room_provider.dart';
 import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 import '../../../core/services/plant_provider.dart';
+//import http package
+import 'package:http/http.dart' as http;
 
 class PlantCard extends StatelessWidget {
   final Plant plant;

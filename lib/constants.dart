@@ -1,4 +1,7 @@
 class Constants {
+  //Api
+  static const String baseURL = "https://botanicare.mauricewoike.com:8443";
+
   //Main
   static const String appTitle = "BotaniCare";
   static const String plantScreenTitle = "Pflanzen";

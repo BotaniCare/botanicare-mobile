@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:botanicare/core/models/room.dart';
+
 class Plant {
   int id;
   String name;
