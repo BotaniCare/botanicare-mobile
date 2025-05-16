@@ -23,18 +23,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   void initState() {
     super.initState();
     final vm = Provider.of<AddPlantViewModel>(context, listen: false);
-
-    /*_roomController = TextEditingController(
-      text:
-      vm.isEditing
-          ? vm.roomProvider.rooms
-          .firstWhere(
-            (room) => room.id == vm.plant.roomId,
-        orElse: () => Room(id: -1, roomName: ""),
-      )
-          .roomName
-          : '',
-    );*/
+    vm.loadRooms();
   }
 
   @override
@@ -139,44 +128,12 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 vm.updateSunlight,
               ),
               const SizedBox(height: 16),
-              /*_buildDropdown(
-                  label,
-                  items,
-                  value,
-                  onChanged
-              )*/
-              /*vm.isEditing
-                  ? _buildDropdown(
-                'Raum',
-                vm.rooms.map((r) => r.roomName).toList(),
-                vm.rooms.firstWhere((r) => r.id == vm.plant.roomId,
-                    orElse: () => vm.rooms.first).roomName,
-                    (selectedRoomName) {
-                  final room = vm.rooms.firstWhere((r) => r.roomName == selectedRoomName);
-                  vm.setRoom(room.id);
-                },
-              )
-                  : _buildAutocomplete(
-                context,
-                label: 'Raum',
-                hint: 'Raum wählen oder neuen eingeben',
-                options: vm.rooms.map((room) => room.roomName).toList(),
-                controller: _roomController,
-                onSelected: (roomName) {
-                  final room = vm.rooms.firstWhere(
-                        (room) => room.roomName == roomName,
-                    orElse: () => Room(id: -1, roomName: ''),
-                  );
-                  if (room.id != -1) {
-                    vm.setRoom(room.id);
-                  }
-                },
-                onSaved: (room) {
-                  if (room.trim().isEmpty) return;
-                  final roomId = vm.addRoomIfNew(room.trim());
-                  vm.setRoom(roomId);
-                },
-              ),*/
+              _buildDropdown(
+                  'Raum',
+                  vm.rooms.map((r) => r.roomName).toList(),
+                  vm.roomName,
+                  vm.updateRoomName,
+              ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () => _saveForm(context),

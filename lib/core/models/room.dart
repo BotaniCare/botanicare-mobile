@@ -12,9 +12,7 @@ class Room {
     return Room(
       id: json['id'],
       roomName: json['roomName'],
-      plantList: [],
-      //TODO: fromJson in Plant
-      //plantsList: (json['plants'] as List).map((plant) => Plant.fromJson(plant)).toList(),
+      plantList: (json['plants'] as List).map((plant) => Plant.fromJson(plant)).toList(),
     );
   }
 
@@ -23,8 +21,7 @@ class Room {
     return {
       'id': id,
       'roomName': roomName,
-      //TODO: toJson in Plant
-      //'plants': plantList.map((plant) => plant.toJson()).toList()
+       'plants': plantList.map((plant) => plant.toJson()).toList()
     };
   }
 }

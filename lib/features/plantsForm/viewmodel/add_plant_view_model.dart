@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:botanicare/core/models/image.dart';
+import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/models/plant.dart';
@@ -9,14 +10,18 @@ import '../../../core/services/room_provider.dart';
 
 class AddPlantViewModel extends ChangeNotifier {
   final bool isEditing;
+  final RoomService roomService;
 
   // Internal state
   late Plant _plant;
   late String isWatered;
+  List<Room> rooms = [];
+  late String roomName = "";
 
   AddPlantViewModel({
     required this.isEditing,
     required Plant initialPlant,
+    required this.roomService,
   }) {
     _plant = initialPlant;
     if (_plant.isWatered) {
@@ -26,6 +31,12 @@ class AddPlantViewModel extends ChangeNotifier {
   }
 
   Plant get plant => _plant;
+
+  Future<void> loadRooms() async {
+    rooms = await RoomService.getAllRooms();
+    roomName = rooms.first.roomName;
+    notifyListeners();
+  }
 
   void updateIsWatered(String watered) {
     isWatered = watered;
@@ -39,22 +50,6 @@ class AddPlantViewModel extends ChangeNotifier {
     _plant.type = newType;
     notifyListeners();
   }
-
-  /*void setRoom(int roomId) {
-    _plant.roomId = roomId;
-    notifyListeners();
-  }*/
-
-  /*int addRoomIfNew(String room) {
-    return roomProvider.addRoomReturnId(room);
-  }
-
-  void removeRoom(int roomId) {
-    if (_plant.roomId == roomId) {
-      _plant.roomId = null;
-      notifyListeners();
-    }
-  }*/
 
   void setImage(String image) {
     _plant.image = PlantImage(id: 0, bytes: image);
@@ -83,6 +78,11 @@ class AddPlantViewModel extends ChangeNotifier {
 
   void updateType(String type) {
     _plant.type = type;
+    notifyListeners();
+  }
+
+  void updateRoomName(String roomName){
+    this.roomName = roomName;
     notifyListeners();
   }
 

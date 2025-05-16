@@ -13,7 +13,7 @@ class PlantSelectionScreen extends StatelessWidget {
       key: navigatorStatePlant,
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
-          builder: (context) => const PlantScreen(),
+          builder: (context) => PlantScreen(),
         );
       },
     );

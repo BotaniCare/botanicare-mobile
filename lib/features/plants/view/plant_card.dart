@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:botanicare/core/models/plant.dart';
+import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../constants.dart';
@@ -11,8 +12,9 @@ import '../../../core/services/plant_provider.dart';
 
 class PlantCard extends StatelessWidget {
   final Plant plant;
+  final RoomService roomService = RoomService();
 
-  const PlantCard({super.key, required this.plant});
+  PlantCard({super.key, required this.plant});
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +102,7 @@ class PlantCard extends StatelessWidget {
                           create: (_) => AddPlantViewModel(
                             isEditing: true,
                             initialPlant: plant,
+                            roomService: roomService,
                           ),
                           child: const AddPlantScreen(),
                         );

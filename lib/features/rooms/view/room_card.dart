@@ -1,3 +1,4 @@
+import 'package:botanicare/core/services/room_service.dart';
 import 'package:botanicare/features/rooms/view/room_display_plant_screen.dart';
 import 'package:botanicare/core/services/room_provider.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class RoomCard extends StatelessWidget {
                     alignment: Alignment.topRight,
                     padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: null,
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
                         foregroundColor:
@@ -55,10 +56,7 @@ class RoomCard extends StatelessWidget {
                             .of(context)
                             .colorScheme
                             .onPrimary,
-                        backgroundColor: Theme
-                            .of(context)
-                            .colorScheme
-                            .primary,
+                        backgroundColor: Colors.grey.shade400,
                         padding: EdgeInsets.all(10),
                       ),
                       child: Icon(Icons.edit, size: 23),
@@ -122,11 +120,8 @@ class RoomCard extends StatelessWidget {
                         );
 
                           if (confirmDeletion == true && context.mounted) {
-                            final plantProvider = Provider.of<PlantProvider>(context, listen: false);
-                            Provider.of<RoomProvider>(
-                              context,
-                              listen: false,
-                            ).deleteRoom(room.id, plantProvider);
+                            final RoomService roomService= RoomService();
+                            roomService.deleteRoom(room.roomName);
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

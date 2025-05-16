@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
+import '../../../core/exceptions/server_exception.dart';
+import '../../../core/models/room.dart';
 import '../../../core/services/plant_provider.dart';
 import '../../../core/services/room_provider.dart';
+import '../../../core/services/room_service.dart';
 
 class AddRoomViewModel extends ChangeNotifier {
-  final RoomProvider roomProvider;
-  final PlantProvider plantProvider;
-  String? newRoom;
+  final Room? initialRoom;
+  final bool isEditing;
+  final RoomService roomService;
+  String? newRoomName;
 
-  AddRoomViewModel({required this.roomProvider, required this.plantProvider});
+  AddRoomViewModel({
+    this.initialRoom,
+    required this.isEditing,
+    required this.roomService
+  });
 
-  bool roomNameExists(String roomName) {
+  /*bool roomNameExists(String roomName) {
     return roomProvider.roomExists(roomName);
-  }
+  }*/
 
   void saveForm(){
-      if(newRoomIsValid(newRoom)){
-         if (!(roomNameExists(newRoom!))){
-            roomProvider.addRoom(newRoom!);
-         }
-      }
+    if(isEditing){
+      // ToDo is Editing
+    } else {
+      roomService.addRoom(newRoomName!);
+    }
   }
 
   bool newRoomIsValid(String? newRoom){
@@ -31,12 +39,30 @@ class AddRoomViewModel extends ChangeNotifier {
     }
   }
 
-  String? validateForm() {
-    if (newRoom != null) {
-      if (roomNameExists(newRoom!)) {
-        return "Der ausgewählte Raumname existiert bereits.";
-      }
+  Future<String?> validateForm(String? newRoomName) async {
+    print("Validating: $newRoomName");
+
+    if (!newRoomIsValid(newRoomName)) {
+      print("Bitte gib einen Raumnamen ein");
+      return "Bitte gib einen Raumnamen ein";
     }
+
+    try {
+      final rooms = await RoomService.getAllRooms();
+      final exists = rooms.any((room) => room.roomName.toLowerCase() == newRoomName!.trim().toLowerCase());
+      print("Testet ob es exisitet");
+      if (exists) {
+        return "Ein Raum mit diesem Namen existiert bereits.";
+      }
+    } on ServerException catch (e) {
+      return "Fehler beim Überprüfen des Raumnamens: ${e.message}";
+    } catch (e) {
+      debugPrint(e.toString());
+      return "Unbekannter Fehler bei der Validierung.";
+    }
+
     return null;
   }
+
+
 }

@@ -1,3 +1,4 @@
+import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +11,8 @@ import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 
 
 class PlantDetailScreen extends StatelessWidget {
-  const PlantDetailScreen({super.key, required this.plant});
+  final RoomService roomService = RoomService();
+  PlantDetailScreen({super.key, required this.plant});
 
   final Plant plant;
 
@@ -54,6 +56,7 @@ class PlantDetailScreen extends StatelessWidget {
                                 (_) => AddPlantViewModel(
                                   isEditing: true,
                                   initialPlant: plant,
+                                  roomService: roomService,
                                 ),
                             child: const AddPlantScreen(),
                           );

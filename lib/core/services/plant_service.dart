@@ -7,7 +7,7 @@ import '../models/plant.dart';
 
 class PlantService {
 
-  Future<List<Plant>> fetchPlants() async {
+  static Future<List<Plant>> getAllPlants() async {
     final response = await http.get(Uri.parse(Constants.apiUrlPlants));
 
     if (response.statusCode == 200) {
@@ -18,7 +18,7 @@ class PlantService {
     }
   }
 
-  Future<Plant> fetchPlantById(int id) async {
+  static Future<Plant> getPlantById(int id) async {
     final response = await http.get(Uri.parse('${Constants.apiUrlPlants}/$id'));
 
     if (response.statusCode == 200) {
@@ -28,7 +28,7 @@ class PlantService {
     }
   }
 
-  Future<Plant> createPlant(Plant plant, String roomName) async {
+  static Future<Plant> createPlant(Plant plant, String roomName) async {
     final response = await http.post(
       Uri.parse('${Constants.apiUrlRooms}/$roomName/plants/'),
       headers: {'Content-Type': 'application/json'},
@@ -42,7 +42,7 @@ class PlantService {
     }
   }
 
-  Future<void> updatePlant(Plant plant) async {
+  static Future<void> updatePlant(Plant plant) async {
     final response = await http.put(
       Uri.parse('${Constants.apiUrlPlants}/${plant.id}'),
       headers: {'Content-Type': 'application/json'},
@@ -54,7 +54,7 @@ class PlantService {
     }
   }
 
-  Future<void> deletePlant(int id) async {
+  static Future<void> deletePlant(int id) async {
     final response = await http.delete(
         Uri.parse('${Constants.apiUrlPlants}/$id'));
 

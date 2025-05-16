@@ -1,9 +1,13 @@
+import 'package:botanicare/core/services/room_service.dart';
+import 'package:botanicare/shared/ui/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../constants.dart';
 import '../viewmodel/add_room_view_model.dart';
 
 class AddRoomForm extends StatefulWidget {
+
   const AddRoomForm({super.key});
 
   @override
@@ -13,63 +17,63 @@ class AddRoomForm extends StatefulWidget {
 class _AddRoomFormState extends State<AddRoomForm> {
   final _formKey = GlobalKey<FormState>();
 
-  void _showSnackBar(
-      BuildContext context,
-      String message, {
-        bool isError = false,
-      }) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Theme.of(context).colorScheme.error : null,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AddRoomViewModel>();
 
     return Scaffold(
-        appBar: AppBar(title: Text("Raum hinzufügen")),
-        body:
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                TextFormField(
-                  decoration: InputDecoration(labelText: "Raumname eingeben"),
-                  onSaved: (String? value){
-                      vm.newRoom = value;
+      appBar: AppBar(
+        title: Text(vm.isEditing
+            ? Constants.formTitleUpdating.replaceFirst("{}", "Raum")
+            : Constants.formTitleAdding.replaceFirst("{}", "Raum") ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                initialValue: vm.isEditing ? vm.initialRoom!.roomName : "",
+                decoration: InputDecoration(labelText: "Raumname eingeben"),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Bitte einen Raumnamen eingeben.";
+                  }
+                  return null;
+                },
+                onSaved: (String? value) {
+                  vm.newRoomName = value;
+                },
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                  onPressed: () async {
+                    _formKey.currentState!.save();
+
+                    // local validation
+                    final isValid = _formKey.currentState!.validate();
+                    if (!isValid) return;
+
+                    // server validation
+                    final error = await vm.validateForm(vm.newRoomName);
+
+                    if (error != null) {
+                    CustomSnackBar.show(context, error, isError: true);
+                    return;
+                    }
+
+                    // save and back
+                    vm.saveForm();
+                    Navigator.pop(context, true);
                   },
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {
-                      _formKey.currentState!.save();
-                      if (_formKey.currentState!.validate()) {
-                        final error = vm.validateForm();
-                        if (error != null) {
-                          _showSnackBar(context, error, isError: true);
-                          return;
-                        }
-                      }
-                      vm.saveForm();
-                      Navigator.pop(context, true);
-                  },
-                  child: Text(
-                      'Speichern'
-                  ),
-                ),
-                const SizedBox(height: 5),
-              ],
-            ),
+                child: Text(vm.isEditing ? Constants.saveChangesMessage: Constants.saveMessage,),
+              ),
+              const SizedBox(height: 5),
+            ],
           ),
-        )
+        ),
+      ),
     );
   }
 }
