@@ -6,9 +6,9 @@ import 'package:botanicare/shared/ui/notification_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/constants/constants.dart';
+import '../../../constants.dart';
 import '../../../core/models/plant.dart';
-import '../../../core/services/plant_api.dart';
+import '../../../core/services/plant_service.dart';
 import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 import '../../../core/services/plant_provider.dart';
 import '../../../shared/ui/add_button.dart';
@@ -25,7 +25,7 @@ class PlantScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(Constants.plantScreenTitle)),
       body: FutureBuilder<List<Plant>>(
-        future: fetchPlants(),
+        future: PlantService.fetchPlants(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -53,7 +53,7 @@ class PlantScreen extends StatelessWidget {
           } else {
             return ListView(
                 children: [
-                  NotificationText(text: "Füge deine Pflanzen 🪴 hinzu,\nindem du auf das + unten rechts drückst")
+                  NotificationText(text: Constants.noPlantsCreated)
                 ]);
           }
         },

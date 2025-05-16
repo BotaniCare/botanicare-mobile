@@ -3,7 +3,7 @@ import 'package:botanicare/shared/ui/notification_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/constants/constants.dart';
+import '../../../constants.dart';
 import '../../../core/services/plant_provider.dart';
 import '../../../shared/ui/add_button.dart';
 import '../../roomForm/view/add_room_form.dart';

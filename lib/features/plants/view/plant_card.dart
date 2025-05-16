@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:botanicare/core/models/plant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../constants.dart';
 import '../../plantsForm/view/add_plant_form.dart';
 import '../../../core/services/room_provider.dart';
 import '../../plantsForm/viewmodel/add_plant_view_model.dart';
@@ -123,7 +124,10 @@ class PlantCard extends StatelessWidget {
                     builder:
                         (con) => AlertDialog(
                           title: Text(
-                            "${plant.name} entfernen",
+                            Constants.alertDialogTitle.replaceFirst(
+                              "{}",
+                              plant.name,
+                            ),
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -131,7 +135,10 @@ class PlantCard extends StatelessWidget {
                             ),
                           ),
                           content: Text(
-                            "Willst du ${plant.name} wirklich entfernen?",
+                            Constants.alertDialogContent.replaceFirst(
+                              "{}",
+                              plant.name,
+                            ),
                             style: TextStyle(fontSize: 14),
                           ),
                           actions: [
@@ -139,11 +146,11 @@ class PlantCard extends StatelessWidget {
                               children: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(con, false),
-                                  child: Text("Abbrechen"),
+                                  child: Text(Constants.cancelDeletion),
                                 ),
                                 TextButton(
                                   onPressed: () => Navigator.pop(con, true),
-                                  child: Text("Pflanze löschen"),
+                                  child: Text(Constants.confirmPlantDeletion),
                                 ),
                               ],
                             ),
@@ -158,7 +165,12 @@ class PlantCard extends StatelessWidget {
                     ).deletePlant(plant.id);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("${plant.name} 🪴 wurde gelöscht."),
+                        content: Text(
+                          Constants.deletionSnackBarMessage.replaceFirst(
+                            "{}",
+                            plant.name,
+                          ),
+                        ),
                         behavior: SnackBarBehavior.floating,
                         duration: const Duration(milliseconds: 450),
                       ),
