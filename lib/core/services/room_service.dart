@@ -40,7 +40,7 @@ class RoomService {
     );
 
     if (response.statusCode != 201) {
-      throw Exception("Raum konnte nicht erstellt werden");
+      throw Exception("Raum konnte nicht erstellt werden.");
     }
   }
 
