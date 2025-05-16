@@ -90,7 +90,7 @@ class TasksScreen extends StatelessWidget {
                 ],
               ),
           ] else ...[
-            NotificationText(text: "Alle Pflanzen sind gegossen 🥳")
+            NotificationText(text: "Alle Pflanzen sind gegossen 🥳"),
           ],
         ],
       ),

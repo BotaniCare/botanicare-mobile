@@ -1,11 +1,11 @@
 import 'package:botanicare/core/models/plant.dart';
 
 class Task {
-  final int id;
+  final int? id;
   final String description;
   final Plant plant;
 
-  Task({ required this.id, required this.description, required this.plant});
+  Task({ this.id, required this.description, required this.plant});
 
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
@@ -17,7 +17,6 @@ class Task {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'description': description,
       'plants': plant.toJson()
     };

@@ -1,11 +1,11 @@
 import 'package:botanicare/core/models/plant.dart';
 
 class Room {
-  final int id;
+  final int? id;
   final String roomName;
   final List<Plant> plants;
 
-  Room({required this.id, required this.roomName, required this.plants});
+  Room({this.id, required this.roomName, required this.plants});
 
   //Json Response to Dart objects
   factory Room.fromJson(Map<String, dynamic> json) {
@@ -20,7 +20,6 @@ class Room {
   //converting Dart object to Json (Map)
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'roomName': roomName,
       //TODO: toJson in Plant
       'plants': plants.map((plant) => plant.toJson()).toList()

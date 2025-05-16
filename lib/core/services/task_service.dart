@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'package:botanicare/constants.dart';
+import 'package:botanicare/core/services/room_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../models/plant.dart';
+import '../models/room.dart';
 import '../models/task.dart';
 
 class TaskService {
@@ -25,6 +29,39 @@ class TaskService {
 
     if (response.statusCode != 200) {
       throw Exception("Task konnte nicht erstellt werden.");
+    }
+  }
+
+  Future <void> createPlantTask() async {
+    final roomService = RoomService();
+    try {
+      List<Room> roomList = await roomService.getAllRooms();
+
+      //loop through all the rooms to get each room name
+      for (Room room in roomList) {
+        //pass room name to getAllPlantsFromRoom
+        List<Plant> plantList = await roomService.getAllPlantsFromRoom(room.roomName);
+
+        //loop through all plants in room to get plant id and to check isWatered
+        for (Plant plant in plantList) {
+          //check isWatered is false
+          if (!plant.isWatered) {
+            //pass plant id to getTaskFromPlant
+            List<Task> taskList = await getTaskFromPlant(plant.id);
+            //check for any task with condition: plant id of task is the same as plant id
+            bool isTaskAlreadyCreated = taskList.any((task) => task.plant.id == plant.id);
+            //create task with the plant id only if not created yet
+            if (!isTaskAlreadyCreated) {
+              Task task = Task(description: "Gieß mich!", plant: plant);
+              await createTask(plant.id, task);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
