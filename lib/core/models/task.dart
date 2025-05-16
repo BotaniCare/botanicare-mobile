@@ -18,7 +18,7 @@ class Task {
   Map<String, dynamic> toJson() {
     return {
       'description': description,
-      'plants': plant.toJson()
+      'plant': plant.toJson()
     };
   }
 }
