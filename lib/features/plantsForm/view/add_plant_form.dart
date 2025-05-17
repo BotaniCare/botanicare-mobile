@@ -156,25 +156,52 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   }
 
   Widget _buildImagePicker(BuildContext context, AddPlantViewModel vm) {
-    return GestureDetector(
-      onTap: () => _showImageSourceSelector(context),
-      child: Container(
-        height: 180,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Theme.of(context).colorScheme.secondary),
+    final hasImage = vm.plant.image != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () => _showImageSourceSelector(context),
+          child: Container(
+            height: 180,
+            decoration: BoxDecoration(
+              color: hasImage
+                  ? Theme.of(context).colorScheme.onSurfaceVariant
+                  : Theme.of(context).colorScheme.error.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: hasImage
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.error,
+                width: 2,
+              ),
+            ),
+            child: hasImage
+                ? ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.memory(base64Decode(vm.plant.image!.bytes), fit: BoxFit.cover),
+            )
+                : Center(
+              child: Text(
+                "Bild hinzufügen",
+                style: TextStyle(color: Theme.of(context).colorScheme.onError),
+              ),
+            ),
+          ),
         ),
-        child:
-        vm.plant.image != null
-            ? ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.memory(base64Decode(vm.plant.image!.bytes)),
-        )
-            : const Center(child: Text("Bild hinzufügen")),
-      ),
+        if (!hasImage)
+          Padding(
+            padding: EdgeInsets.only(top: 8.0, left: 4),
+            child: Text(
+              "Bitte füge ein Bild hinzu.",
+              style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12),
+            ),
+          ),
+      ],
     );
   }
+
 
   void _showImageSourceSelector(BuildContext context) {
     showModalBottomSheet(
