@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 import 'package:flutter/material.dart';
+import '../../../constants.dart';
 import '../../../core/models/plant.dart';
 import '../../../core/services/task_service.dart';
 
@@ -107,6 +107,20 @@ class TaskCardState extends State<TaskCard> {
                 setState(() {
                   widget.plant.isWatered = !widget.plant.isWatered;
                 });
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        Constants.wateredPlantSnackBarMessage.replaceFirst(
+                          "{}",
+                          widget.plant.name,
+                        ),
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                }
 
                 await Future.delayed(const Duration(milliseconds: 300));
 

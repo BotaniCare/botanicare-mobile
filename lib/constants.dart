@@ -11,6 +11,7 @@ class Constants {
 
   //Task
   static const String noTasks = "Alle Pflanzen sind gegossen 🥳";
+  static const String wateredPlantSnackBarMessage = "Du hast {} gegossen 💧";
 
   //Plant
   static const String noPlantsCreated =
