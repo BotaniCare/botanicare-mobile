@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:botanicare/constants.dart';
 import 'package:botanicare/core/exceptions/server_exception.dart';
-import 'package:flutter/foundation.dart';
+import 'package:botanicare/core/services/task_provider.dart';
 import 'package:http/http.dart' as http;
 import '../models/plant.dart';
 import '../models/room.dart';
 
 class RoomService {
+  static get taskProvider => TaskProvider();
+
   static Future<List<Room>> getAllRooms() async {
     final response = await http.get(Uri.parse("${Constants.baseURL}/rooms"));
     if (response.statusCode == 200) {
@@ -42,11 +44,13 @@ class RoomService {
     throw ServerException("Pflanzen konnten nicht geladen werden.", 500);
   }
 
-  Future<void> addRoom(String roomName) async {
+  Future<void> addRoom(String roomName, String roomLocation) async {
     final response = await http.post(Uri.parse(Constants.apiUrlRooms),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({'roomName': roomName}
-      ),
+      body: json.encode({
+        'roomName': roomName,
+        'roomLocation': roomLocation
+      }),
     );
 
     if (response.statusCode != 201) {
@@ -62,6 +66,7 @@ class RoomService {
     );
 
     if (response.statusCode == 201 || response.statusCode == 200) {
+      await taskProvider.createPlantTasks();
       return Plant.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to create plant');

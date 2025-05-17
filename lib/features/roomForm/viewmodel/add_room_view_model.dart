@@ -8,6 +8,7 @@ class AddRoomViewModel extends ChangeNotifier {
   final bool isEditing;
   final RoomService roomService;
   String? newRoomName;
+  String? roomLocation;
 
   AddRoomViewModel({
     this.initialRoom,
@@ -15,15 +16,11 @@ class AddRoomViewModel extends ChangeNotifier {
     required this.roomService
   });
 
-  /*bool roomNameExists(String roomName) {
-    return roomProvider.roomExists(roomName);
-  }*/
-
   void saveForm(){
     if(isEditing){
       // ToDo is Editing
     } else {
-      roomService.addRoom(newRoomName!);
+      roomService.addRoom(newRoomName!, roomLocation!);
     }
   }
 
@@ -38,17 +35,14 @@ class AddRoomViewModel extends ChangeNotifier {
   }
 
   Future<String?> validateForm(String? newRoomName) async {
-    print("Validating: $newRoomName");
 
     if (!newRoomIsValid(newRoomName)) {
-      print("Bitte gib einen Raumnamen ein");
       return "Bitte gib einen Raumnamen ein";
     }
 
     try {
       final rooms = await RoomService.getAllRooms();
       final exists = rooms.any((room) => room.roomName.toLowerCase() == newRoomName!.trim().toLowerCase());
-      print("Testet ob es exisitet");
       if (exists) {
         return "Ein Raum mit diesem Namen existiert bereits.";
       }
