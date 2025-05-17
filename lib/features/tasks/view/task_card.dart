@@ -1,12 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-
-import 'package:botanicare/core/services/task_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../../../core/models/plant.dart';
-import '../../../core/models/task.dart';
 import '../../../core/services/task_service.dart';
 
 class TaskCard extends StatefulWidget {

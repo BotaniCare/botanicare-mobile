@@ -8,7 +8,6 @@ import '../models/room.dart';
 import '../models/task.dart';
 
 class TaskService {
-
   Future<List<Task>> getTaskFromPlant(int plantId) async {
     final response = await http.get(
       Uri.parse("${Constants.baseURL}/plants/$plantId/tasks"),
@@ -30,7 +29,9 @@ class TaskService {
     //loop through each room to get their name
     for (Room room in roomList) {
       //get all Plants of the room
-      List<Plant> plantList = await roomService.getAllPlantsFromRoom(room.roomName);
+      List<Plant> plantList = await roomService.getAllPlantsFromRoom(
+        room.roomName,
+      );
       List<Task> tasksOfRoom = [];
 
       //get the task of the each plant inside the room
@@ -40,10 +41,7 @@ class TaskService {
       }
 
       //link room to tasks
-      roomWithTasks.add({
-        'room': room,
-        'tasks': tasksOfRoom,
-      });
+      roomWithTasks.add({'room': room, 'tasks': tasksOfRoom});
     }
 
     return roomWithTasks;
@@ -61,7 +59,7 @@ class TaskService {
     }
   }
 
-  Future <void> createPlantTask() async {
+  Future<void> createPlantTask() async {
     final roomService = RoomService();
     try {
       List<Room> roomList = await roomService.getAllRooms();
@@ -69,7 +67,9 @@ class TaskService {
       //loop through all the rooms to get each room name
       for (Room room in roomList) {
         //pass room name to getAllPlantsFromRoom
-        List<Plant> plantList = await roomService.getAllPlantsFromRoom(room.roomName);
+        List<Plant> plantList = await roomService.getAllPlantsFromRoom(
+          room.roomName,
+        );
 
         //loop through all plants in room to get plant id and to check isWatered
         for (Plant plant in plantList) {
@@ -78,7 +78,9 @@ class TaskService {
             //pass plant id to getTaskFromPlant
             List<Task> taskList = await getTaskFromPlant(plant.id);
             //check for any task with condition: plant id of task is the same as plant id
-            bool isTaskAlreadyCreated = taskList.any((task) => task.plant.id == plant.id);
+            bool isTaskAlreadyCreated = taskList.any(
+              (task) => task.plant.id == plant.id,
+            );
             //create task with the plant id only if not created yet
             if (!isTaskAlreadyCreated) {
               Task task = Task(description: "Gieß mich!", plant: plant);
@@ -95,7 +97,9 @@ class TaskService {
   }
 
   Future<void> deleteTask(int plantId, int taskId) async {
-    final response = await http.delete(Uri.parse("${Constants.baseURL}/plants/$plantId/tasks/$taskId"));
+    final response = await http.delete(
+      Uri.parse("${Constants.baseURL}/plants/$plantId/tasks/$taskId"),
+    );
     if (response.statusCode != 200 && response.statusCode != 204) {
       throw Exception("Aufgabe könnte nicht gelöscht werden.");
     }
