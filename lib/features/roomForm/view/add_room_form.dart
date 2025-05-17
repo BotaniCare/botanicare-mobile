@@ -1,4 +1,3 @@
-import 'package:botanicare/core/services/room_service.dart';
 import 'package:botanicare/shared/ui/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +43,20 @@ class _AddRoomFormState extends State<AddRoomForm> {
                 },
                 onSaved: (String? value) {
                   vm.newRoomName = value;
+                },
+              ),
+              const SizedBox(height: 24),
+              TextFormField(
+                initialValue: vm.isEditing ? vm.initialRoom!.roomLocation : "",
+                decoration: InputDecoration(labelText: "Ort des Raumes eingeben"),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Bitte einen Ortnamen eingeben.";
+                  }
+                  return null;
+                },
+                onSaved: (String? value) {
+                  vm.roomLocation = value;
                 },
               ),
               const SizedBox(height: 24),
