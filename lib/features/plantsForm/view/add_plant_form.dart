@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/models/room.dart';
 import '../viewmodel/add_plant_view_model.dart';
 
 class AddPlantScreen extends StatefulWidget {
@@ -63,7 +61,6 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     }
   }
 
-
   void _showSnackBar(
       BuildContext context,
       String message, {
@@ -98,11 +95,23 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 'Name',
                 initialValue: vm.isEditing ? vm.plant.name : '',
                 onSaved: vm.updateName,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Bitte einen Pflanzennamen ein.";
+                    }
+                    return null;
+                  },
               ),
               _buildTextField(
                 'Art der Pflanze',
                 initialValue: vm.isEditing ? vm.plant.type : '',
                 onChanged: vm.updateType,
+                validator:  (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Bitte einen Pflanzenart eingeben.";
+                  }
+                  return null;
+                },
               ),
               if(!vm.isEditing)
                 _buildDropdown(
@@ -195,58 +204,14 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
         String? initialValue,
         void Function(String)? onChanged,
         void Function(String)? onSaved,
+        String? Function(String?)? validator,
       }) {
     return TextFormField(
       initialValue: initialValue,
       decoration: InputDecoration(labelText: label),
+      validator: validator,
       onSaved: onSaved != null ? (val) => onSaved(val!) : null,
       onChanged: onChanged,
-    );
-  }
-
-  Widget _buildAutocomplete(
-      BuildContext context, {
-        required String label,
-        String? hint,
-        required List<String> options,
-        required TextEditingController controller,
-        required void Function(String) onSelected,
-        required void Function(String) onSaved,
-      }) {
-    return Autocomplete<String>(
-      optionsBuilder:
-          (textEditingValue) => options.where(
-            (option) => option.toLowerCase().contains(
-          textEditingValue.text.toLowerCase(),
-        ),
-      ),
-      onSelected: onSelected,
-      fieldViewBuilder: (
-          context,
-          fieldController,
-          focusNode,
-          onEditingComplete,
-          ) {
-        fieldController.text = controller.text;
-        fieldController.selection = TextSelection.fromPosition(
-          TextPosition(offset: fieldController.text.length),
-        );
-        fieldController.addListener(
-              () => controller.text = fieldController.text,
-        );
-
-        return TextFormField(
-          controller: fieldController,
-          focusNode: focusNode,
-          decoration: InputDecoration(labelText: label, hintText: hint),
-          onEditingComplete: onEditingComplete,
-          onSaved: (val) {
-            if (val != null) {
-              onSaved(val);
-            }
-          },
-        );
-      },
     );
   }
 

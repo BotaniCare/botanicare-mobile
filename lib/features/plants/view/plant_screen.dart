@@ -33,7 +33,6 @@ class PlantScreen extends StatelessWidget {
             return ListView.builder(
               itemCount: plants.length,
               itemBuilder: (context, index) {
-                final post = plants[index];
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
