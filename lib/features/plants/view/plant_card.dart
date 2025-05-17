@@ -32,11 +32,15 @@ class PlantCard extends StatelessWidget {
               bottomLeft: Radius.circular(8),
             ),
             child:
-                plant.image == null
-                    ? Center(child: Text("Kein Bild gefunden"))
-                    : Image.memory(
+                plant.image != null
+                    ? Image.memory(
                       base64.decode(plant.image!.bytes),
                       fit: BoxFit.cover, // Optional
+                    )
+                    : Icon(
+                      Icons.image_not_supported_outlined,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
           ),
           Expanded(
