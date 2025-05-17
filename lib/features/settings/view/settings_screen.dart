@@ -1,4 +1,3 @@
-import 'package:botanicare/features/settings/view/settings_location.dart';
 import 'package:botanicare/features/settings/view/settings_notification.dart';
 import 'package:botanicare/features/settings/view/settings_preferences.dart';
 import 'package:botanicare/shared/ui/app_info.dart';
@@ -39,12 +38,6 @@ class SettingsScreen extends StatelessWidget {
                 title: Text('Benachrichtigungen'),
                 subtitle: Text('App- & Systembenachrichtigungen'),
                 leading: Icon(Icons.notifications_none_rounded),
-              ),
-              ControlNavigator.page(
-                SettingsLocation(),
-                title: Text('Standort'),
-                subtitle: Text('Standortdienste & Berechtigungen'),
-                leading: Icon(Icons.location_on),
               ),
               ControlNavigator.page(
                 SettingsPreferences(),

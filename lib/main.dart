@@ -15,8 +15,10 @@ import 'core/services/plant_provider.dart';
 import 'data/local/hive_helper.dart';
 import 'data/local/models/theme.dart' as local_theme;
 
-final GlobalKey<NavigatorState> navigatorStateRoom = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> navigatorStatePlants = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorStateRoom =
+    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorStatePlants =
+    GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,43 +35,32 @@ void main() async {
 
   final notificationNotifier = await NotificationNotifier.create();
 
-  /*runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeNotifier(
-        initialMode: savedTheme.themeMode,
-        initialContrast: savedTheme.contrastLevel,
-        themeBox: themeBox,
-      ),
-      child: const BotaniCareMobileApp(),
-    )
-  );*/
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeNotifier>(
-          create: (_) => ThemeNotifier(
-            initialMode: savedTheme.themeMode,
-            initialContrast: savedTheme.contrastLevel,
-            themeBox: themeBox,
-          ),
+          create:
+              (_) => ThemeNotifier(
+                initialMode: savedTheme.themeMode,
+                initialContrast: savedTheme.contrastLevel,
+                themeBox: themeBox,
+              ),
         ),
 
         ChangeNotifierProvider<NotificationNotifier>.value(
           value: notificationNotifier,
         ),
 
-        ChangeNotifierProvider<TaskScreenViewModel>(
-          create: (_) => TaskScreenViewModel(),
-        ),
-        
+        ChangeNotifierProvider(create: (context) => TaskProvider()),
+
         ChangeNotifierProvider(create: (context) => PlantProvider()),
-        
+
         ChangeNotifierProvider(create: (context) => RoomProvider()),
-        
+
         ChangeNotifierProvider(create: (context) => TaskProvider()),
       ],
       child: const BotaniCareMobileApp(),
-    )
+    ),
   );
 }
 
@@ -78,29 +69,19 @@ class BotaniCareMobileApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Consumer<ThemeNotifier>(
-    //   builder: (context, themeNotifier, child) {
-        // Listen to ThemeNotifier to rebuild on themeMode changes:
-        final themeNotifier = context.watch<ThemeNotifier>();
+    // Listen to ThemeNotifier to rebuild on themeMode changes:
+    final themeNotifier = context.watch<ThemeNotifier>();
 
-        // Use with Google Fonts package to use downloadable fonts
-        TextTheme textTheme = createTextTheme(context, "Inter Tight", "Inter");
-        MaterialTheme theme = MaterialTheme(textTheme);
-        return MaterialApp(
-          title: Constants.appTitle,
-          themeMode: themeNotifier.effectiveThemeMode,
-          theme: theme.light(),
-          darkTheme: theme.dark(),
-          home: const Scaffold(body: BotaniCareHome()),
-          /*home: MultiProvider(
-            providers: [
-              ChangeNotifierProvider(create: (context) => TaskScreenViewModel()),
-            ],
-            child: const Scaffold(body: BotaniCareHome()),
-          ),*/
-        );
-    //   },
-    // );
+    // Use with Google Fonts package to use downloadable fonts
+    TextTheme textTheme = createTextTheme(context, "Inter Tight", "Inter");
+    MaterialTheme theme = MaterialTheme(textTheme);
+    return MaterialApp(
+      title: Constants.appTitle,
+      themeMode: themeNotifier.effectiveThemeMode,
+      theme: theme.light(),
+      darkTheme: theme.dark(),
+      home: const Scaffold(body: BotaniCareHome()),
+    );
   }
 }
 
@@ -118,7 +99,6 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
   Widget build(BuildContext context) {
     final List<Widget> pages = [
       TasksScreen(),
-      //pass navigator state
       PlantSelectionScreen(navigatorStatePlant: navigatorStatePlants),
       RoomScreen(navigatorStateRoom: navigatorStateRoom),
       SettingsScreen(),
