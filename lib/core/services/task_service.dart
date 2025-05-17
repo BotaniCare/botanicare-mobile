@@ -58,7 +58,6 @@ class TaskService {
   }
 
   static Future<void> createPlantTask() async {
-    final roomService = RoomService();
     try {
       List<Room> roomList = await RoomService.getAllRooms();
 

@@ -16,6 +16,7 @@ class Task {
   }
 
   Map<String, dynamic> toJson() {
-    return {'description': description, 'plant': plant.toJson()};
+                                        //might have to change it later
+    return {'description': description, 'plant': plant.toJsonEditing()};
   }
 }

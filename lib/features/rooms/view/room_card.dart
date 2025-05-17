@@ -70,78 +70,101 @@ class RoomCard extends StatelessWidget {
                     padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
                     child: ElevatedButton(
                       onPressed: () async {
-                        final confirmDeletion = await showDialog<bool>(
-                          context: context,
-                          builder:
-                              (con) =>
-                              AlertDialog(
-                                title: Text(
-                                  Constants.alertDialogTitle.replaceFirst(
-                                      "{}", room.roomName),
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                    Theme
-                                        .of(context)
-                                        .colorScheme
-                                        .primary,
+                        if(room.plantList.isNotEmpty){
+                          final confirmDeletion = await showDialog<bool>(
+                            context: context,
+                            builder:
+                                (con) =>
+                                AlertDialog(
+                                  title: Text(
+                                    Constants.alertDialogTitle.replaceFirst(
+                                        "{}", room.roomName),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                      Theme
+                                          .of(context)
+                                          .colorScheme
+                                          .primary,
+                                    ),
                                   ),
+                                  content: Text(
+                                    Constants.alertDialogContent.replaceFirst(
+                                      "{}",
+                                      room.roomName,
+                                    ),
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  actions: [
+                                    Row(
+                                      children: [
+                                        TextButton(
+                                          onPressed:
+                                              () => Navigator.pop(con, false),
+                                          child: Text(Constants.cancelDeletion),
+                                        ),
+                                        TextButton(
+                                          onPressed:
+                                              () => Navigator.pop(con, true),
+                                          child: Text(
+                                              Constants.confirmRoomDeletion),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
+                          );
+
+                          if (confirmDeletion == true && context.mounted) {
+                            final RoomService roomService= RoomService();
+                            roomService.deleteRoom(room.roomName);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
                                 content: Text(
-                                  Constants.alertDialogContent.replaceFirst(
-                                    "{}",
-                                    room.roomName,
-                                  ),
-                                  style: TextStyle(fontSize: 14),
+                                  Constants.deletionSnackBarMessage.replaceFirst(
+                                      "{}", room.roomName),
                                 ),
-                                actions: [
-                                  Row(
-                                    children: [
-                                      TextButton(
-                                        onPressed:
-                                            () => Navigator.pop(con, false),
-                                        child: Text(Constants.cancelDeletion),
-                                      ),
-                                      TextButton(
-                                        onPressed:
-                                            () => Navigator.pop(con, true),
-                                        child: Text(
-                                            Constants.confirmRoomDeletion),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                behavior: SnackBarBehavior.floating,
+                                duration: const Duration(milliseconds: 450),
                               ),
-                        );
-
-                        if (confirmDeletion == true && context.mounted) {
-                          final RoomService roomService= RoomService();
-                          roomService.deleteRoom(room.roomName);
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            );
+                          }
+                        } else {
+                          await showDialog<void>(
+                            context: context,
+                            builder: (con) => AlertDialog(
+                              title: Text(
+                                "${room.roomName} kann nicht gelöscht werden",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(con).colorScheme.primary,
+                                ),
+                              ),
                               content: Text(
-                                Constants.deletionSnackBarMessage.replaceFirst(
-                                    "{}", room.roomName),
+                                "Bitte lösche erst die Pflanzen in ${room.roomName}, um diesen Raum löschen zu können",
+                                style: TextStyle(fontSize: 14),
                               ),
-                              behavior: SnackBarBehavior.floating,
-                              duration: const Duration(milliseconds: 450),
+                              actions: [
+                                Row(
+                                  children: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(con),
+                                      child: Text("Verstanden"),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           );
                         }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
-                        foregroundColor:
-                        Theme
-                            .of(context)
-                            .colorScheme
-                            .onPrimary,
-                        backgroundColor: Theme
-                            .of(context)
-                            .colorScheme
-                            .primary,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: (room.plantList.isEmpty) ? Theme.of(context).colorScheme.primary : Colors.grey.shade400,
                         padding: EdgeInsets.all(10),
                       ),
                       child: Icon(Icons.delete_forever, size: 23),

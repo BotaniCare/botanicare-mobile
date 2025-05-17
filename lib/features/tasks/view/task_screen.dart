@@ -4,6 +4,7 @@ import 'package:botanicare/features/tasks/view/task_card.dart';
 import 'package:flutter/material.dart';
 import '../../../core/models/room.dart';
 import '../../../core/models/task.dart';
+import '../../../shared/ui/notification_text.dart';
 
 class TaskScreen extends StatefulWidget {
   const TaskScreen({super.key});
@@ -48,6 +49,15 @@ class _TaskScreenState extends State<TaskScreen> {
           }
 
           final roomWithTaskList = snapshot.data!;
+
+          //get only tasks of room
+          final taskList = roomWithTaskList.expand((entry) => entry['task'] as List<Task>).toList();
+          if (taskList.isEmpty) {
+            NotificationText(text: Constants.noTasks);
+            return Center(
+              child: Text(Constants.noTasks),
+            );
+          }
 
           return ListView.builder(
             itemCount: roomWithTaskList.length,

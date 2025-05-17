@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
+import '../../../core/models/room.dart';
 import '../viewmodel/add_plant_view_model.dart';
 
 class AddPlantScreen extends StatefulWidget {
@@ -13,19 +17,12 @@ class AddPlantScreen extends StatefulWidget {
 
 class _AddPlantScreenState extends State<AddPlantScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _roomController;
 
   @override
   void initState() {
     super.initState();
     final vm = Provider.of<AddPlantViewModel>(context, listen: false);
     vm.loadRooms();
-  }
-
-  @override
-  void dispose() {
-    _roomController.dispose();
-    super.dispose();
   }
 
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
@@ -39,7 +36,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   }
 
 
-  void _saveForm(BuildContext context) {
+  Future<void> _saveForm(BuildContext context) async {
     final vm = context.read<AddPlantViewModel>();
 
     _formKey.currentState!.save();
@@ -50,17 +47,22 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
         return;
       }
 
-      vm.save();
+      final success = await vm.save();
 
-      _showSnackBar(
-        context,
-        vm.isEditing
-            ? 'Änderungen erfolgreich gespeichert! 🎉'
-            : 'Pflanze erfolgreich gespeichert! 🎉',
-      );
-      Navigator.pop(context, true);
+      if (success) {
+        _showSnackBar(
+          context,
+          vm.isEditing
+              ? 'Änderungen erfolgreich gespeichert! 🎉'
+              : 'Pflanze erfolgreich gespeichert! 🎉',
+        );
+        Navigator.pop(context, true);
+      } else {
+        _showSnackBar(context, 'Fehler beim Speichern der Pflanze ❌', isError: true);
+      }
     }
   }
+
 
   void _showSnackBar(
       BuildContext context,

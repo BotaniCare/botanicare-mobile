@@ -15,13 +15,4 @@ class Room {
       plantList: (json['plants'] as List).map((plant) => Plant.fromJson(plant)).toList(),
     );
   }
-
-  //converting Dart object to Json (Map)
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'roomName': roomName,
-      'plants': plantList.map((plant) => plant.toJson()).toList()
-    };
-  }
 }

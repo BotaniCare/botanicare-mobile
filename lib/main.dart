@@ -75,6 +75,12 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Theme.of(context).colorScheme.secondary,
         onTap: (index) {
+          //if navigation bar item is plant
+          if (index == 1) {
+            navigatorStatePlants.currentState?.popUntil(
+                  (route) => route.isFirst,
+            ); //navigate back to the plant screen
+          }
           //if navigation bar item is room
           if (index == 2) {
             navigatorStateRoom.currentState?.popUntil(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:botanicare/constants.dart';
 import 'package:botanicare/core/exceptions/server_exception.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/plant.dart';
 import '../models/room.dart';
@@ -44,15 +45,27 @@ class RoomService {
   Future<void> addRoom(String roomName) async {
     final response = await http.post(Uri.parse(Constants.apiUrlRooms),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({'roomName': roomName}),
+      body: json.encode({'roomName': roomName}
+      ),
     );
 
     if (response.statusCode != 201) {
       throw ServerException("Raum konnte nicht erstellt werden", 500);
     }
-    print("Status: ${response.statusCode}");
-    print("Body: ${response.body}");
+  }
 
+  static Future<Plant> createPlant(Plant plant, String roomName) async {
+    final response = await http.post(
+      Uri.parse('${Constants.apiUrlRooms}/$roomName/plants/'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(plant.toJsonAdding()),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return Plant.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to create plant');
+    }
   }
 
   Future<void> deleteRoom(String roomName) async {

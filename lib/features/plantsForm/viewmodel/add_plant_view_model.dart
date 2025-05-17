@@ -1,16 +1,14 @@
-import 'dart:io';
 import 'package:botanicare/core/models/image.dart';
 import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
-
 import '../../../core/models/plant.dart';
-import '../../../core/services/plant_provider.dart';
 import '../../../core/models/room.dart';
-import '../../../core/services/room_provider.dart';
+import '../../../core/services/plant_service.dart';
 
 class AddPlantViewModel extends ChangeNotifier {
   final bool isEditing;
   final RoomService roomService;
+  final PlantService plantService;
 
   // Internal state
   late Plant _plant;
@@ -22,20 +20,37 @@ class AddPlantViewModel extends ChangeNotifier {
     required this.isEditing,
     required Plant initialPlant,
     required this.roomService,
+    required this.plantService,
+    String? roomName,
   }) {
     _plant = initialPlant;
     if (_plant.isWatered) {
       isWatered = "Ja";
     }
     isWatered = "Nein";
+    if (roomName != null) {
+      this.roomName = roomName; // initialize if provided
+    }
   }
 
   Plant get plant => _plant;
 
   Future<void> loadRooms() async {
     rooms = await RoomService.getAllRooms();
-    roomName = rooms.first.roomName;
+    if (!_isRoomNameInitialized()) {
+      roomName = rooms.first.roomName;
+    }
     notifyListeners();
+  }
+
+  bool _isRoomNameInitialized() {
+    try {
+      // Access it to force a runtime error if uninitialized
+      roomName;
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   void updateIsWatered(String watered) {
@@ -93,12 +108,18 @@ class AddPlantViewModel extends ChangeNotifier {
     return null; // no error
   }
 
-  void save() {
-    if (isEditing) {
-      // TODO Api: update Plant
-    } else {
-      // TODO api add Plant
+  Future<bool> save() async {
+    try {
+      if (isEditing) {
+        await PlantService.updatePlant(plant);
+      } else {
+        await RoomService.createPlant(plant, roomName);
+      }
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
     }
-    notifyListeners();
   }
+
 }

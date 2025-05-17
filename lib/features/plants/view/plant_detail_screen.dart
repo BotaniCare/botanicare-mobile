@@ -1,14 +1,19 @@
+import 'dart:convert';
+
 import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/models/plant.dart';
+import '../../../core/services/plant_service.dart';
+import 'mini_detail_card.dart';
 import '../../plantsForm/view/add_plant_form.dart';
 import '../../plantsForm/viewmodel/add_plant_view_model.dart';
-import 'mini_detail_card.dart';
 
 
 class PlantDetailScreen extends StatelessWidget {
   final RoomService roomService = RoomService();
+  final PlantService plantService = PlantService();
   PlantDetailScreen({super.key, required this.plant});
 
   final Plant plant;
@@ -25,9 +30,7 @@ class PlantDetailScreen extends StatelessWidget {
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(
-                        "https://cdn.pixabay.com/photo/2023/09/15/12/43/living-room-8254772_1280.jpg",
-                      ),
+                      image: MemoryImage(base64.decode(plant.image!.bytes)),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -54,6 +57,7 @@ class PlantDetailScreen extends StatelessWidget {
                               isEditing: true,
                               initialPlant: plant,
                               roomService: roomService,
+                              plantService: plantService,
                             ),
                             child: const AddPlantScreen(),
                           );

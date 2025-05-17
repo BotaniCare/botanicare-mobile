@@ -6,8 +6,8 @@ import 'package:botanicare/core/models/task.dart';
 List<Plant> plantFromJson(String str) =>
     List<Plant>.from(json.decode(str).map((x) => Plant.fromJson(x)));
 
-String plantToJson(List<Plant> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String plantToJsonAdding(List<Plant> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJsonAdding())));
 
 class Plant {
   int id;
@@ -40,14 +40,22 @@ class Plant {
     image: json['plantPicture'],
   );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJsonEditing() => {
     'id': id,
     'name': name,
     'type': type,
     'waterNeed': waterNeed,
     'sunlight': sunLight,
     'isWatered': isWatered,
-    'plantPicture': image?.toJson(),
+    'plantPicture': image?.toJsonEditing(name),
+  };
+
+  Map<String, dynamic> toJsonAdding() => {
+    'name': name,
+    'type': type,
+    'waterNeed': waterNeed,
+    'sunlight': sunLight,
+    'isWatered': isWatered,
+    'plantPicture': image?.toJsonAdding(name),
   };
 }
-

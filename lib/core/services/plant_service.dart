@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import '../../constants.dart';
 import '../models/plant.dart';
 
@@ -26,25 +28,11 @@ class PlantService {
     }
   }
 
-  static Future<Plant> createPlant(Plant plant, String roomName) async {
-    final response = await http.post(
-      Uri.parse('${Constants.apiUrlRooms}/$roomName/plants/'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(plant.toJson()),
-    );
-
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      return Plant.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to create plant');
-    }
-  }
-
   static Future<void> updatePlant(Plant plant) async {
     final response = await http.put(
       Uri.parse('${Constants.apiUrlPlants}/${plant.id}'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(plant.toJson()),
+      body: jsonEncode(plant.toJsonEditing()),
     );
 
     if (response.statusCode != 200) {
