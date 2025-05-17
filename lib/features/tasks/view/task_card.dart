@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../../../constants.dart';
@@ -39,12 +40,19 @@ class TaskCardState extends State<TaskCard> {
                 topLeft: Radius.circular(8),
                 bottomLeft: Radius.circular(8),
               ),
-              child: Image.memory(
-                widget.plant.image as Uint8List,
-                width: 90,
-                height: 90,
-                fit: BoxFit.cover,
-              ),
+              child:
+                  widget.plant.image != null
+                      ? Image.memory(
+                        base64.decode(widget.plant.image!.bytes),
+                        width: 90,
+                        height: 90,
+                        fit: BoxFit.cover,
+                      )
+                      : Icon(
+                        Icons.image_not_supported_outlined,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
             ),
             Expanded(
               child: Padding(
