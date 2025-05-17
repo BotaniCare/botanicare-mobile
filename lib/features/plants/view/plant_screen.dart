@@ -4,7 +4,6 @@ import 'package:botanicare/features/plants/view/plant_detail_screen.dart';
 import 'package:botanicare/shared/ui/notification_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../constants.dart';
 import '../../../core/models/plant.dart';
 import '../../../core/services/plant_service.dart';

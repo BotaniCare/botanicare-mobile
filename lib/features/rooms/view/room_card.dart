@@ -1,12 +1,8 @@
 import 'package:botanicare/core/services/room_service.dart';
 import 'package:botanicare/features/rooms/view/room_display_plant_screen.dart';
-import 'package:botanicare/core/services/room_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../../../constants.dart';
 import '../../../core/models/room.dart';
-import '../../../core/services/plant_provider.dart';
 
 class RoomCard extends StatelessWidget {
   final Room room;
