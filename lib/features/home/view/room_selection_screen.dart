@@ -1,25 +1,48 @@
 import 'package:flutter/material.dart';
-
-import '../widgets/room_card.dart';
+import 'package:provider/provider.dart';
+import '../../../constants.dart';
+import '../../../core/services/room_provider.dart';
+import '../../rooms/view/room_card.dart';
 
 class RoomSelectionScreen extends StatelessWidget {
   const RoomSelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final roomProvider = Provider.of<RoomProvider>(context, listen: true);
+    final roomList = roomProvider.rooms;
+
     return Scaffold(
+      appBar: AppBar(title: Text(Constants.roomScreenTitle)),
       body: ListView(
         children: [
-          RoomCard(
-            roomName: "Wohnzimmer",
-            imageUrl:
-                "https://cdn.pixabay.com/photo/2016/09/19/17/20/home-1680800_1280.jpg",
+          ...roomList.map(
+            (room) => RoomCard(
+              room: room,
+              imagePath:
+                  room.roomName.toLowerCase() ==
+                          Constants.livingroom.toLowerCase()
+                      ? Constants.livingroomImage
+                      : room.roomName.toLowerCase() ==
+                          Constants.bedroom.toLowerCase()
+                      ? Constants.bedroomImage
+                      : room.roomName.toLowerCase() ==
+                          Constants.kitchen.toLowerCase()
+                      ? Constants.kitchenImage
+                      : room.roomName.toLowerCase() ==
+                          Constants.office.toLowerCase()
+                      ? Constants.officeImage
+                      : room.roomName.toLowerCase() ==
+                          Constants.bathroom.toLowerCase()
+                      ? Constants.bathroomImage
+                      : room.roomName.toLowerCase() ==
+                          Constants.balcony.toLowerCase()
+                      ? Constants.balconyImage
+                      : Constants.defaultImage,
+            ),
           ),
-          RoomCard(
-            roomName: "Küche",
-            imageUrl:
-                "https://cdn.pixabay.com/photo/2024/12/24/10/04/kitchen-9288111_1280.jpg",
-          ),
+          //bottom margin to prevent actionButton overlap
+          SizedBox(height: 73),
         ],
       ),
     );

@@ -1,20 +1,22 @@
-import 'package:botanicare/features/home/viewmodel/task_screen_view_model.dart';
 import 'package:botanicare/features/settings/notifier/notifications_notifier.dart';
 import 'package:botanicare/features/settings/notifier/theme_notifier.dart';
+import 'package:botanicare/core/services/room_provider.dart';
+import 'package:botanicare/features/plants/view/plant_selection_screen.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
-import 'package:botanicare/features/home/view/plant_screen.dart';
-import 'package:botanicare/features/home/view/room_screen.dart';
+import 'package:botanicare/features/rooms/view/room_screen.dart';
 import 'package:botanicare/features/settings/view/settings_screen.dart';
-import 'package:botanicare/features/home/view/task_screen.dart';
+import 'package:botanicare/features/tasks/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'constants.dart';
+import 'core/services/task_provider.dart';
+import 'core/services/plant_provider.dart';
 import 'data/local/hive_helper.dart';
 import 'data/local/models/theme.dart' as local_theme;
 
-final GlobalKey<NavigatorState> navigatorStateRoom =
-    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorStateRoom = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorStatePlants = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,6 +61,12 @@ void main() async {
         ChangeNotifierProvider<TaskScreenViewModel>(
           create: (_) => TaskScreenViewModel(),
         ),
+        
+        ChangeNotifierProvider(create: (context) => PlantProvider()),
+        
+        ChangeNotifierProvider(create: (context) => RoomProvider()),
+        
+        ChangeNotifierProvider(create: (context) => TaskProvider()),
       ],
       child: const BotaniCareMobileApp(),
     )
@@ -79,10 +87,10 @@ class BotaniCareMobileApp extends StatelessWidget {
         TextTheme textTheme = createTextTheme(context, "Inter Tight", "Inter");
         MaterialTheme theme = MaterialTheme(textTheme);
         return MaterialApp(
-          title: 'BotaniCare',
+          title: Constants.appTitle,
           themeMode: themeNotifier.effectiveThemeMode,
-          theme: theme.light(), // Your light theme
-          darkTheme: theme.dark(), // Your dark theme
+          theme: theme.light(),
+          darkTheme: theme.dark(),
           home: const Scaffold(body: BotaniCareHome()),
           /*home: MultiProvider(
             providers: [
@@ -106,26 +114,28 @@ class BotaniCareHome extends StatefulWidget {
 class BotaniCareHomeState extends State<BotaniCareHome> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    TasksScreen(),
-    PlantScreen(),
-    RoomScreen(navigatorStateRoom: navigatorStateRoom),
-    SettingsScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<Widget> pages = [
+      TasksScreen(),
+      //pass navigator state
+      PlantSelectionScreen(navigatorStatePlant: navigatorStatePlants),
+      RoomScreen(navigatorStateRoom: navigatorStateRoom),
+      SettingsScreen(),
+    ];
+
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Theme.of(context).colorScheme.secondary,
         onTap: (index) {
+          //if navigation bar item is room
           if (index == 2) {
             navigatorStateRoom.currentState?.popUntil(
               (route) => route.isFirst,
-            ); //um wieder auf erste Seite von Räume zu kommen
+            ); //navigate back to the room selection screen
           }
           setState(() {
             _currentIndex = index;
@@ -134,16 +144,19 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.task_alt),
-            label: 'Aufgaben',
+            label: Constants.taskScreenTitle,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_florist),
-            label: 'Pflanzen',
+            label: Constants.plantScreenTitle,
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Räume'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.weekend),
+            label: Constants.roomScreenTitle,
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Einstellungen',
+            label: Constants.settingsScreenTitle,
           ),
         ],
       ),

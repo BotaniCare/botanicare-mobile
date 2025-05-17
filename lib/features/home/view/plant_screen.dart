@@ -1,73 +1,60 @@
+import 'package:botanicare/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../viewmodel/add_plant_view_model.dart';
-import '../widgets/add_button.dart';
-import '../widgets/plant_card.dart';
-import 'add_plant_form.dart';
+import '../../../core/models/plant.dart';
+import '../../../core/services/plant_provider.dart';
+import '../../../core/services/room_provider.dart';
+import '../../../shared/ui/add_button.dart';
+import '../../plants/view/plant_card.dart';
+import '../../plantsForm/view/add_plant_form.dart';
+import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 
 class PlantScreen extends StatelessWidget {
   const PlantScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final plantProvider = Provider.of<PlantProvider>(context, listen: true);
+    final plantList = plantProvider.plants;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Pflanzen')),
+      appBar: AppBar(title: Text(Constants.plantScreenTitle)),
       body: ListView(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 15),
-              Padding(
-                padding: EdgeInsets.fromLTRB(13, 0, 0, 0),
-                child: Text(
-                  "Wohnzimmer",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              PlantCard(
+          if (plantList.isNotEmpty) ...[
+            ...plantList.map(
+              (plant) => PlantCard(
+                plant: plant,
                 imageUrl:
-                    "https://cdn.pixabay.com/photo/2023/09/15/12/43/living-room-8254772_1280.jpg",
-              ),
-            ],
-          ),
-
-          Padding(
-            padding: EdgeInsets.fromLTRB(13, 0, 0, 0),
-            child: Text(
-              "Küche",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+                    "https://cdn.pixabay.com/photo/2019/06/17/08/24/pastel-4279379_1280.jpg",
               ),
             ),
-          ),
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PlantCard(
-                imageUrl:
-                    "https://cdn.pixabay.com/photo/2012/04/26/21/52/flowerpot-43272_1280.jpg",
-              ),
-            ],
-          ),
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PlantCard(
-                imageUrl:
-                    "https://cdn.pixabay.com/photo/2022/03/07/21/56/tulips-7054614_1280.jpg",
-              ),
-            ],
-          ),
+            //bottom margin to prevent actionButton overlap
+            SizedBox(height: 73),
+          ] else ...[
+            Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.30),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(35),
+                  ),
+                  child: Text(
+                    Constants.noPlantsCreated,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
       floatingActionButton: AddButton(
@@ -75,11 +62,35 @@ class PlantScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder:
-                  (_) => ChangeNotifierProvider(
-                    create: (_) => AddPlantViewModel(),
-                    child: const AddPlantScreen(),
-                  ),
+              builder: (_) {
+                final plantProvider = Provider.of<PlantProvider>(
+                  context,
+                  listen: false,
+                );
+                final roomProvider = Provider.of<RoomProvider>(
+                  context,
+                  listen: false,
+                );
+                return ChangeNotifierProvider(
+                  create:
+                      (_) => AddPlantViewModel(
+                        isEditing: false,
+                        plantProvider: plantProvider,
+                        roomProvider: roomProvider,
+                        initialPlant: Plant(
+                          id: 0,
+                          // will be provided in plantProvider correctly
+                          name: '',
+                          type: 'Monstera',
+                          waterNeed: 'hoch',
+                          sunlight: 'nicht sonnig',
+                          roomId: null,
+                          isWatered: true,
+                        ),
+                      ),
+                  child: const AddPlantScreen(),
+                );
+              },
             ),
           );
         },
