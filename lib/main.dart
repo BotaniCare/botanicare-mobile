@@ -5,7 +5,6 @@ import 'package:botanicare/features/plants/view/plant_selection_screen.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
 import 'package:botanicare/features/rooms/view/room_screen.dart';
-import 'package:botanicare/features/settings/view/settings_screen.dart';
 import 'package:botanicare/features/tasks/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +13,9 @@ import 'core/services/task_provider.dart';
 import 'core/services/plant_provider.dart';
 import 'data/local/hive_helper.dart';
 import 'data/local/models/theme.dart' as local_theme;
+import 'features/settings/view/settings_screen.dart';
 
+//for nested navigation
 final GlobalKey<NavigatorState> navigatorStateRoom =
     GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> navigatorStatePlants =
@@ -53,12 +54,15 @@ void main() async {
 
         ChangeNotifierProvider(create: (context) => TaskProvider()),
 
-//for nested navigation
-final GlobalKey<NavigatorState> navigatorStateRoom = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> navigatorStatePlants = GlobalKey<NavigatorState>();
+        ChangeNotifierProvider(create: (context) => PlantProvider()),
 
-void main() {
-  runApp(const BotaniCareMobileApp());
+        ChangeNotifierProvider(create: (context) => RoomProvider()),
+
+        ChangeNotifierProvider(create: (context) => TaskProvider()),
+      ],
+      child: const BotaniCareMobileApp(),
+    ),
+  );
 }
 
 class BotaniCareMobileApp extends StatelessWidget {
@@ -66,26 +70,18 @@ class BotaniCareMobileApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = View.of(context).platformDispatcher.platformBrightness;
-
-    // Retrieves the default theme for the platform
-    // TextTheme textTheme = Theme.of(context).textTheme;
+    // Listen to ThemeNotifier to rebuild on themeMode changes:
+    final themeNotifier = context.watch<ThemeNotifier>();
 
     // Use with Google Fonts package to use downloadable fonts
     TextTheme textTheme = createTextTheme(context, "Inter Tight", "Inter");
     MaterialTheme theme = MaterialTheme(textTheme);
     return MaterialApp(
       title: Constants.appTitle,
-      themeMode: ThemeMode.system,
-      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => PlantProvider()),
-          ChangeNotifierProvider(create: (context) => RoomProvider()),
-          ChangeNotifierProvider(create: (context) => TaskProvider()),
-        ],
-        child: const Scaffold(body: BotaniCareHome()),
-      ),
+      themeMode: themeNotifier.effectiveThemeMode,
+      theme: theme.light(),
+      darkTheme: theme.dark(),
+      home: const Scaffold(body: BotaniCareHome()),
     );
   }
 }
@@ -117,9 +113,8 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Theme.of(context).colorScheme.secondary,
         onTap: (index) {
-          //if navigation bar item is plant
           if (index == 1) {
-            navigatorStatePlants.currentState?.popUntil(
+            navigatorStateRoom.currentState?.popUntil(
                   (route) => route.isFirst,
             ); //navigate back to the plant screen
           }
