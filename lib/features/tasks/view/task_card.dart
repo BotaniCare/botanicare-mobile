@@ -1,22 +1,29 @@
 import 'dart:async';
-
-import 'package:botanicare/core/services/task_provider.dart';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../../core/models/task.dart';
+import '../../../constants.dart';
+import '../../../core/models/plant.dart';
+import '../../../core/services/task_service.dart';
 
 class TaskCard extends StatefulWidget {
   final String imageUrl;
-  final Task task;
+  final Plant plant;
+  final int taskId;
+  final VoidCallback? onDelete;
 
-  const TaskCard({super.key, required this.imageUrl, required this.task});
+  const TaskCard({
+    super.key,
+    required this.imageUrl,
+    required this.plant,
+    required this.taskId,
+    this.onDelete,
+  });
+
   @override
   TaskCardState createState() => TaskCardState();
 }
 
 class TaskCardState extends State<TaskCard> {
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -32,8 +39,8 @@ class TaskCardState extends State<TaskCard> {
                 topLeft: Radius.circular(8),
                 bottomLeft: Radius.circular(8),
               ),
-              child: Image.network(
-                widget.imageUrl,
+              child: Image.memory(
+                widget.plant.image as Uint8List,
                 width: 90,
                 height: 90,
                 fit: BoxFit.cover,
@@ -46,7 +53,7 @@ class TaskCardState extends State<TaskCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.task.plant.name,
+                      widget.plant.name,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
@@ -57,13 +64,13 @@ class TaskCardState extends State<TaskCard> {
                     Row(
                       children: [
                         Icon(
-                          Icons.calendar_month_outlined,
+                          Icons.grass,
                           size: 16,
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
                         SizedBox(width: 6),
                         Text(
-                          "1x/Woche",
+                          widget.plant.type,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
@@ -80,7 +87,7 @@ class TaskCardState extends State<TaskCard> {
                         ),
                         SizedBox(width: 6),
                         Text(
-                          "200ml",
+                          widget.plant.waterNeed,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
@@ -94,10 +101,29 @@ class TaskCardState extends State<TaskCard> {
             ElevatedButton(
               onPressed: () async {
                 setState(() {
-                  widget.task.plant.isWatered = !widget.task.plant.isWatered;
+                  widget.plant.isWatered = !widget.plant.isWatered;
                 });
-                Provider.of<TaskProvider>(context, listen: false).deleteTask(widget.task.id);
-                await Future.delayed(const Duration(seconds: 1));
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        Constants.wateredPlantSnackBarMessage.replaceFirst(
+                          "{}",
+                          widget.plant.name,
+                        ),
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                }
+
+                await Future.delayed(const Duration(milliseconds: 300));
+
+                await TaskService.deleteTask(widget.plant.id, widget.taskId);
+                if (context.mounted) {
+                  widget.onDelete?.call();
+                }
               },
               style: ElevatedButton.styleFrom(
                 shape: CircleBorder(),
@@ -106,7 +132,9 @@ class TaskCardState extends State<TaskCard> {
                 padding: EdgeInsets.all(16),
               ),
               child: Icon(
-                widget.task.plant.isWatered ? Icons.check_outlined : Icons.water_drop_outlined,
+                widget.plant.isWatered
+                    ? Icons.check_outlined
+                    : Icons.water_drop_outlined,
                 size: 18,
               ),
             ),

@@ -1,7 +1,4 @@
 class Constants {
-  //Api
-  static const String baseURL = "https://botanicare.mauricewoike.com:8443";
-
   //Main
   static const String appTitle = "BotaniCare";
   static const String plantScreenTitle = "Pflanzen";
@@ -10,6 +7,8 @@ class Constants {
   static const String settingsScreenTitle = "Einstellungen";
 
   //Task
+  static const String noTasks = "Alle Pflanzen sind gegossen 🥳";
+  static const String wateredPlantSnackBarMessage = "Du hast {} gegossen 💧";
 
   //Plant
   static const String noPlantsCreated =
@@ -33,6 +32,14 @@ class Constants {
   static const String noRoomsCreated =
       "Füge einen Raum 🛋️ hinzu,\nindem du auf das + unten rechts drückst";
 
+  //Button Dialog
+  static const String saveMessage = "Speichern";
+  static const String saveChangesMessage = "Änderungen speichern";
+
+  //Form Dialog
+  static const String formTitleUpdating = "{} bearbeiten";
+  static const String formTitleAdding = "{} hinzufügen";
+
   //Alert Dialog
   static const String alertDialogTitle = "{} entfernen";
   static const String alertDialogContent = "Willst du {} wirklich löschen?";
@@ -40,4 +47,11 @@ class Constants {
   static const String confirmRoomDeletion = "Raum löschen";
   static const String confirmPlantDeletion = "Pflanze löschen";
   static const String deletionSnackBarMessage = "{} wurde gelöscht 🚮";
+
+  //Api
+  static const String baseURL = "https://botanicare.mauricewoike.com:8443";
+  static const String apiUrlPlants =
+      "https://botanicare.mauricewoike.com:8443/plants";
+  static const String apiUrlRooms =
+      "https://botanicare.mauricewoike.com:8443/rooms";
 }

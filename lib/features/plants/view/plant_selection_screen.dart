@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'plant_screen.dart';
 
 class PlantSelectionScreen extends StatelessWidget {
@@ -13,7 +12,7 @@ class PlantSelectionScreen extends StatelessWidget {
       key: navigatorStatePlant,
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
-          builder: (context) => const PlantScreen(),
+          builder: (context) => PlantScreen(),
         );
       },
     );

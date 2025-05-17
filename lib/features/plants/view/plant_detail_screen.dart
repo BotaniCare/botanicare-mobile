@@ -1,30 +1,25 @@
+import 'dart:convert';
+
+import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/models/plant.dart';
-import '../../../core/services/plant_provider.dart';
-import '../../../core/services/room_provider.dart';
+import '../../../core/services/plant_service.dart';
 import 'mini_detail_card.dart';
 import '../../plantsForm/view/add_plant_form.dart';
 import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 
 
 class PlantDetailScreen extends StatelessWidget {
-  const PlantDetailScreen({super.key, required this.plant});
+  final RoomService roomService = RoomService();
+  final PlantService plantService = PlantService();
+  PlantDetailScreen({super.key, required this.plant});
 
   final Plant plant;
 
   @override
   Widget build(BuildContext context) {
-    final plantProvider = Provider.of<PlantProvider>(
-      context,
-      listen: true,
-    );
-    final roomProvider = Provider.of<RoomProvider>(
-      context,
-      listen: true,
-    );
-
     return Scaffold(
       body: Column(
         children: [
@@ -35,9 +30,7 @@ class PlantDetailScreen extends StatelessWidget {
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(
-                        "https://cdn.pixabay.com/photo/2023/09/15/12/43/living-room-8254772_1280.jpg",
-                      ),
+                      image: MemoryImage(base64.decode(plant.image!.bytes)),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -61,11 +54,11 @@ class PlantDetailScreen extends StatelessWidget {
                           return ChangeNotifierProvider(
                             create:
                                 (_) => AddPlantViewModel(
-                                  isEditing: true,
-                                  plantProvider: plantProvider,
-                                  roomProvider: roomProvider,
-                                  initialPlant: plant,
-                                ),
+                              isEditing: true,
+                              initialPlant: plant,
+                              roomService: roomService,
+                              plantService: plantService,
+                            ),
                             child: const AddPlantScreen(),
                           );
                         },
@@ -117,12 +110,12 @@ class PlantDetailScreen extends StatelessWidget {
                     MiniDetailCard(
                       icon: Icons.sunny,
                       title: "Sonnenlicht",
-                      description: plant.sunlight,
+                      description: plant.sunLight,
                     ),
                     MiniDetailCard(
                       icon: Icons.sensor_door,
                       title: "Raum",
-                      description: roomProvider.getRoomName(plant.roomId),
+                      description: "TODO",
                     ),
                   ],
                 ),

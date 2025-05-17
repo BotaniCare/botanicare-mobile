@@ -1,35 +1,57 @@
-import 'dart:io';
+import 'package:botanicare/core/models/image.dart';
+import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
-
 import '../../../core/models/plant.dart';
-import '../../../core/services/plant_provider.dart';
 import '../../../core/models/room.dart';
-import '../../../core/services/room_provider.dart';
+import '../../../core/services/plant_service.dart';
 
 class AddPlantViewModel extends ChangeNotifier {
-  final PlantProvider plantProvider;
   final bool isEditing;
-  final RoomProvider roomProvider;
+  final RoomService roomService;
+  final PlantService plantService;
 
   // Internal state
   late Plant _plant;
   late String isWatered;
+  List<Room> rooms = [];
+  late String roomName = "";
 
   AddPlantViewModel({
     required this.isEditing,
-    required this.plantProvider,
-    required this.roomProvider,
     required Plant initialPlant,
+    required this.roomService,
+    required this.plantService,
+    String? roomName,
   }) {
     _plant = initialPlant;
     if (_plant.isWatered) {
       isWatered = "Ja";
     }
     isWatered = "Nein";
+    if (roomName != null) {
+      this.roomName = roomName; // initialize if provided
+    }
   }
 
   Plant get plant => _plant;
-  List<Room> get rooms => roomProvider.rooms;
+
+  Future<void> loadRooms() async {
+    rooms = await RoomService.getAllRooms();
+    if (!_isRoomNameInitialized()) {
+      roomName = rooms.first.roomName;
+    }
+    notifyListeners();
+  }
+
+  bool _isRoomNameInitialized() {
+    try {
+      // Access it to force a runtime error if uninitialized
+      roomName;
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 
   void updateIsWatered(String watered) {
     isWatered = watered;
@@ -44,24 +66,8 @@ class AddPlantViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setRoom(int roomId) {
-    _plant.roomId = roomId;
-    notifyListeners();
-  }
-
-  int addRoomIfNew(String room) {
-    return roomProvider.addRoomReturnId(room);
-  }
-
-  void removeRoom(int roomId) {
-    if (_plant.roomId == roomId) {
-      _plant.roomId = null;
-      notifyListeners();
-    }
-  }
-
-  void setImage(File image) {
-    _plant.image = image;
+  void setImage(String image) {
+    _plant.image = PlantImage(id: 0, bytes: image);
     notifyListeners();
   }
 
@@ -81,12 +87,17 @@ class AddPlantViewModel extends ChangeNotifier {
   }
 
   void updateSunlight(String sunlight) {
-    _plant.sunlight = sunlight;
+    _plant.sunLight = sunlight;
     notifyListeners();
   }
 
   void updateType(String type) {
     _plant.type = type;
+    notifyListeners();
+  }
+
+  void updateRoomName(String roomName){
+    this.roomName = roomName;
     notifyListeners();
   }
 
@@ -97,12 +108,18 @@ class AddPlantViewModel extends ChangeNotifier {
     return null; // no error
   }
 
-  void save() {
-    if (isEditing) {
-      plantProvider.updatePlant(_plant);
-    } else {
-      plantProvider.addPlant(_plant);
+  Future<bool> save() async {
+    try {
+      if (isEditing) {
+        await PlantService.updatePlant(plant);
+      } else {
+        await RoomService.createPlant(plant, roomName);
+      }
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
     }
-    notifyListeners();
   }
+
 }

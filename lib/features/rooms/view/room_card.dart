@@ -1,10 +1,8 @@
+import 'package:botanicare/core/services/room_service.dart';
 import 'package:botanicare/features/rooms/view/room_display_plant_screen.dart';
-import 'package:botanicare/core/services/room_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../../../core/models/room.dart';
-import '../../../core/services/plant_provider.dart';
 
 class RoomCard extends StatelessWidget {
   final Room room;
@@ -46,7 +44,7 @@ class RoomCard extends StatelessWidget {
                     alignment: Alignment.topRight,
                     padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: null,
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
                         foregroundColor:
@@ -54,10 +52,7 @@ class RoomCard extends StatelessWidget {
                             .of(context)
                             .colorScheme
                             .onPrimary,
-                        backgroundColor: Theme
-                            .of(context)
-                            .colorScheme
-                            .primary,
+                        backgroundColor: Colors.grey.shade400,
                         padding: EdgeInsets.all(10),
                       ),
                       child: Icon(Icons.edit, size: 23),
@@ -75,81 +70,101 @@ class RoomCard extends StatelessWidget {
                     padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
                     child: ElevatedButton(
                       onPressed: () async {
-                        final confirmDeletion = await showDialog<bool>(
-                          context: context,
-                          builder:
-                              (con) =>
-                              AlertDialog(
-                                title: Text(
-                                  Constants.alertDialogTitle.replaceFirst(
-                                      "{}", room.roomName),
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                    Theme
-                                        .of(context)
-                                        .colorScheme
-                                        .primary,
+                        if(room.plantList.isNotEmpty){
+                          final confirmDeletion = await showDialog<bool>(
+                            context: context,
+                            builder:
+                                (con) =>
+                                AlertDialog(
+                                  title: Text(
+                                    Constants.alertDialogTitle.replaceFirst(
+                                        "{}", room.roomName),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                      Theme
+                                          .of(context)
+                                          .colorScheme
+                                          .primary,
+                                    ),
                                   ),
+                                  content: Text(
+                                    Constants.alertDialogContent.replaceFirst(
+                                      "{}",
+                                      room.roomName,
+                                    ),
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  actions: [
+                                    Row(
+                                      children: [
+                                        TextButton(
+                                          onPressed:
+                                              () => Navigator.pop(con, false),
+                                          child: Text(Constants.cancelDeletion),
+                                        ),
+                                        TextButton(
+                                          onPressed:
+                                              () => Navigator.pop(con, true),
+                                          child: Text(
+                                              Constants.confirmRoomDeletion),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                content: Text(
-                                  Constants.alertDialogContent.replaceFirst(
-                                    "{}",
-                                    room.roomName,
-                                  ),
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                actions: [
-                                  Row(
-                                    children: [
-                                      TextButton(
-                                        onPressed:
-                                            () => Navigator.pop(con, false),
-                                        child: Text(Constants.cancelDeletion),
-                                      ),
-                                      TextButton(
-                                        onPressed:
-                                            () => Navigator.pop(con, true),
-                                        child: Text(
-                                            Constants.confirmRoomDeletion),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                        );
+                          );
 
                           if (confirmDeletion == true && context.mounted) {
-                            final plantProvider = Provider.of<PlantProvider>(context, listen: false);
-                            Provider.of<RoomProvider>(
-                              context,
-                              listen: false,
-                            ).deleteRoom(room.id, plantProvider);
+                            final RoomService roomService= RoomService();
+                            roomService.deleteRoom(room.roomName);
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                Constants.deletionSnackBarMessage.replaceFirst(
-                                    "{}", room.roomName),
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  Constants.deletionSnackBarMessage.replaceFirst(
+                                      "{}", room.roomName),
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                duration: const Duration(milliseconds: 450),
                               ),
-                              behavior: SnackBarBehavior.floating,
-                              duration: const Duration(milliseconds: 450),
+                            );
+                          }
+                        } else {
+                          await showDialog<void>(
+                            context: context,
+                            builder: (con) => AlertDialog(
+                              title: Text(
+                                "${room.roomName} kann nicht gelöscht werden",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(con).colorScheme.primary,
+                                ),
+                              ),
+                              content: Text(
+                                "Bitte lösche erst die Pflanzen in ${room.roomName}, um diesen Raum löschen zu können",
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              actions: [
+                                Row(
+                                  children: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(con),
+                                      child: Text("Verstanden"),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           );
                         }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
-                        foregroundColor:
-                        Theme
-                            .of(context)
-                            .colorScheme
-                            .onPrimary,
-                        backgroundColor: Theme
-                            .of(context)
-                            .colorScheme
-                            .primary,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: (room.plantList.isEmpty) ? Theme.of(context).colorScheme.primary : Colors.grey.shade400,
                         padding: EdgeInsets.all(10),
                       ),
                       child: Icon(Icons.delete_forever, size: 23),

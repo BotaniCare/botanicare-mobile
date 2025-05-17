@@ -1,55 +1,81 @@
 import 'dart:convert';
 import 'package:botanicare/constants.dart';
+import 'package:botanicare/core/exceptions/server_exception.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/plant.dart';
 import '../models/room.dart';
 
 class RoomService {
-  Future<List<Room>> getAllRooms() async {
+  static Future<List<Room>> getAllRooms() async {
     final response = await http.get(Uri.parse("${Constants.baseURL}/rooms"));
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.map((data) => Room.fromJson(data)).toList();
     } else {
-      throw Exception("Räume konnten nicht geladen werden.");
+      throw ServerException("Interner Server Fehler", 500);
     }
   }
 
-  Future<List<Plant>> getAllPlantsFromRoom(String roomName) async {
+  Future<Room?> getRoomByName(String name) async {
+    final response = await http.get(Uri.parse("${Constants.baseURL}/rooms/$name"));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return Room.fromJson(jsonResponse.first);
+    }
+    else if(response.statusCode == 505){
+      throw ServerException("Interner Fehler", 500);
+    }
+    else {
+      throw ServerException("Raum konnte nicht gefunden werden.", 400);
+    }
+  }
+
+  static Future<List<Plant>> getAllPlantsFromRoom(String roomName) async {
     final response = await http.get(
       Uri.parse("${Constants.baseURL}/rooms/$roomName/plants"),
     );
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
-      //TODO: fromJson in Plant
       return jsonResponse.map((data) => Plant.fromJson(data)).toList();
     }
-    throw Exception("Pflanzen konnten nicht geladen werden.");
+    throw ServerException("Pflanzen konnten nicht geladen werden.", 500);
   }
 
   Future<void> addRoom(String roomName) async {
-    //check if roomName is Empty
-    if (roomName.trim().isEmpty) {
-      throw Exception("Ein Raum muss einen Namen haben.");
-    }
-
-    final response = await http.post(
-      Uri.parse("${Constants.baseURL}/rooms"),
+    final response = await http.post(Uri.parse(Constants.apiUrlRooms),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({'roomName': roomName}),
+      body: json.encode({'roomName': roomName}
+      ),
     );
 
     if (response.statusCode != 201) {
-      throw Exception("Raum konnte nicht erstellt werden");
+      throw ServerException("Raum konnte nicht erstellt werden", 500);
+    }
+  }
+
+  static Future<Plant> createPlant(Plant plant, String roomName) async {
+    final response = await http.post(
+      Uri.parse('${Constants.apiUrlRooms}/$roomName/plants/'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(plant.toJsonAdding()),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return Plant.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to create plant');
     }
   }
 
   Future<void> deleteRoom(String roomName) async {
     final response = await http.delete(
-      Uri.parse("${Constants.baseURL}/rooms/$roomName"),
+      Uri.parse("${Constants.apiUrlRooms}/$roomName"),
     );
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      throw Exception("Raum konnte nicht gelöscht werden.");
+    if (response.statusCode == 400) {
+      throw ServerException("Raum konnte gefunden werden", 404);
+    } else if (response.statusCode == 500) {
+      throw ServerException("Interner Server Fehler", 500);
     }
   }
 }

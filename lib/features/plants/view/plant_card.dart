@@ -1,19 +1,22 @@
+import 'dart:convert';
+
 import 'package:botanicare/core/models/plant.dart';
+import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../constants.dart';
+import '../../../core/services/plant_service.dart';
 import '../../plantsForm/view/add_plant_form.dart';
 import '../../../core/services/room_provider.dart';
 import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 import '../../../core/services/plant_provider.dart';
-//import http package
-import 'package:http/http.dart' as http;
 
 class PlantCard extends StatelessWidget {
   final Plant plant;
-  final String imageUrl;
+  final RoomService roomService = RoomService();
+  final PlantService plantService = PlantService();
 
-  const PlantCard({super.key, required this.plant, required this.imageUrl});
+  PlantCard({super.key, required this.plant});
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +32,11 @@ class PlantCard extends StatelessWidget {
               topLeft: Radius.circular(8),
               bottomLeft: Radius.circular(8),
             ),
-            child: Image.network(
-              imageUrl,
-              width: 90,
-              height: 97,
-              fit: BoxFit.cover,
+            child: plant.image == null
+                ? Center(child: Text("Kein Bild gefunden"))
+                : Image.memory(
+              base64.decode(plant.image!.bytes),
+              fit: BoxFit.cover, // Optional
             ),
           ),
           Expanded(
@@ -98,22 +101,13 @@ class PlantCard extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (_) {
-                        final plantProvider = Provider.of<PlantProvider>(
-                          context,
-                          listen: false,
-                        );
-                        final roomProvider = Provider.of<RoomProvider>(
-                          context,
-                          listen: false,
-                        );
                         return ChangeNotifierProvider(
-                          create:
-                              (_) => AddPlantViewModel(
-                                isEditing: true,
-                                plantProvider: plantProvider,
-                                roomProvider: roomProvider,
-                                initialPlant: plant,
-                              ),
+                          create: (_) => AddPlantViewModel(
+                            isEditing: true,
+                            initialPlant: plant,
+                            roomService: roomService,
+                            plantService: plantService,
+                          ),
                           child: const AddPlantScreen(),
                         );
                       },
@@ -136,39 +130,39 @@ class PlantCard extends StatelessWidget {
                     context: context,
                     builder:
                         (con) => AlertDialog(
-                          title: Text(
-                            Constants.alertDialogTitle.replaceFirst(
-                              "{}",
-                              plant.name,
+                      title: Text(
+                        Constants.alertDialogTitle.replaceFirst(
+                          "{}",
+                          plant.name,
+                        ),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      content: Text(
+                        Constants.alertDialogContent.replaceFirst(
+                          "{}",
+                          plant.name,
+                        ),
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      actions: [
+                        Row(
+                          children: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(con, false),
+                              child: Text(Constants.cancelDeletion),
                             ),
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          content: Text(
-                            Constants.alertDialogContent.replaceFirst(
-                              "{}",
-                              plant.name,
-                            ),
-                            style: TextStyle(fontSize: 14),
-                          ),
-                          actions: [
-                            Row(
-                              children: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(con, false),
-                                  child: Text(Constants.cancelDeletion),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(con, true),
-                                  child: Text(Constants.confirmPlantDeletion),
-                                ),
-                              ],
+                            TextButton(
+                              onPressed: () => Navigator.pop(con, true),
+                              child: Text(Constants.confirmPlantDeletion),
                             ),
                           ],
                         ),
+                      ],
+                    ),
                   );
 
                   if (confirmDeletion == true && context.mounted) {

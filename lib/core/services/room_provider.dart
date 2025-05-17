@@ -6,24 +6,16 @@ import '../models/plant.dart';
 
 class RoomProvider extends ChangeNotifier {
   final List<Room> _rooms = [
-    Room(id: 0, roomName: "Wohnzimmer"),
-    Room(id: 1, roomName: "Schlafzimmer"),
-    Room(id: 2, roomName: "Küche"),
+    Room(id: 0, roomName: "Wohnzimmer", plantList: []),
+    Room(id: 1, roomName: "Schlafzimmer", plantList: []),
+    Room(id: 2, roomName: "Küche", plantList: []),
   ];
 
   List<Room> get rooms => _rooms;
 
-  List<Plant> getPlantsByRoom(List<Plant> plants, int roomId) {
-    return plants.where((plant) => plant.roomId == roomId).toList();
-  }
-
-  List<Plant> getPlantsWithNoRoom(List<Plant> plants) {
-    return plants.where((plant) => plant.roomId == null).toList();
-  }
-
   addRoomReturnId(String name){
     if(!roomExists(name)){
-      _rooms.add(Room(id: _rooms.length, roomName: name));
+      _rooms.add(Room(id: _rooms.length, roomName: name, plantList: []));
       notifyListeners();
       return _rooms.last.id;
     }
@@ -31,16 +23,15 @@ class RoomProvider extends ChangeNotifier {
   }
 
   addRoom(String name){
-      if(!roomExists(name)){
-        _rooms.add(Room(id: _rooms.length, roomName: name));
-        notifyListeners();
-      }
+    if(!roomExists(name)){
+      _rooms.add(Room(id: _rooms.length, roomName: name, plantList: []));
+      notifyListeners();
+    }
   }
 
   deleteRoom(int id, PlantProvider plantProvider) {
     _rooms.removeWhere((room) => room.id == id);
     notifyListeners();
-    plantProvider.removeRoomFromPlants(id);
   }
 
   bool roomExists(String roomName) {
@@ -53,7 +44,7 @@ class RoomProvider extends ChangeNotifier {
   }
 
   String getRoomName(int? roomId) {
-      final room = _rooms.where((room) => room.id == roomId).firstOrNull;
-      return room?.roomName ?? "Ohne";
+    final room = _rooms.where((room) => room.id == roomId).firstOrNull;
+    return room?.roomName ?? "Ohne";
   }
 }

@@ -1,8 +1,22 @@
 import 'package:botanicare/core/models/plant.dart';
 
 class Task {
-  int id;
-  Plant plant;
+  final int? id;
+  final String description;
+  final Plant plant;
 
-  Task({ required this.id, required this.plant});
+  Task({this.id, required this.description, required this.plant});
+
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
+      id: json['id'],
+      description: json['description'],
+      plant: Plant.fromJson(json['plant']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+                                        //might have to change it later
+    return {'description': description, 'plant': plant.toJsonEditing()};
+  }
 }
