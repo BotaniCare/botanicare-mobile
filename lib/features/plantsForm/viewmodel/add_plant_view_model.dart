@@ -106,7 +106,7 @@ class AddPlantViewModel extends ChangeNotifier {
   }
 
   String? validateForm() {
-    if (_plant.image == null) return 'Bitte füge ein Bild hinzu.';
+    // if server side validation is needed
     return null; // no error
   }
 

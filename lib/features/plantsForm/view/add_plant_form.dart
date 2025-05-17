@@ -15,6 +15,7 @@ class AddPlantScreen extends StatefulWidget {
 
 class _AddPlantScreenState extends State<AddPlantScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool showImageError = false;
 
   @override
   void initState() {
@@ -38,13 +39,13 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     final vm = context.read<AddPlantViewModel>();
 
     _formKey.currentState!.save();
-    if (_formKey.currentState!.validate()) {
-      final error = vm.validateForm();
-      if (error != null) {
-        _showSnackBar(context, error, isError: true);
-        return;
-      }
+    final error = vm.validateForm();
 
+    setState(() {
+      showImageError = error != null;
+    });
+
+    if (_formKey.currentState!.validate() && error == null) {
       final success = await vm.save();
 
       if (success) {
@@ -58,8 +59,11 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
       } else {
         _showSnackBar(context, 'Fehler beim Speichern der Pflanze ❌', isError: true);
       }
+    } else if (error != null) {
+      _showSnackBar(context, error, isError: true);
     }
   }
+
 
   void _showSnackBar(
       BuildContext context,
@@ -157,6 +161,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
 
   Widget _buildImagePicker(BuildContext context, AddPlantViewModel vm) {
     final hasImage = vm.plant.image != null;
+    final isError = showImageError && !hasImage;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,33 +171,40 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           child: Container(
             height: 180,
             decoration: BoxDecoration(
-              color: hasImage
-                  ? Theme.of(context).colorScheme.onSurfaceVariant
-                  : Theme.of(context).colorScheme.error.withOpacity(0.1),
+              color: isError
+                  ? Theme.of(context).colorScheme.error.withOpacity(0.1)
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: hasImage
-                    ? Theme.of(context).colorScheme.secondary
-                    : Theme.of(context).colorScheme.error,
+                color: isError
+                    ? Theme.of(context).colorScheme.error
+                    : Theme.of(context).colorScheme.secondary,
                 width: 2,
               ),
             ),
             child: hasImage
                 ? ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.memory(base64Decode(vm.plant.image!.bytes), fit: BoxFit.cover),
+              child: Image.memory(
+                base64Decode(vm.plant.image!.bytes),
+                fit: BoxFit.cover,
+              ),
             )
                 : Center(
               child: Text(
                 "Bild hinzufügen",
-                style: TextStyle(color: Theme.of(context).colorScheme.onError),
+                style: TextStyle(
+                  color: isError
+                      ? Theme.of(context).colorScheme.error
+                      : Theme.of(context).colorScheme.onBackground,
+                ),
               ),
             ),
           ),
         ),
-        if (!hasImage)
+        if (isError)
           Padding(
-            padding: EdgeInsets.only(top: 8.0, left: 4),
+            padding: const EdgeInsets.only(top: 8.0, left: 4),
             child: Text(
               "Bitte füge ein Bild hinzu.",
               style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12),
@@ -201,6 +213,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
       ],
     );
   }
+
 
 
   void _showImageSourceSelector(BuildContext context) {
