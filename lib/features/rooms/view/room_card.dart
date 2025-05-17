@@ -70,7 +70,7 @@ class RoomCard extends StatelessWidget {
                     padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
                     child: ElevatedButton(
                       onPressed: () async {
-                        if(room.plantList.isNotEmpty){
+                        if(room.plantList.isEmpty){
                           final confirmDeletion = await showDialog<bool>(
                             context: context,
                             builder:

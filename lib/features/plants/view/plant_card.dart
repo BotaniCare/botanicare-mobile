@@ -5,7 +5,6 @@ import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../constants.dart';
-import '../../../core/services/plant_provider.dart';
 import '../../../core/services/plant_service.dart';
 import '../../plantsForm/view/add_plant_form.dart';
 import '../../plantsForm/viewmodel/add_plant_view_model.dart';
@@ -171,10 +170,7 @@ class PlantCard extends StatelessWidget {
                   );
 
                   if (confirmDeletion == true && context.mounted) {
-                    Provider.of<PlantProvider>(
-                      context,
-                      listen: false,
-                    ).deletePlant(plant.id);
+                    PlantService.deletePlant(plant.id);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(

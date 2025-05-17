@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/models/room.dart';
 import '../viewmodel/add_plant_view_model.dart';
 
 class AddPlantScreen extends StatefulWidget {
@@ -63,7 +61,6 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     }
   }
 
-
   void _showSnackBar(
       BuildContext context,
       String message, {
@@ -98,11 +95,23 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 'Name',
                 initialValue: vm.isEditing ? vm.plant.name : '',
                 onSaved: vm.updateName,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Bitte einen Pflanzennamen ein.";
+                    }
+                    return null;
+                  },
               ),
               _buildTextField(
                 'Art der Pflanze',
                 initialValue: vm.isEditing ? vm.plant.type : '',
                 onChanged: vm.updateType,
+                validator:  (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Bitte einen Pflanzenart eingeben.";
+                  }
+                  return null;
+                },
               ),
               if(!vm.isEditing)
                 _buildDropdown(
@@ -147,25 +156,52 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   }
 
   Widget _buildImagePicker(BuildContext context, AddPlantViewModel vm) {
-    return GestureDetector(
-      onTap: () => _showImageSourceSelector(context),
-      child: Container(
-        height: 180,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Theme.of(context).colorScheme.secondary),
+    final hasImage = vm.plant.image != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () => _showImageSourceSelector(context),
+          child: Container(
+            height: 180,
+            decoration: BoxDecoration(
+              color: hasImage
+                  ? Theme.of(context).colorScheme.onSurfaceVariant
+                  : Theme.of(context).colorScheme.error.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: hasImage
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.error,
+                width: 2,
+              ),
+            ),
+            child: hasImage
+                ? ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.memory(base64Decode(vm.plant.image!.bytes), fit: BoxFit.cover),
+            )
+                : Center(
+              child: Text(
+                "Bild hinzufügen",
+                style: TextStyle(color: Theme.of(context).colorScheme.onError),
+              ),
+            ),
+          ),
         ),
-        child:
-        vm.plant.image != null
-            ? ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.memory(base64Decode(vm.plant.image!.bytes)),
-        )
-            : const Center(child: Text("Bild hinzufügen")),
-      ),
+        if (!hasImage)
+          Padding(
+            padding: EdgeInsets.only(top: 8.0, left: 4),
+            child: Text(
+              "Bitte füge ein Bild hinzu.",
+              style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12),
+            ),
+          ),
+      ],
     );
   }
+
 
   void _showImageSourceSelector(BuildContext context) {
     showModalBottomSheet(
@@ -195,58 +231,14 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
         String? initialValue,
         void Function(String)? onChanged,
         void Function(String)? onSaved,
+        String? Function(String?)? validator,
       }) {
     return TextFormField(
       initialValue: initialValue,
       decoration: InputDecoration(labelText: label),
+      validator: validator,
       onSaved: onSaved != null ? (val) => onSaved(val!) : null,
       onChanged: onChanged,
-    );
-  }
-
-  Widget _buildAutocomplete(
-      BuildContext context, {
-        required String label,
-        String? hint,
-        required List<String> options,
-        required TextEditingController controller,
-        required void Function(String) onSelected,
-        required void Function(String) onSaved,
-      }) {
-    return Autocomplete<String>(
-      optionsBuilder:
-          (textEditingValue) => options.where(
-            (option) => option.toLowerCase().contains(
-          textEditingValue.text.toLowerCase(),
-        ),
-      ),
-      onSelected: onSelected,
-      fieldViewBuilder: (
-          context,
-          fieldController,
-          focusNode,
-          onEditingComplete,
-          ) {
-        fieldController.text = controller.text;
-        fieldController.selection = TextSelection.fromPosition(
-          TextPosition(offset: fieldController.text.length),
-        );
-        fieldController.addListener(
-              () => controller.text = fieldController.text,
-        );
-
-        return TextFormField(
-          controller: fieldController,
-          focusNode: focusNode,
-          decoration: InputDecoration(labelText: label, hintText: hint),
-          onEditingComplete: onEditingComplete,
-          onSaved: (val) {
-            if (val != null) {
-              onSaved(val);
-            }
-          },
-        );
-      },
     );
   }
 
