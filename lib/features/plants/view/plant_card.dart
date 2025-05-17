@@ -5,6 +5,7 @@ import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../constants.dart';
+import '../../../core/services/plant_service.dart';
 import '../../plantsForm/view/add_plant_form.dart';
 import '../../../core/services/room_provider.dart';
 import '../../plantsForm/viewmodel/add_plant_view_model.dart';
@@ -13,6 +14,7 @@ import '../../../core/services/plant_provider.dart';
 class PlantCard extends StatelessWidget {
   final Plant plant;
   final RoomService roomService = RoomService();
+  final PlantService plantService = PlantService();
 
   PlantCard({super.key, required this.plant});
 
@@ -32,7 +34,10 @@ class PlantCard extends StatelessWidget {
             ),
             child: plant.image == null
                 ? Center(child: Text("Kein Bild gefunden"))
-                : Image.memory(base64Decode(plant.image!.bytes)),
+                : Image.memory(
+                    base64.decode(plant.image!.bytes),
+                    fit: BoxFit.cover, // Optional
+            ),
           ),
           Expanded(
             child: Padding(
@@ -96,13 +101,12 @@ class PlantCard extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (_) {
-                        final plantProvider = Provider.of<PlantProvider>(context, listen: false);
-                        final roomProvider = Provider.of<RoomProvider>(context, listen: false);
                         return ChangeNotifierProvider(
                           create: (_) => AddPlantViewModel(
                             isEditing: true,
                             initialPlant: plant,
                             roomService: roomService,
+                            plantService: plantService,
                           ),
                           child: const AddPlantScreen(),
                         );

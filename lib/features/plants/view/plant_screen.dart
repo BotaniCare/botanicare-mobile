@@ -15,6 +15,7 @@ import '../../plantsForm/view/add_plant_form.dart';
 class PlantScreen extends StatelessWidget {
   PlantScreen({super.key});
   final RoomService roomService = RoomService();
+  final PlantService plantService = PlantService();
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +74,7 @@ class PlantScreen extends StatelessWidget {
                           isWatered: true,
                           image: null,
                         ), roomService: roomService,
+                           plantService: plantService,
                       ),
                   child: const AddPlantScreen(),
                 );
