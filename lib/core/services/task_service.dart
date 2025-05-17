@@ -8,6 +8,7 @@ import '../models/room.dart';
 import '../models/task.dart';
 
 class TaskService {
+
   Future<List<Task>> getTaskFromPlant(int plantId) async {
     final response = await http.get(
       Uri.parse("${Constants.baseURL}/plants/$plantId/tasks"),
@@ -18,6 +19,34 @@ class TaskService {
     } else {
       throw Exception("Tasks konnten nicht geladen werden.");
     }
+  }
+
+  Future<List<Map<String, dynamic>>> getAllTasks() async {
+    final roomService = RoomService();
+    final taskService = TaskService();
+    List<Map<String, dynamic>> roomWithTasks = [];
+    List<Room> roomList = await roomService.getAllRooms();
+
+    //loop through each room to get their name
+    for (Room room in roomList) {
+      //get all Plants of the room
+      List<Plant> plantList = await roomService.getAllPlantsFromRoom(room.roomName);
+      List<Task> tasksOfRoom = [];
+
+      //get the task of the each plant inside the room
+      for (Plant plant in plantList) {
+        List<Task> taskOfPlant = await taskService.getTaskFromPlant(plant.id);
+        tasksOfRoom.addAll(taskOfPlant);
+      }
+
+      //link room to tasks
+      roomWithTasks.add({
+        'room': room,
+        'tasks': tasksOfRoom,
+      });
+    }
+
+    return roomWithTasks;
   }
 
   Future<void> createTask(int plantId, Task task) async {

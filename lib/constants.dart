@@ -10,6 +10,7 @@ class Constants {
   static const String settingsScreenTitle = "Einstellungen";
 
   //Task
+  static const String noTasks = "Alle Pflanzen sind gegossen 🥳";
 
   //Plant
   static const String noPlantsCreated =
