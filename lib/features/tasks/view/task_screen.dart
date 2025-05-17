@@ -5,17 +5,36 @@ import 'package:flutter/material.dart';
 import '../../../core/models/room.dart';
 import '../../../core/models/task.dart';
 
-class TasksScreen extends StatelessWidget {
-  const TasksScreen({super.key});
+class TaskScreen extends StatefulWidget {
+  const TaskScreen({super.key});
+
+  @override
+  State<TaskScreen> createState() => _TaskScreenState();
+}
+
+class _TaskScreenState extends State<TaskScreen> {
+  late Future<List<Map<String, dynamic>>> _taskFuture;
+
+  //only at create widget
+  @override
+  void initState() {
+    super.initState();
+    _taskFuture = TaskService().getAllTasks();
+  }
+
+  //refresh Tasks after deleting
+  void _refreshTasks() {
+    setState(() {
+      _taskFuture = TaskService().getAllTasks();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final taskService = TaskService();
-
     return Scaffold(
       appBar: AppBar(title: Text(Constants.appTitle)),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: taskService.getAllTasks(),
+        future: _taskFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -61,6 +80,7 @@ class TasksScreen extends StatelessWidget {
                           "https://cdn.pixabay.com/photo/2023/09/15/12/43/living-room-8254772_1280.jpg",
                       plant: plant,
                       taskId: task.id!,
+                      onDelete: _refreshTasks,
                     );
                   }),
                   SizedBox(height: 7),

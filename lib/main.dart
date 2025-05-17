@@ -61,7 +61,7 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
-      TasksScreen(),
+      TaskScreen(),
       //pass navigator state
       PlantSelectionScreen(navigatorStatePlant: navigatorStatePlants),
       RoomScreen(navigatorStateRoom: navigatorStateRoom),

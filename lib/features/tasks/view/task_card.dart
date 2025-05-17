@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 import 'package:flutter/material.dart';
 import '../../../core/models/plant.dart';
 import '../../../core/services/task_service.dart';
@@ -7,12 +8,14 @@ class TaskCard extends StatefulWidget {
   final String imageUrl;
   final Plant plant;
   final int taskId;
+  final VoidCallback? onDelete;
 
   const TaskCard({
     super.key,
     required this.imageUrl,
     required this.plant,
     required this.taskId,
+    this.onDelete,
   });
 
   @override
@@ -104,8 +107,13 @@ class TaskCardState extends State<TaskCard> {
                 setState(() {
                   widget.plant.isWatered = !widget.plant.isWatered;
                 });
-                taskService.deleteTask(widget.plant.id, widget.taskId);
-                await Future.delayed(const Duration(seconds: 1));
+
+                await Future.delayed(const Duration(milliseconds: 300));
+
+                await taskService.deleteTask(widget.plant.id, widget.taskId);
+                if (context.mounted) {
+                  widget.onDelete?.call();
+                }
               },
               style: ElevatedButton.styleFrom(
                 shape: CircleBorder(),
