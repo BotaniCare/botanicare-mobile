@@ -15,17 +15,18 @@ class TaskScreen extends StatefulWidget {
 class _TaskScreenState extends State<TaskScreen> {
   late Future<List<Map<String, dynamic>>> _taskFuture;
 
-  //only at create widget
+  //only at onCreate
   @override
   void initState() {
     super.initState();
-    _taskFuture = TaskService().getAllTasks();
+    TaskService.createPlantTask();
+    _taskFuture = TaskService.getAllTasks();
   }
 
   //refresh Tasks after deleting
   void _refreshTasks() {
     setState(() {
-      _taskFuture = TaskService().getAllTasks();
+      _taskFuture = TaskService.getAllTasks();
     });
   }
 

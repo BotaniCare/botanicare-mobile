@@ -5,7 +5,7 @@ class Task {
   final String description;
   final Plant plant;
 
-  Task({ this.id, required this.description, required this.plant});
+  Task({this.id, required this.description, required this.plant});
 
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
@@ -16,9 +16,6 @@ class Task {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'description': description,
-      'plant': plant.toJson()
-    };
+    return {'description': description, 'plant': plant.toJson()};
   }
 }

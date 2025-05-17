@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import '../models/plant.dart';
 
 class RoomProvider extends ChangeNotifier {
-  final List<Room> _rooms = [
+  /*final List<Room> _rooms = [
     Room(id: 0, roomName: "Wohnzimmer"),
     Room(id: 1, roomName: "Schlafzimmer"),
     Room(id: 2, roomName: "Küche"),
@@ -55,5 +55,5 @@ class RoomProvider extends ChangeNotifier {
   String getRoomName(int? roomId) {
       final room = _rooms.where((room) => room.id == roomId).firstOrNull;
       return room?.roomName ?? "Ohne";
-  }
+  }*/
 }

@@ -8,7 +8,7 @@ import '../models/room.dart';
 import '../models/task.dart';
 
 class TaskService {
-  Future<List<Task>> getTaskFromPlant(int plantId) async {
+  static Future<List<Task>> getTaskFromPlant(int plantId) async {
     final response = await http.get(
       Uri.parse("${Constants.baseURL}/plants/$plantId/tasks"),
     );
@@ -20,23 +20,21 @@ class TaskService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAllTasks() async {
-    final roomService = RoomService();
-    final taskService = TaskService();
+  static Future<List<Map<String, dynamic>>> getAllTasks() async {
     List<Map<String, dynamic>> roomWithTasks = [];
-    List<Room> roomList = await roomService.getAllRooms();
+    List<Room> roomList = await RoomService.getAllRooms();
 
     //loop through each room to get their name
     for (Room room in roomList) {
       //get all Plants of the room
-      List<Plant> plantList = await roomService.getAllPlantsFromRoom(
+      List<Plant> plantList = await RoomService.getAllPlantsFromRoom(
         room.roomName,
       );
       List<Task> tasksOfRoom = [];
 
       //get the task of the each plant inside the room
       for (Plant plant in plantList) {
-        List<Task> taskOfPlant = await taskService.getTaskFromPlant(plant.id);
+        List<Task> taskOfPlant = await TaskService.getTaskFromPlant(plant.id);
         tasksOfRoom.addAll(taskOfPlant);
       }
 
@@ -47,7 +45,7 @@ class TaskService {
     return roomWithTasks;
   }
 
-  Future<void> createTask(int plantId, Task task) async {
+  static Future<void> createTask(int plantId, Task task) async {
     final response = await http.post(
       Uri.parse("${Constants.baseURL}/plants/$plantId/tasks"),
       headers: {'Content-Type': 'application/json'},
@@ -59,15 +57,15 @@ class TaskService {
     }
   }
 
-  Future<void> createPlantTask() async {
+  static Future<void> createPlantTask() async {
     final roomService = RoomService();
     try {
-      List<Room> roomList = await roomService.getAllRooms();
+      List<Room> roomList = await RoomService.getAllRooms();
 
       //loop through all the rooms to get each room name
       for (Room room in roomList) {
         //pass room name to getAllPlantsFromRoom
-        List<Plant> plantList = await roomService.getAllPlantsFromRoom(
+        List<Plant> plantList = await RoomService.getAllPlantsFromRoom(
           room.roomName,
         );
 
@@ -96,7 +94,7 @@ class TaskService {
     }
   }
 
-  Future<void> deleteTask(int plantId, int taskId) async {
+  static Future<void> deleteTask(int plantId, int taskId) async {
     final response = await http.delete(
       Uri.parse("${Constants.baseURL}/plants/$plantId/tasks/$taskId"),
     );

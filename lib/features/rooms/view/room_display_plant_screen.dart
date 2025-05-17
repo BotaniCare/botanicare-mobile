@@ -2,7 +2,6 @@ import 'package:botanicare/core/services/room_provider.dart';
 import 'package:botanicare/features/plants/view/plant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../constants.dart';
 import '../../../core/models/room.dart';
 import '../../../core/services/plant_provider.dart';
 
@@ -16,19 +15,17 @@ class RoomDisplayPlantScreen extends StatelessWidget {
     final roomProvider = Provider.of<RoomProvider>(context, listen: true);
     final plantProvider = Provider.of<PlantProvider>(context, listen: true);
     final plantList = plantProvider.plants;
-    final plantsInRoom = roomProvider.getPlantsByRoom(plantList, room.id);
 
     return Scaffold(
-      appBar: AppBar(title: Text(room.roomName)),
-      body: ListView(
+        appBar: AppBar(title: Text(room.roomName)),
+        body: Center(child: Text("To Do"),)
+      /*ListView(
         children: [
           ...(plantsInRoom.isNotEmpty
               ? plantsInRoom
                   .map(
                     (plant) => PlantCard(
                       plant: plant,
-                      imageUrl:
-                          "https://cdn.pixabay.com/photo/2022/08/05/18/50/houseplant-7367379_1280.jpg",
                     ),
                   )
                   .toList()
@@ -60,7 +57,7 @@ class RoomDisplayPlantScreen extends StatelessWidget {
                 ),
               ]),
         ],
-      ),
+      ),*/
     );
   }
 }

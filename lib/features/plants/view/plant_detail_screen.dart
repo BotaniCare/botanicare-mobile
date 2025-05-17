@@ -1,3 +1,4 @@
+import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,21 +11,13 @@ import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 
 
 class PlantDetailScreen extends StatelessWidget {
-  const PlantDetailScreen({super.key, required this.plant});
+  final RoomService roomService = RoomService();
+  PlantDetailScreen({super.key, required this.plant});
 
   final Plant plant;
 
   @override
   Widget build(BuildContext context) {
-    final plantProvider = Provider.of<PlantProvider>(
-      context,
-      listen: true,
-    );
-    final roomProvider = Provider.of<RoomProvider>(
-      context,
-      listen: true,
-    );
-
     return Scaffold(
       body: Column(
         children: [
@@ -61,11 +54,10 @@ class PlantDetailScreen extends StatelessWidget {
                           return ChangeNotifierProvider(
                             create:
                                 (_) => AddPlantViewModel(
-                                  isEditing: true,
-                                  plantProvider: plantProvider,
-                                  roomProvider: roomProvider,
-                                  initialPlant: plant,
-                                ),
+                              isEditing: true,
+                              initialPlant: plant,
+                              roomService: roomService,
+                            ),
                             child: const AddPlantScreen(),
                           );
                         },
@@ -117,12 +109,12 @@ class PlantDetailScreen extends StatelessWidget {
                     MiniDetailCard(
                       icon: Icons.sunny,
                       title: "Sonnenlicht",
-                      description: plant.sunlight,
+                      description: plant.sunLight,
                     ),
                     MiniDetailCard(
                       icon: Icons.sensor_door,
                       title: "Raum",
-                      description: roomProvider.getRoomName(plant.roomId),
+                      description: "TODO",
                     ),
                   ],
                 ),

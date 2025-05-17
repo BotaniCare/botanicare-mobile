@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../../../core/models/plant.dart';
@@ -25,7 +26,6 @@ class TaskCard extends StatefulWidget {
 class TaskCardState extends State<TaskCard> {
   @override
   Widget build(BuildContext context) {
-    final taskService = TaskService();
     return Card(
       elevation: 3,
       margin: EdgeInsets.all(12),
@@ -39,16 +39,12 @@ class TaskCardState extends State<TaskCard> {
                 topLeft: Radius.circular(8),
                 bottomLeft: Radius.circular(8),
               ),
-              //might have to change this later
-              child:
-                  widget.plant.image != null
-                      ? Image.file(
-                        widget.plant.image!,
-                        width: 90,
-                        height: 90,
-                        fit: BoxFit.cover,
-                      )
-                      : const Icon(Icons.image_not_supported_outlined),
+              child: Image.memory(
+                widget.plant.image as Uint8List,
+                width: 90,
+                height: 90,
+                fit: BoxFit.cover,
+              ),
             ),
             Expanded(
               child: Padding(
@@ -124,7 +120,7 @@ class TaskCardState extends State<TaskCard> {
 
                 await Future.delayed(const Duration(milliseconds: 300));
 
-                await taskService.deleteTask(widget.plant.id, widget.taskId);
+                await TaskService.deleteTask(widget.plant.id, widget.taskId);
                 if (context.mounted) {
                   widget.onDelete?.call();
                 }

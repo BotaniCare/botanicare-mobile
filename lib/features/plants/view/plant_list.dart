@@ -7,11 +7,12 @@ import 'plant_card.dart';
 class PlantsList extends StatelessWidget {
   const PlantsList({super.key});
 
-  @override
+@override
   Widget build(BuildContext context) {
-    final plants = Provider.of<PlantProvider>(context).plants;
+  throw UnimplementedError();
+    //final plants = Provider.of<PlantProvider>(context).plants;
 
-    return ListView.builder(
+    /*return ListView.builder(
         itemCount: plants.length,
         itemBuilder: (context, index) {
           return GestureDetector(
@@ -27,6 +28,7 @@ class PlantsList extends StatelessWidget {
               ),
           );
         }
-    );
+    )*/
+
   }
 }

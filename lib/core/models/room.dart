@@ -12,7 +12,6 @@ class Room {
     return Room(
       id: json['id'],
       roomName: json['roomName'],
-      //TODO: fromJson in Plant
       plants: (json['plants'] as List).map((plant) => Plant.fromJson(plant)).toList(),
     );
   }
@@ -20,8 +19,8 @@ class Room {
   //converting Dart object to Json (Map)
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'roomName': roomName,
-      //TODO: toJson in Plant
       'plants': plants.map((plant) => plant.toJson()).toList()
     };
   }

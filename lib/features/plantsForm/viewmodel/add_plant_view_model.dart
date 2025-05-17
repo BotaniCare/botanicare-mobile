@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:botanicare/core/models/image.dart';
+import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/models/plant.dart';
@@ -7,19 +9,19 @@ import '../../../core/models/room.dart';
 import '../../../core/services/room_provider.dart';
 
 class AddPlantViewModel extends ChangeNotifier {
-  final PlantProvider plantProvider;
   final bool isEditing;
-  final RoomProvider roomProvider;
+  final RoomService roomService;
 
   // Internal state
   late Plant _plant;
   late String isWatered;
+  List<Room> rooms = [];
+  late String roomName = "";
 
   AddPlantViewModel({
     required this.isEditing,
-    required this.plantProvider,
-    required this.roomProvider,
     required Plant initialPlant,
+    required this.roomService,
   }) {
     _plant = initialPlant;
     if (_plant.isWatered) {
@@ -29,7 +31,12 @@ class AddPlantViewModel extends ChangeNotifier {
   }
 
   Plant get plant => _plant;
-  List<Room> get rooms => roomProvider.rooms;
+
+  Future<void> loadRooms() async {
+    rooms = await RoomService.getAllRooms();
+    roomName = rooms.first.roomName;
+    notifyListeners();
+  }
 
   void updateIsWatered(String watered) {
     isWatered = watered;
@@ -44,24 +51,8 @@ class AddPlantViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setRoom(int roomId) {
-    _plant.roomId = roomId;
-    notifyListeners();
-  }
-
-  int addRoomIfNew(String room) {
-    return roomProvider.addRoomReturnId(room);
-  }
-
-  void removeRoom(int roomId) {
-    if (_plant.roomId == roomId) {
-      _plant.roomId = null;
-      notifyListeners();
-    }
-  }
-
-  void setImage(File image) {
-    _plant.image = image;
+  void setImage(String image) {
+    _plant.image = PlantImage(id: 0, bytes: image);
     notifyListeners();
   }
 
@@ -81,12 +72,17 @@ class AddPlantViewModel extends ChangeNotifier {
   }
 
   void updateSunlight(String sunlight) {
-    _plant.sunlight = sunlight;
+    _plant.sunLight = sunlight;
     notifyListeners();
   }
 
   void updateType(String type) {
     _plant.type = type;
+    notifyListeners();
+  }
+
+  void updateRoomName(String roomName){
+    this.roomName = roomName;
     notifyListeners();
   }
 
@@ -99,9 +95,9 @@ class AddPlantViewModel extends ChangeNotifier {
 
   void save() {
     if (isEditing) {
-      plantProvider.updatePlant(_plant);
+      // TODO Api: update Plant
     } else {
-      plantProvider.addPlant(_plant);
+      // TODO api add Plant
     }
     notifyListeners();
   }
