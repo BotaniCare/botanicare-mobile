@@ -1,22 +1,57 @@
-import 'package:botanicare/features/home/viewmodel/room_provider.dart';
+import 'package:botanicare/features/settings/notifier/notifications_notifier.dart';
+import 'package:botanicare/features/settings/notifier/theme_notifier.dart';
+import 'package:botanicare/features/plants/view/plant_selection_screen.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
-import 'package:botanicare/features/home/view/plant_screen.dart';
-import 'package:botanicare/features/home/view/room_screen.dart';
-import 'package:botanicare/features/home/view/settings_screen.dart';
-import 'package:botanicare/features/home/view/task_screen.dart';
+import 'package:botanicare/features/rooms/view/room_screen.dart';
+import 'package:botanicare/features/tasks/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'constants.dart';
+import 'data/local/hive_helper.dart';
+import 'data/local/models/theme.dart' as local_theme;
+import 'features/settings/view/settings_screen.dart';
 
-import 'features/home/viewmodel/task_provider.dart';
-import 'features/home/viewmodel/task_screen_view_model.dart';
-import 'features/home/viewmodel/plant_provider.dart';
-
+//for nested navigation
 final GlobalKey<NavigatorState> navigatorStateRoom =
     GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorStatePlants =
+    GlobalKey<NavigatorState>();
 
-void main() {
-  runApp(const BotaniCareMobileApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveHelper.init();
+  final themeBox = await HiveHelper.openThemeBox();
+
+  local_theme.Theme savedTheme;
+  if (themeBox.isNotEmpty) {
+    savedTheme = themeBox.getAt(0)!;
+  } else {
+    savedTheme = local_theme.Theme.initial();
+    await themeBox.add(savedTheme);
+  }
+
+  final notificationNotifier = await NotificationNotifier.create();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeNotifier>(
+          create:
+              (_) => ThemeNotifier(
+                initialMode: savedTheme.themeMode,
+                initialContrast: savedTheme.contrastLevel,
+                themeBox: themeBox,
+              ),
+        ),
+
+        ChangeNotifierProvider<NotificationNotifier>.value(
+          value: notificationNotifier,
+        ),
+      ],
+      child: const BotaniCareMobileApp(),
+    ),
+  );
 }
 
 class BotaniCareMobileApp extends StatelessWidget {
@@ -24,27 +59,18 @@ class BotaniCareMobileApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = View.of(context).platformDispatcher.platformBrightness;
-
-    // Retrieves the default theme for the platform
-    // TextTheme textTheme = Theme.of(context).textTheme;
+    // Listen to ThemeNotifier to rebuild on themeMode changes:
+    final themeNotifier = context.watch<ThemeNotifier>();
 
     // Use with Google Fonts package to use downloadable fonts
     TextTheme textTheme = createTextTheme(context, "Inter Tight", "Inter");
     MaterialTheme theme = MaterialTheme(textTheme);
     return MaterialApp(
-      title: 'BotaniCare',
-      themeMode: ThemeMode.system,
-      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => TaskScreenViewModel()),
-          ChangeNotifierProvider(create: (context) => PlantProvider()),
-          ChangeNotifierProvider(create: (context) => RoomProvider()),
-          ChangeNotifierProvider(create: (context) => TaskProvider()),
-        ],
-        child: const Scaffold(body: BotaniCareHome()),
-      ),
+      title: Constants.appTitle,
+      themeMode: themeNotifier.effectiveThemeMode,
+      theme: theme.light(),
+      darkTheme: theme.dark(),
+      home: const Scaffold(body: BotaniCareHome()),
     );
   }
 }
@@ -61,24 +87,31 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
-      TasksScreen(),
-      PlantScreen(),
+    final List<Widget> pages = [
+      TaskScreen(),
+      //pass navigator state
+      PlantSelectionScreen(navigatorStatePlant: navigatorStatePlants),
       RoomScreen(navigatorStateRoom: navigatorStateRoom),
       SettingsScreen(),
     ];
 
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Theme.of(context).colorScheme.secondary,
         onTap: (index) {
+          if (index == 1) {
+            navigatorStateRoom.currentState?.popUntil(
+              (route) => route.isFirst,
+            ); //navigate back to the plant screen
+          }
+          //if navigation bar item is room
           if (index == 2) {
             navigatorStateRoom.currentState?.popUntil(
               (route) => route.isFirst,
-            ); //um wieder auf erste Seite von Räume zu kommen
+            ); //navigate back to the room selection screen
           }
           setState(() {
             _currentIndex = index;
@@ -87,16 +120,19 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.task_alt),
-            label: 'Aufgaben',
+            label: Constants.taskScreenTitle,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_florist),
-            label: 'Pflanzen',
+            label: Constants.plantScreenTitle,
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.weekend), label: 'Räume'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.weekend),
+            label: Constants.roomScreenTitle,
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Einstellungen',
+            label: Constants.settingsScreenTitle,
           ),
         ],
       ),
