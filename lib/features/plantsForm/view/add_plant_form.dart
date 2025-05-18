@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:botanicare/core/services/task_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -48,6 +50,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
       final success = await vm.save();
 
       if (success) {
+        debugPrint("---- Until here");
         _showSnackBar(
           context,
           vm.isEditing
@@ -55,7 +58,9 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               : 'Pflanze erfolgreich gespeichert! 🎉',
         );
         //create task for plant
+
         await TaskService.createPlantTask();
+        debugPrint("---- After then");
         Navigator.pop(context, true);
       } else {
         _showSnackBar(context, 'Fehler beim Speichern der Pflanze ❌', isError: true);
@@ -187,7 +192,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 ? ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.memory(
-                base64Decode(vm.plant.image!.bytes),
+                Uint8List.fromList(vm.plant.image!.plantPicture),
                 fit: BoxFit.cover,
               ),
             )

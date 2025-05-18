@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:typed_data';
+
 import 'dart:convert';
 import 'dart:developer';
 import 'package:botanicare/core/services/plant_service.dart';
@@ -44,8 +46,8 @@ class TaskCardState extends State<TaskCard> {
               child:
                   widget.plant.image != null
                       ? Image.memory(
-                        base64.decode(widget.plant.image!.bytes),
-                        width: 90,
+                        Uint8List.fromList(widget.plant.image!.plantPicture),
+                          width: 90,
                         height: 90,
                         fit: BoxFit.cover,
                       )

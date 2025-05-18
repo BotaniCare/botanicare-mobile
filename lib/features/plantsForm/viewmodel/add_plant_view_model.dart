@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:botanicare/core/models/image.dart';
 import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +73,8 @@ class AddPlantViewModel extends ChangeNotifier {
   }
 
   void setImage(String image) {
-    _plant.image = PlantImage(id: 0, bytes: image);
+    final bytes = base64Decode(image);
+    _plant.image = PlantPicture(id: 0, plantPicture: bytes);
     notifyListeners();
   }
 

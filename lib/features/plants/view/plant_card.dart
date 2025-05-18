@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:botanicare/core/models/plant.dart';
 import 'package:botanicare/core/services/room_service.dart';
@@ -34,7 +35,8 @@ class PlantCard extends StatelessWidget {
             child:
                 plant.image != null
                     ? Image.memory(
-                      base64.decode(plant.image!.bytes),
+                      Uint8List.fromList(plant.image!.plantPicture),
+                      width: 50,
                       fit: BoxFit.cover, // Optional
                     )
                     : Icon(

@@ -87,6 +87,7 @@ class TaskService {
         }
       }
     } catch (e) {
+      debugPrint("----- Check this exception $e");
       if (kDebugMode) {
         print(e);
       }

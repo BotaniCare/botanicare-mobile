@@ -55,15 +55,20 @@ class RoomService {
   }
 
   static Future<Plant> createPlant(Plant plant, String roomName) async {
+    debugPrint("---- Check endpoint ${Constants.apiUrlRooms}");
+    final uri = Uri.parse('${Constants.apiUrlRooms}/${Uri.encodeComponent(roomName)}/plants');
+
     final response = await http.post(
-      Uri.parse('${Constants.apiUrlRooms}/$roomName/plants/'),
+      uri,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(plant.toJsonAdding()),
     );
 
+
     if (response.statusCode == 201 || response.statusCode == 200) {
       return Plant.fromJson(jsonDecode(response.body));
     } else {
+      debugPrint("---- Cause: ${response.statusCode} - ${response.body}");
       throw Exception('Failed to create plant');
     }
   }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
@@ -26,15 +27,15 @@ class PlantDetailScreen extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                Container(
+                plant.image != null ? Container(
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: MemoryImage(base64.decode(plant.image!.bytes)),
+                      image:MemoryImage(  Uint8List.fromList(plant.image!.plantPicture)),
                       fit: BoxFit.cover,
                     ),
                   ),
-                ),
+                ) : const SizedBox.shrink(),
                 AppBar(elevation: 0, backgroundColor: Colors.transparent),
               ],
             ),
