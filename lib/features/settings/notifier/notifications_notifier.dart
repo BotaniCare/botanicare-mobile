@@ -56,4 +56,5 @@ class NotificationNotifier with ChangeNotifier {
   void setEmail(bool v)              => _update((s) => s.email = v);
   void setDailyTasks(bool v)         => _update((s) => s.dailyTasks = v);
   void setCriticalCondition(bool v)  => _update((s) => s.criticalCondition = v);
+  void sendTestMessage() => { DeviceService.sendTestMessage() };
 }

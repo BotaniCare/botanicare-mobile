@@ -4,6 +4,7 @@ import 'package:botanicare/shared/ui/control/control_group.dart';
 import 'package:botanicare/shared/ui/control/control_switch_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
 
 class SettingsNotification extends StatelessWidget {
   const SettingsNotification({super.key});
@@ -97,6 +98,19 @@ class SettingsNotification extends StatelessWidget {
                 ),
                 tapToToggle: true,
               ),
+            ],
+          ),
+          if(kDebugMode) ControlGroup(
+            header: Text('Debug'),
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                width: double.maxFinite,
+                child: FilledButton(
+                    onPressed: () => noti.sendTestMessage(),
+                    child: Text('Test Nachricht')
+                ),
+              )
             ],
           ),
         ],
