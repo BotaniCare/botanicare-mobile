@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:developer';
+import 'package:botanicare/core/services/plant_service.dart';
 import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../../../core/models/plant.dart';
@@ -89,13 +90,13 @@ class TaskCardState extends State<TaskCard> {
                     Row(
                       children: [
                         Icon(
-                          Icons.water_drop_outlined,
+                          Icons.calendar_month_outlined,
                           size: 16,
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
                         SizedBox(width: 6),
                         Text(
-                          widget.plant.waterNeed,
+                          widget.plant.waterDate ?? "tt.mm.jjjj",
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
@@ -109,27 +110,37 @@ class TaskCardState extends State<TaskCard> {
             ElevatedButton(
               onPressed: () async {
                 setState(() {
+                  //change isWatered locally
                   widget.plant.isWatered = !widget.plant.isWatered;
                 });
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        Constants.wateredPlantSnackBarMessage.replaceFirst(
-                          "{}",
-                          widget.plant.name,
+
+                try {
+                  //update isWatered in db
+                  PlantService.updatePlant(widget.plant);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          Constants.wateredPlantSnackBarMessage.replaceFirst(
+                            "{}",
+                            widget.plant.name,
+                          ),
                         ),
+                        behavior: SnackBarBehavior.floating,
+                        duration: const Duration(seconds: 2),
                       ),
-                      behavior: SnackBarBehavior.floating,
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
+                    );
+                  }
+                } catch (e) {
+                  log("error when updating isWatered in db: $e");
                 }
 
+                //show checkmark icon for a while
                 await Future.delayed(const Duration(milliseconds: 300));
 
                 await TaskService.deleteTask(widget.plant.id, widget.taskId);
                 if (context.mounted) {
+                  //update UI
                   widget.onDelete?.call();
                 }
               },

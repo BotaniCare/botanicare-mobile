@@ -1,9 +1,8 @@
 import 'dart:convert';
-
+import 'package:botanicare/core/services/task_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
 import '../viewmodel/add_plant_view_model.dart';
 
 class AddPlantScreen extends StatefulWidget {
@@ -55,6 +54,8 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               ? 'Änderungen erfolgreich gespeichert! 🎉'
               : 'Pflanze erfolgreich gespeichert! 🎉',
         );
+        //create task for plant
+        await TaskService.createPlantTask();
         Navigator.pop(context, true);
       } else {
         _showSnackBar(context, 'Fehler beim Speichern der Pflanze ❌', isError: true);

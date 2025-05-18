@@ -28,7 +28,7 @@ class Constants {
   static const String balcony = "Balkon";
   static const String balconyImage = "assets/images/balcony.jpg";
   static const String defaultImage = "assets/images/default.jpg";
-  static const String emptyRoomMessage = "Sieht ziemlich leer aus hier 🍃";
+  static const String emptyRoom = "Sieht ziemlich leer aus hier 🍃";
   static const String noRoomsCreated =
       "Füge einen Raum 🛋️ hinzu,\nindem du auf das + unten rechts drückst";
 

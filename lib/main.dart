@@ -8,7 +8,6 @@ import 'package:botanicare/features/tasks/view/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'constants.dart';
-import 'core/services/task_provider.dart';
 import 'data/local/hive_helper.dart';
 import 'data/local/models/theme.dart' as local_theme;
 import 'features/settings/view/settings_screen.dart';
@@ -49,8 +48,6 @@ void main() async {
         ChangeNotifierProvider<NotificationNotifier>.value(
           value: notificationNotifier,
         ),
-
-        ChangeNotifierProvider(create: (context) => TaskProvider()),
       ],
       child: const BotaniCareMobileApp(),
     ),
@@ -107,7 +104,7 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
         onTap: (index) {
           if (index == 1) {
             navigatorStateRoom.currentState?.popUntil(
-                  (route) => route.isFirst,
+              (route) => route.isFirst,
             ); //navigate back to the plant screen
           }
           //if navigation bar item is room

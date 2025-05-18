@@ -13,8 +13,9 @@ class PlantCard extends StatelessWidget {
   final Plant plant;
   final RoomService roomService = RoomService();
   final PlantService plantService = PlantService();
+  final VoidCallback? onDelete;
 
-  PlantCard({super.key, required this.plant});
+  PlantCard({super.key, required this.plant, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -77,13 +78,13 @@ class PlantCard extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        Icons.water_drop_outlined,
+                        Icons.calendar_month_outlined,
                         size: 16,
                         color: Theme.of(context).colorScheme.onPrimary,
                       ),
                       SizedBox(width: 6),
                       Text(
-                        plant.waterNeed,
+                        plant.waterDate ?? "tt.mm.jjjj",
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
@@ -170,7 +171,7 @@ class PlantCard extends StatelessWidget {
                   );
 
                   if (confirmDeletion == true && context.mounted) {
-                    PlantService.deletePlant(plant.id);
+                    await PlantService.deletePlant(plant.id);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -183,6 +184,8 @@ class PlantCard extends StatelessWidget {
                         duration: const Duration(milliseconds: 450),
                       ),
                     );
+
+                    onDelete?.call();
                   }
                 },
                 style: ElevatedButton.styleFrom(

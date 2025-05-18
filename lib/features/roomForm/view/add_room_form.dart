@@ -1,12 +1,10 @@
 import 'package:botanicare/shared/ui/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../constants.dart';
 import '../viewmodel/add_room_view_model.dart';
 
 class AddRoomForm extends StatefulWidget {
-
   const AddRoomForm({super.key});
 
   @override
@@ -22,9 +20,11 @@ class _AddRoomFormState extends State<AddRoomForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(vm.isEditing
-            ? Constants.formTitleUpdating.replaceFirst("{}", "Raum")
-            : Constants.formTitleAdding.replaceFirst("{}", "Raum") ),
+        title: Text(
+          vm.isEditing
+              ? Constants.formTitleUpdating.replaceFirst("{}", "Raum")
+              : Constants.formTitleAdding.replaceFirst("{}", "Raum"),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -66,7 +66,11 @@ class _AddRoomFormState extends State<AddRoomForm> {
                   vm.saveForm();
                   Navigator.pop(context, true);
                 },
-                child: Text(vm.isEditing ? Constants.saveChangesMessage: Constants.saveMessage,),
+                child: Text(
+                  vm.isEditing
+                      ? Constants.saveChangesMessage
+                      : Constants.saveMessage,
+                ),
               ),
               const SizedBox(height: 5),
             ],
