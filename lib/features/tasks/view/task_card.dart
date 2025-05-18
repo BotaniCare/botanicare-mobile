@@ -72,13 +72,13 @@ class TaskCardState extends State<TaskCard> {
                     Row(
                       children: [
                         Icon(
-                          Icons.grass,
+                          Icons.calendar_month_outlined,
                           size: 16,
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
                         SizedBox(width: 6),
                         Text(
-                          widget.plant.type,
+                          widget.plant.waterDate ?? "tt.mm.yyyy",
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
@@ -89,13 +89,13 @@ class TaskCardState extends State<TaskCard> {
                     Row(
                       children: [
                         Icon(
-                          Icons.water_drop_outlined,
+                          Icons.grass,
                           size: 16,
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
                         SizedBox(width: 6),
                         Text(
-                          widget.plant.waterNeed,
+                          widget.plant.type,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
