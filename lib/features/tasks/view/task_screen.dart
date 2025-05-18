@@ -59,7 +59,20 @@ class _TaskScreenState extends State<TaskScreen> {
 
           if (taskList.isEmpty) {
             NotificationText(text: Constants.noTasks);
-            return Center(child: Text(Constants.noTasks));
+            return (Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Container(
+                  width: 260,
+                  height: 45,
+                  alignment: Alignment.center,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.5),
+                  child: Text(Constants.noTasks),
+                ),
+              ),
+            ));
           }
 
           return ListView.builder(

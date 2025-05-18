@@ -32,6 +32,23 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             final rooms = snapshot.data!;
+            if (rooms.isEmpty) {
+              return (Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Container(
+                    width: 320,
+                    height: 60,
+                    alignment: Alignment.center,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.5),
+                    child: Text(Constants.noRoomsCreated),
+                  ),
+                ),
+              ));
+            }
+
             return ListView.builder(
               itemCount: rooms.length,
               itemBuilder: (context, index) {
