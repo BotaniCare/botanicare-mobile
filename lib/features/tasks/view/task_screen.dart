@@ -51,22 +51,25 @@ class _TaskScreenState extends State<TaskScreen> {
           final roomWithTaskList = snapshot.data!;
 
           //get only tasks of room
-          final taskList = roomWithTaskList.expand((entry) => entry['task'] as List<Task>).toList();
+          final taskList =
+              roomWithTaskList.expand((entry) {
+                final tasks = entry['task'];
+                return tasks is List<Task> ? tasks : <Task>[];
+              }).toList();
+
           if (taskList.isEmpty) {
             NotificationText(text: Constants.noTasks);
-            return Center(
-              child: Text(Constants.noTasks),
-            );
+            return Center(child: Text(Constants.noTasks));
           }
 
           return ListView.builder(
             itemCount: roomWithTaskList.length,
             itemBuilder: (context, index) {
               final room = roomWithTaskList[index]['room'] as Room;
-              final taskList = roomWithTaskList[index]['tasks'] as List<Task>;
+              final taskListOfRoom = roomWithTaskList[index]['tasks'];
 
-              if (taskList.isEmpty) {
-                return Center(child: Text(Constants.noTasks));
+              if (taskListOfRoom.isEmpty || taskListOfRoom == null) {
+                return SizedBox();
               }
 
               return Column(
@@ -84,7 +87,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       ),
                     ),
                   ),
-                  ...taskList.map((task) {
+                  ...taskListOfRoom.map((task) {
                     final plant = task.plant;
                     return TaskCard(
                       imageUrl:
