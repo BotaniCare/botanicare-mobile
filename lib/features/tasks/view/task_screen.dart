@@ -50,7 +50,7 @@ class _TaskScreenState extends State<TaskScreen> {
 
           final roomWithTaskList = snapshot.data!;
 
-          //get only tasks of room
+          //all tasks
           final taskList =
               roomWithTaskList.expand((entry) {
                 final tasks = entry['task'];
@@ -63,12 +63,13 @@ class _TaskScreenState extends State<TaskScreen> {
           }
 
           return ListView.builder(
+            //get tasks from a specific room
             itemCount: roomWithTaskList.length,
             itemBuilder: (context, index) {
               final room = roomWithTaskList[index]['room'] as Room;
               final taskListOfRoom = roomWithTaskList[index]['tasks'];
 
-              if (taskListOfRoom.isEmpty || taskListOfRoom == null) {
+              if (taskListOfRoom == null || taskListOfRoom.isEmpty) {
                 return SizedBox();
               }
 

@@ -18,6 +18,7 @@ class Plant {
   bool isWatered;
   PlantImage? image;
   List<Task>? tasks;
+  String? waterDate;
 
   Plant({
     required this.id,
@@ -28,6 +29,7 @@ class Plant {
     required this.isWatered,
     required this.image,
     this.tasks,
+    this.waterDate,
   });
 
   factory Plant.fromJson(Map<String, dynamic> json) => Plant(
@@ -38,6 +40,7 @@ class Plant {
     sunLight: json['sunLight'],
     isWatered: json['isWatered'],
     image: json['plantPicture'],
+    waterDate: json['waterDate'],
   );
 
   Map<String, dynamic> toJsonEditing() => {
