@@ -119,8 +119,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
 
           // Only reload if the form actually saved something
           if (result == true && mounted) {
-            _refreshRooms(); // Rebuilds the widget and triggers relo
-            // ad (e.g. in initState or build)
+            _refreshRooms(); // Rebuilds the widget and triggers reload (e.g. in initState or build)
           }
         },
       ),

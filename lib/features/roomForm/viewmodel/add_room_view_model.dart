@@ -12,25 +12,25 @@ class AddRoomViewModel extends ChangeNotifier {
   AddRoomViewModel({
     this.initialRoom,
     required this.isEditing,
-    required this.roomService
+    required this.roomService,
   });
 
   /*bool roomNameExists(String roomName) {
     return roomProvider.roomExists(roomName);
   }*/
 
-  void saveForm(){
-    if(isEditing){
+  void saveForm() {
+    if (isEditing) {
       // ToDo is Editing
     } else {
       roomService.addRoom(newRoomName!);
     }
   }
 
-  bool newRoomIsValid(String? newRoom){
-    if(newRoom == null){
+  bool newRoomIsValid(String? newRoom) {
+    if (newRoom == null) {
       return false;
-    } else if(newRoom.isEmpty){
+    } else if (newRoom.isEmpty) {
       return false;
     } else {
       return true;
@@ -47,7 +47,10 @@ class AddRoomViewModel extends ChangeNotifier {
 
     try {
       final rooms = await RoomService.getAllRooms();
-      final exists = rooms.any((room) => room.roomName.toLowerCase() == newRoomName!.trim().toLowerCase());
+      final exists = rooms.any(
+        (room) =>
+            room.roomName.toLowerCase() == newRoomName!.trim().toLowerCase(),
+      );
       print("Testet ob es exisitet");
       if (exists) {
         return "Ein Raum mit diesem Namen existiert bereits.";
@@ -61,6 +64,4 @@ class AddRoomViewModel extends ChangeNotifier {
 
     return null;
   }
-
-
 }

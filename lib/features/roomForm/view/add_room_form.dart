@@ -5,9 +5,7 @@ import '../../../constants.dart';
 import '../viewmodel/add_room_view_model.dart';
 
 class AddRoomForm extends StatefulWidget {
-  final VoidCallback? onCreated;
-
-  const AddRoomForm({super.key, this.onCreated});
+  const AddRoomForm({super.key});
 
   @override
   State<AddRoomForm> createState() => _AddRoomFormState();
@@ -66,8 +64,6 @@ class _AddRoomFormState extends State<AddRoomForm> {
 
                   // save and back
                   vm.saveForm();
-                  //update UI
-                  widget.onCreated?.call();
                   Navigator.pop(context, true);
                 },
                 child: Text(

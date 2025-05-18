@@ -11,11 +11,30 @@ import '../../plantsForm/viewmodel/add_plant_view_model.dart';
 import '../../../shared/ui/add_button.dart';
 import '../../plantsForm/view/add_plant_form.dart';
 
-class PlantScreen extends StatelessWidget {
-  PlantScreen({super.key});
-
+class PlantScreen extends StatefulWidget {
   final RoomService roomService = RoomService();
   final PlantService plantService = PlantService();
+
+  PlantScreen({super.key});
+
+  @override
+  State<PlantScreen> createState() => _PlantScreenState();
+}
+
+class _PlantScreenState extends State<PlantScreen> {
+  late Future<List<Plant>> _plantFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _plantFuture = PlantService.getAllPlants();
+  }
+
+  void _refreshPlants() {
+    setState(() {
+      _plantFuture = PlantService.getAllPlants();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +46,7 @@ class PlantScreen extends StatelessWidget {
         ),
       ),
       body: FutureBuilder<List<Plant>>(
-        future: PlantService.getAllPlants(),
+        future: _plantFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -79,8 +98,8 @@ class PlantScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: AddButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) {
@@ -98,14 +117,19 @@ class PlantScreen extends StatelessWidget {
                           isWatered: true,
                           image: null,
                         ),
-                        roomService: roomService,
-                        plantService: plantService,
+                        roomService: widget.roomService,
+                        plantService: widget.plantService,
                       ),
                   child: const AddPlantScreen(),
                 );
               },
             ),
           );
+
+          // Only reload if the form actually saved something
+          if (result == true && mounted) {
+            _refreshPlants(); // Rebuilds the widget and triggers reload (e.g. in initState or build)
+          }
         },
       ),
     );
