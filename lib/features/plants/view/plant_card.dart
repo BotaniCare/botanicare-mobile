@@ -78,13 +78,13 @@ class PlantCard extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        Icons.water_drop_outlined,
+                        Icons.calendar_month_outlined,
                         size: 16,
                         color: Theme.of(context).colorScheme.onPrimary,
                       ),
                       SizedBox(width: 6),
                       Text(
-                        plant.waterNeed,
+                        plant.waterDate ?? "tt.mm.jjjj",
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
