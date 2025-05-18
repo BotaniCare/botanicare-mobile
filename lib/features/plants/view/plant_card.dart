@@ -32,18 +32,22 @@ class PlantCard extends StatelessWidget {
               topLeft: Radius.circular(8),
               bottomLeft: Radius.circular(8),
             ),
-            child:
-                plant.image != null
-                    ? Image.memory(
-                      Uint8List.fromList(plant.image!.plantPicture),
-                      width: 50,
-                      fit: BoxFit.cover, // Optional
-                    )
-                    : Icon(
-                      Icons.image_not_supported_outlined,
-                      size: 16,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
+            child: SizedBox(
+              width: 80,
+              height: 85,
+              child:
+                  plant.image != null
+                      ? Image.memory(
+                        Uint8List.fromList(plant.image!.plantPicture),
+                        width: 50,
+                        fit: BoxFit.cover, // Optional
+                      )
+                      : Icon(
+                        Icons.image_not_supported_outlined,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+            ),
           ),
           Expanded(
             child: Padding(

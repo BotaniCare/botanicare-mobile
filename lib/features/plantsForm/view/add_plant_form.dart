@@ -35,7 +35,6 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     }
   }
 
-
   Future<void> _saveForm(BuildContext context) async {
     final vm = context.read<AddPlantViewModel>();
 
@@ -61,21 +60,26 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
 
         await TaskService.createPlantTask();
         debugPrint("---- After then");
-        Navigator.pop(context, true);
+        if (mounted) {
+          Navigator.pop(context, true);
+        }
       } else {
-        _showSnackBar(context, 'Fehler beim Speichern der Pflanze ❌', isError: true);
+        _showSnackBar(
+          context,
+          'Fehler beim Speichern der Pflanze ❌',
+          isError: true,
+        );
       }
     } else if (error != null) {
       _showSnackBar(context, error, isError: true);
     }
   }
 
-
   void _showSnackBar(
-      BuildContext context,
-      String message, {
-        bool isError = false,
-      }) {
+    BuildContext context,
+    String message, {
+    bool isError = false,
+  }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -108,22 +112,22 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return "Bitte einen Pflanzennamen ein.";
-                    }
-                    return null;
-                  },
+                  }
+                  return null;
+                },
               ),
               _buildTextField(
                 'Art der Pflanze',
                 initialValue: vm.isEditing ? vm.plant.type : '',
                 onChanged: vm.updateType,
-                validator:  (value) {
+                validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return "Bitte einen Pflanzenart eingeben.";
                   }
                   return null;
                 },
               ),
-              if(!vm.isEditing)
+              if (!vm.isEditing)
                 _buildDropdown(
                   "Kürzlich gegossen",
                   ['Ja', 'Nein'],
@@ -177,35 +181,39 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           child: Container(
             height: 180,
             decoration: BoxDecoration(
-              color: isError
-                  ? Theme.of(context).colorScheme.error.withOpacity(0.1)
-                  : Theme.of(context).colorScheme.onSurfaceVariant,
+              color:
+                  isError
+                      ? Theme.of(context).colorScheme.error.withOpacity(0.1)
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: isError
-                    ? Theme.of(context).colorScheme.error
-                    : Theme.of(context).colorScheme.secondary,
+                color:
+                    isError
+                        ? Theme.of(context).colorScheme.error
+                        : Theme.of(context).colorScheme.secondary,
                 width: 2,
               ),
             ),
-            child: hasImage
-                ? ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.memory(
-                Uint8List.fromList(vm.plant.image!.plantPicture),
-                fit: BoxFit.cover,
-              ),
-            )
-                : Center(
-              child: Text(
-                "Bild hinzufügen",
-                style: TextStyle(
-                  color: isError
-                      ? Theme.of(context).colorScheme.error
-                      : Theme.of(context).colorScheme.onBackground,
-                ),
-              ),
-            ),
+            child:
+                hasImage
+                    ? ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.memory(
+                        Uint8List.fromList(vm.plant.image!.plantPicture),
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                    : Center(
+                      child: Text(
+                        "Bild hinzufügen",
+                        style: TextStyle(
+                          color:
+                              isError
+                                  ? Theme.of(context).colorScheme.error
+                                  : Theme.of(context).colorScheme.onBackground,
+                        ),
+                      ),
+                    ),
           ),
         ),
         if (isError)
@@ -213,45 +221,46 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             padding: const EdgeInsets.only(top: 8.0, left: 4),
             child: Text(
               "Bitte füge ein Bild hinzu.",
-              style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 12,
+              ),
             ),
           ),
       ],
     );
   }
 
-
-
   void _showImageSourceSelector(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder:
           (_) => SafeArea(
-        child: Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Aus Galerie auswählen'),
-              onTap: () => _pickImage(context, ImageSource.gallery),
+            child: Wrap(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: const Text('Aus Galerie auswählen'),
+                  onTap: () => _pickImage(context, ImageSource.gallery),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text('Foto aufnehmen'),
+                  onTap: () => _pickImage(context, ImageSource.camera),
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('Foto aufnehmen'),
-              onTap: () => _pickImage(context, ImageSource.camera),
-            ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 
   Widget _buildTextField(
-      String label, {
-        String? initialValue,
-        void Function(String)? onChanged,
-        void Function(String)? onSaved,
-        String? Function(String?)? validator,
-      }) {
+    String label, {
+    String? initialValue,
+    void Function(String)? onChanged,
+    void Function(String)? onSaved,
+    String? Function(String?)? validator,
+  }) {
     return TextFormField(
       initialValue: initialValue,
       decoration: InputDecoration(labelText: label),
@@ -262,18 +271,18 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   }
 
   Widget _buildDropdown(
-      String label,
-      List<String> items,
-      String value,
-      void Function(String) onChanged,
-      ) {
+    String label,
+    List<String> items,
+    String value,
+    void Function(String) onChanged,
+  ) {
     return DropdownButtonFormField<String>(
       value: value,
       decoration: InputDecoration(labelText: label),
       items:
-      items
-          .map((val) => DropdownMenuItem(value: val, child: Text(val)))
-          .toList(),
+          items
+              .map((val) => DropdownMenuItem(value: val, child: Text(val)))
+              .toList(),
       onChanged: (val) => onChanged(val!),
     );
   }

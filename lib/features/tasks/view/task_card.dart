@@ -43,19 +43,23 @@ class TaskCardState extends State<TaskCard> {
                 topLeft: Radius.circular(8),
                 bottomLeft: Radius.circular(8),
               ),
-              child:
-                  widget.plant.image != null
-                      ? Image.memory(
-                        Uint8List.fromList(widget.plant.image!.plantPicture),
+              child: SizedBox(
+                width: 80,
+                height: 85,
+                child:
+                    widget.plant.image != null
+                        ? Image.memory(
+                          Uint8List.fromList(widget.plant.image!.plantPicture),
                           width: 90,
-                        height: 90,
-                        fit: BoxFit.cover,
-                      )
-                      : Icon(
-                        Icons.image_not_supported_outlined,
-                        size: 16,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
+                          height: 90,
+                          fit: BoxFit.cover,
+                        )
+                        : Icon(
+                          Icons.image_not_supported_outlined,
+                          size: 16,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+              ),
             ),
             Expanded(
               child: Padding(
