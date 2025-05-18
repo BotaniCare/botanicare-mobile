@@ -38,7 +38,8 @@ class SettingsScreen extends StatelessWidget {
                 SettingsNotification(),
                 title: Text(Constants.notificationsTitle),
                 subtitle: Text(Constants.notificationsSubtitle),
-                leading: Icon(Icons.notifications_none_rounded),
+                leading: Icon(Icons.notifications_none_rounded, color: Theme.of(context).disabledColor),
+                enabled: false,
               ),
               ControlNavigator.page(
                 SettingsPreferences(),
