@@ -58,7 +58,7 @@ class _TaskScreenState extends State<TaskScreen> {
           //all tasks
           final taskList =
               roomWithTaskList.expand((entry) {
-                final tasks = entry['task'];
+                final tasks = entry['tasks'];
                 return tasks is List<Task> ? tasks : <Task>[];
               }).toList();
 

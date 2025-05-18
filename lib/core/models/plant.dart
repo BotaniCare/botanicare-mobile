@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:botanicare/core/models/image.dart';
 import 'package:botanicare/core/models/task.dart';
 
@@ -17,7 +16,7 @@ class Plant {
   String sunLight;
   bool isWatered;
   PlantPicture? image;
-  List<Task>?  tasks;
+  List<Task>? tasks;
   String? waterDate;
 
   Plant({
@@ -39,7 +38,10 @@ class Plant {
     waterNeed: json['waterNeed'] ?? "",
     sunLight: json['sunLight'] ?? "",
     isWatered: json['isWatered'] ?? false,
-    image: json['plantPicture'] != null ? PlantPicture.fromJson(json['plantPicture']) : null,
+    image:
+        json['plantPicture'] != null
+            ? PlantPicture.fromJson(json['plantPicture'])
+            : null,
     waterDate: json['waterDate'],
   );
 
