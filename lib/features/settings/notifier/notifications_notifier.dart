@@ -1,6 +1,18 @@
+import 'package:botanicare/core/services/device_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:botanicare/data/local/models/notifications.dart';
+
+extension NotificationSettingsJson on NotificationSettings {
+  Map<String, dynamic> toJson() => {
+    'allowAll': allowAll,
+    'push': push,
+    'sms': sms,
+    'email': email,
+    'dailyTasks': dailyTasks,
+    'criticalCondition': criticalCondition,
+  };
+}
 
 class NotificationNotifier with ChangeNotifier {
   final Box<NotificationSettings> _box;
@@ -34,6 +46,7 @@ class NotificationNotifier with ChangeNotifier {
     mutate(_settings);
     _box.putAt(0, _settings);
     notifyListeners();
+    DeviceService.updateSettings(_settings.toJson());
   }
 
   // Public API for toggles:
@@ -43,4 +56,5 @@ class NotificationNotifier with ChangeNotifier {
   void setEmail(bool v)              => _update((s) => s.email = v);
   void setDailyTasks(bool v)         => _update((s) => s.dailyTasks = v);
   void setCriticalCondition(bool v)  => _update((s) => s.criticalCondition = v);
+  void sendTestMessage() => { DeviceService.sendTestMessage() };
 }

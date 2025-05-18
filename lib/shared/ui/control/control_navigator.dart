@@ -63,7 +63,7 @@ class ControlNavigator extends StatelessWidget {
     VoidCallback? onTapHandler;
 
     if (href != null) {
-      trailingWidget = const Icon(Icons.open_in_new, size: 18.0);
+      trailingWidget = Icon(Icons.open_in_new, size: 18.0, color: enabled ? null : Theme.of(context).disabledColor);
       onTapHandler = () async {
         if (href == null) return;
         final Uri uri = Uri.parse(href!);
@@ -72,7 +72,7 @@ class ControlNavigator extends StatelessWidget {
         }
       };
     } else {
-      trailingWidget = const Icon(Icons.arrow_forward_ios, size: 18.0);
+      trailingWidget = Icon(Icons.arrow_forward_ios, size: 18.0, color: enabled ? null : Theme.of(context).disabledColor);
       onTapHandler = () {
         if (page == null) return;
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => page!));

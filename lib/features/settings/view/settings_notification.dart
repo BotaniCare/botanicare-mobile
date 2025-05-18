@@ -1,8 +1,10 @@
+import 'package:botanicare/constants.dart';
 import 'package:botanicare/features/settings/notifier/notifications_notifier.dart';
 import 'package:botanicare/shared/ui/control/control_group.dart';
 import 'package:botanicare/shared/ui/control/control_switch_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
 
 class SettingsNotification extends StatelessWidget {
   const SettingsNotification({super.key});
@@ -14,7 +16,7 @@ class SettingsNotification extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Benachrichtigungen',
+          Constants.notificationsTitle,
           style: Theme.of(
             context,
           ).textTheme.titleLarge?.apply(fontWeightDelta: 600),
@@ -26,7 +28,7 @@ class SettingsNotification extends StatelessWidget {
           ControlGroup(
             children: [
               ControlSwitchTile(
-                title: Text('Benachrichtigungen erlauben'),
+                title: Text(Constants.notificationsAllowed),
                 value: noti.allowAll,
                 onChanged: (v) => noti.setAllowAll(v),
                 tapToToggle: true,
@@ -34,10 +36,10 @@ class SettingsNotification extends StatelessWidget {
             ],
           ),
           ControlGroup(
-            header: Text('Berechtigungen'),
+            header: Text(Constants.permissions),
             children: [
               ControlSwitchTile(
-                title: Text('Pushbenachrichtigungen'),
+                title: Text(Constants.notificationPush),
                 value: noti.push,
                 enabled: noti.allowAll,
                 onChanged: (v) => noti.setPush(v),
@@ -48,7 +50,7 @@ class SettingsNotification extends StatelessWidget {
                 tapToToggle: true,
               ),
               ControlSwitchTile(
-                title: Text('SMS Benachrichtigungen'),
+                title: Text(Constants.notificationSMS),
                 value: noti.sms,
                 enabled: noti.allowAll,
                 onChanged: (v) => noti.setSms(v),
@@ -59,7 +61,7 @@ class SettingsNotification extends StatelessWidget {
                 tapToToggle: true,
               ),
               ControlSwitchTile(
-                title: Text('Email Benachrichtigungen'),
+                title: Text(Constants.notificationEmail),
                 value: noti.email,
                 enabled: noti.allowAll,
                 onChanged: (v) => noti.setEmail(v),
@@ -72,10 +74,10 @@ class SettingsNotification extends StatelessWidget {
             ],
           ),
           ControlGroup(
-            header: Text('Erinnerungen'),
+            header: Text(Constants.notificationReminder),
             children: [
               ControlSwitchTile(
-                title: Text('Tägliche Aufgaben'),
+                title: Text(Constants.reminderDailies),
                 value: noti.dailyTasks,
                 enabled: noti.allowAll,
                 onChanged: (v) => noti.setDailyTasks(v),
@@ -86,7 +88,7 @@ class SettingsNotification extends StatelessWidget {
                 tapToToggle: true,
               ),
               ControlSwitchTile(
-                title: Text('Kritischer Zustand'),
+                title: Text(Constants.reminderCritical),
                 value: noti.criticalCondition,
                 enabled: noti.allowAll,
                 onChanged: (v) => noti.setCriticalCondition(v),
@@ -96,6 +98,19 @@ class SettingsNotification extends StatelessWidget {
                 ),
                 tapToToggle: true,
               ),
+            ],
+          ),
+          if(kDebugMode) ControlGroup(
+            header: Text('Debug'),
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                width: double.maxFinite,
+                child: FilledButton(
+                    onPressed: () => noti.sendTestMessage(),
+                    child: Text('Test Nachricht')
+                ),
+              )
             ],
           ),
         ],

@@ -54,4 +54,34 @@ class Constants {
       "https://botanicare.mauricewoike.com:8443/plants";
   static const String apiUrlRooms =
       "https://botanicare.mauricewoike.com:8443/rooms";
+
+  static const String notificationsTitle = "Benachrichtigungen";
+  static const String notificationsSubtitle = "App- & Systembenachrichtigungen";
+  static const String notificationsAllowed = "Benachrichtigungen erlauben";
+  static const String permissions = "Berechtigungen";
+  static const String notificationPush = "Pushbenachrichtigungen";
+  static const String notificationSMS = "SMS Benachrichtigungen";
+  static const String notificationEmail = "Email Benachrichtigungen";
+  static const String notificationReminder = "Erinnerungen";
+  static const String reminderDailies = "Tägliche Aufgaben";
+  static const String reminderCritical = "Kritischer Zustand";
+  static const String preferencesTitle = "Präferenzen";
+  static const String preferencesSubtitle = "Barriere- & Darstellungsanpassungen";
+  static const String preferencesAccessibility = "Barrierefreiheit";
+  static const String preferencesLanguage = "Sprache";
+  static const String preferencesLanguageDialogTitle = "Anzeigesprache - Derzeit deaktiviert";
+  static const String preferencesLanguageDialogDesc = "Legt fest, in welcher Sprache die App-Oberfläche angezeigt wird.\n\t•“Deutsch” – Standard-Hochdeutsch.\n\t•“English (Englisch)” – Englische Oberfläche.\n\t•“Schwäbisch” – Regionaler Dialekt für Schwaben.";
+  static const String preferencesDisplay = "Darstellung";
+  static const String preferencesColorscheme = "Farbschema";
+  static const String preferencesColorschemeDialogTitle = "Farb-Modus";
+  static const String preferencesColorschemeDialogDesc = "„Automatisch (System)“ passt sich deinem Geräteschema an. „Hell“ und „Dunkel“ zwingen jeweils den Light- oder Dark-Modus.";
+  static const String preferencesContrast = "Kontrast";
+  static const String preferencesContrastDialogTitle = "Kontrast-Level";
+  static const String preferencesContrastDialogDesc = "Definiert die Schrift- und UI-Kontraststärke: \n\t• Normal – Standard-Kontrast für optimales Gleichgewicht von Lesbarkeit und Design.\n\t• Medium – Hervorhebung von Elementen für bessere Sichtbarkeit.\n\t• Hoch – Maximaler Kontrast für höchste Lesbarkeit, ideal bei Sehschwächen.";
+  static const String groupMoreInfoTitle = "Nützliche Infos";
+  static const String privacyTitle = "Datenschutzrichtlinien";
+  static const String privacySubtitle = "Informationen zum Datenschutz";
+  static const String termsTitle = "Nutzungsbedingungen";
+  static const String termsSubtitle = "Informationen zu den AGBs";
+  static const String supportTitle = "Support/Hilfe";
 }

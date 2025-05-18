@@ -1,3 +1,4 @@
+import 'package:botanicare/core/services/device_service.dart';
 import 'package:botanicare/features/settings/notifier/notifications_notifier.dart';
 import 'package:botanicare/features/settings/notifier/theme_notifier.dart';
 import 'package:botanicare/features/plants/view/plant_selection_screen.dart';
@@ -5,12 +6,15 @@ import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
 import 'package:botanicare/features/rooms/view/room_screen.dart';
 import 'package:botanicare/features/tasks/view/task_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'constants.dart';
 import 'data/local/hive_helper.dart';
 import 'data/local/models/theme.dart' as local_theme;
 import 'features/settings/view/settings_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 //for nested navigation
 final GlobalKey<NavigatorState> navigatorStateRoom =
@@ -18,9 +22,29 @@ final GlobalKey<NavigatorState> navigatorStateRoom =
 final GlobalKey<NavigatorState> navigatorStatePlants =
     GlobalKey<NavigatorState>();
 
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  print("Background Message: ${message.messageId}");
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await HiveHelper.init();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  final deviceBox = await HiveHelper.openDeviceInfo();
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  WidgetsFlutterBinding.ensureInitialized();
+
+  DeviceService.setBox(deviceBox);
+  await DeviceService.registerOrRefreshToken();
+
   final themeBox = await HiveHelper.openThemeBox();
 
   local_theme.Theme savedTheme;

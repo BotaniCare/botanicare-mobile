@@ -1,3 +1,4 @@
+import 'package:botanicare/constants.dart';
 import 'package:botanicare/data/local/models/theme.dart' as local_theme;
 import 'package:botanicare/features/settings/notifier/theme_notifier.dart';
 import 'package:botanicare/shared/ui/control/control_group.dart';
@@ -35,7 +36,7 @@ class SettingsPreferences extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Präferenzen',
+          Constants.preferencesTitle,
           style: Theme.of(
             context,
           ).textTheme.titleLarge?.apply(fontWeightDelta: 600),
@@ -45,11 +46,11 @@ class SettingsPreferences extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         children: [
           ControlGroup(
-            header: Text('Barrierefreiheit'),
+            header: Text(Constants.preferencesAccessibility),
             children: [
               ControlRadioGroup<String>(
                 enabled: false,
-                groupLabel: Text('Sprache'),
+                groupLabel: Text(Constants.preferencesLanguage),
                 groupLeading: Icon(Icons.language),
                 groupTrailing: IconButton(
                   style: ButtonStyle(
@@ -67,8 +68,8 @@ class SettingsPreferences extends StatelessWidget {
                   onPressed: () {
                     _showInfoDialog(
                       context,
-                      'Anzeigesprache - Derzeit deaktiviert',
-                      'Legt fest, in welcher Sprache die App-Oberfläche angezeigt wird.\n\t•“Deutsch” – Standard-Hochdeutsch.\n\t•“English (Englisch)” – Englische Oberfläche.\n\t•“Schwäbisch” – Regionaler Dialekt für Schwaben.',
+                      Constants.preferencesLanguageDialogTitle,
+                      Constants.preferencesLanguageDialogDesc,
                     );
                   },
                 ),
@@ -85,10 +86,10 @@ class SettingsPreferences extends StatelessWidget {
             ],
           ),
           ControlGroup(
-            header: Text('Darstellung'),
+            header: Text(Constants.preferencesDisplay),
             children: [
               ControlRadioGroup<local_theme.ThemeModeSetting>(
-                groupLabel: Text('Farbschema'),
+                groupLabel: Text(Constants.preferencesColorscheme),
                 groupLeading: Icon(Icons.color_lens_outlined),
                 groupTrailing: IconButton(
                   style: ButtonStyle(
@@ -106,8 +107,8 @@ class SettingsPreferences extends StatelessWidget {
                   onPressed: () {
                     _showInfoDialog(
                       context,
-                      'Farb-Modus',
-                      '„Automatisch (System)“ passt sich deinem Geräteschema an. „Hell“ und „Dunkel“ zwingen jeweils den Light- oder Dark-Modus.',
+                      Constants.preferencesColorschemeDialogTitle,
+                      Constants.preferencesColorschemeDialogDesc,
                     );
                   },
                 ),
@@ -135,7 +136,7 @@ class SettingsPreferences extends StatelessWidget {
                 tapToToggle: true,
               ),
               ControlRadioGroup<local_theme.ContrastLevel>(
-                groupLabel: Text('Kontrast'),
+                groupLabel: Text(Constants.preferencesContrast),
                 groupLeading: Icon(Icons.contrast_outlined),
                 groupTrailing: IconButton(
                   style: ButtonStyle(
@@ -153,8 +154,8 @@ class SettingsPreferences extends StatelessWidget {
                   onPressed: () {
                     _showInfoDialog(
                       context,
-                      'Kontrast-Level',
-                      'Definiert die Schrift- und UI-Kontraststärke: \n\t• Normal – Standard-Kontrast für optimales Gleichgewicht von Lesbarkeit und Design.\n\t• Medium – Hervorhebung von Elementen für bessere Sichtbarkeit.\n\t• Hoch – Maximaler Kontrast für höchste Lesbarkeit, ideal bei Sehschwächen.',
+                      Constants.preferencesContrastDialogTitle,
+                      Constants.preferencesContrastDialogDesc,
                     );
                   },
                 ),

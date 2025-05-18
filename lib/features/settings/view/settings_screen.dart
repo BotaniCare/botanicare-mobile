@@ -1,3 +1,4 @@
+import 'package:botanicare/constants.dart';
 import 'package:botanicare/features/settings/view/settings_notification.dart';
 import 'package:botanicare/features/settings/view/settings_preferences.dart';
 import 'package:botanicare/shared/ui/app_info.dart';
@@ -13,7 +14,7 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Einstellungen',
+          Constants.settingsScreenTitle,
           style: Theme.of(
             context,
           ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.w600),
@@ -35,36 +36,37 @@ class SettingsScreen extends StatelessWidget {
             children: [
               ControlNavigator.page(
                 SettingsNotification(),
-                title: Text('Benachrichtigungen'),
-                subtitle: Text('App- & Systembenachrichtigungen'),
-                leading: Icon(Icons.notifications_none_rounded),
+                title: Text(Constants.notificationsTitle),
+                subtitle: Text(Constants.notificationsSubtitle),
+                leading: Icon(Icons.notifications_none_rounded, color: Theme.of(context).disabledColor),
+                enabled: false,
               ),
               ControlNavigator.page(
                 SettingsPreferences(),
-                title: Text('Präferenzen'),
-                subtitle: Text('Barriere- & Darstellungsanpassungen'),
+                title: Text(Constants.preferencesTitle),
+                subtitle: Text(Constants.preferencesSubtitle),
                 leading: Icon(Icons.settings_outlined),
               ),
             ],
           ),
           ControlGroup(
-            header: Text('Nützliche Infos'),
+            header: Text(Constants.groupMoreInfoTitle),
             children: [
               ControlNavigator.href(
                 'https://botanicare.de/privacy-policy',
-                title: Text('Datenschutzrichtlinien'),
-                subtitle: Text('Informationen zum Datenschutz'),
+                title: Text(Constants.privacyTitle),
+                subtitle: Text(Constants.privacySubtitle),
                 leading: Icon(Icons.privacy_tip_outlined),
               ),
               ControlNavigator.href(
                 'https://botanicare.de/tos',
-                title: Text('Nutzungsbedingungen'),
-                subtitle: Text('Informationen zu den AGBs'),
+                title: Text(Constants.termsTitle),
+                subtitle: Text(Constants.termsSubtitle),
                 leading: Icon(Icons.miscellaneous_services_rounded),
               ),
               ControlNavigator.href(
                 'https://support.botanicare.de/',
-                title: Text('Support/Hilfe'),
+                title: Text(Constants.supportTitle),
                 leading: Icon(Icons.help_outline_rounded),
               ),
             ],
