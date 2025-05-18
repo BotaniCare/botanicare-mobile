@@ -19,6 +19,20 @@ class RoomSelectionScreen extends StatefulWidget {
 }
 
 class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
+  late Future<List<Room>> _roomFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _roomFuture = RoomService.getAllRooms();
+  }
+
+  void _refreshRooms() {
+    setState(() {
+      _roomFuture = RoomService.getAllRooms();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +43,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
         ),
       ),
       body: FutureBuilder<List<Room>>(
-        future: RoomService.getAllRooms(),
+        future: _roomFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -74,6 +88,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                           : roomName == Constants.balcony.toLowerCase()
                           ? Constants.balconyImage
                           : Constants.defaultImage,
+                  onDelete: _refreshRooms,
                 );
               },
             );
@@ -96,7 +111,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                         isEditing: false,
                         roomService: widget.roomService,
                       ),
-                  child: const AddRoomForm(),
+                  child: AddRoomForm(),
                 );
               },
             ),
@@ -104,9 +119,8 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
 
           // Only reload if the form actually saved something
           if (result == true && mounted) {
-            setState(
-              () {},
-            ); // Rebuilds the widget and triggers reload (e.g. in initState or build)
+            _refreshRooms(); // Rebuilds the widget and triggers relo
+            // ad (e.g. in initState or build)
           }
         },
       ),
