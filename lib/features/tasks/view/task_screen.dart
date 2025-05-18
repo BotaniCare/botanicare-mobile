@@ -34,7 +34,12 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(Constants.appTitle)),
+      appBar: AppBar(
+        title: Text(
+          Constants.appTitle,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        ),
+      ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _taskFuture,
         builder: (context, snapshot) {

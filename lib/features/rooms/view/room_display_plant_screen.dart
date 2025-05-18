@@ -22,7 +22,12 @@ class RoomDisplayPlantScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(room.roomName)),
+      appBar: AppBar(
+        title: Text(
+          room.roomName,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        ),
+      ),
       body: FutureBuilder<List<Plant>>(
         future: RoomService.getAllPlantsFromRoom(room.roomName),
         builder: (context, snapshot) {

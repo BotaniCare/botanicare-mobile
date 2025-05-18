@@ -20,7 +20,12 @@ class PlantScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(Constants.plantScreenTitle)),
+      appBar: AppBar(
+        title: Text(
+          Constants.plantScreenTitle,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        ),
+      ),
       body: FutureBuilder<List<Plant>>(
         future: PlantService.getAllPlants(),
         builder: (context, snapshot) {

@@ -22,7 +22,12 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(Constants.roomScreenTitle)),
+      appBar: AppBar(
+        title: Text(
+          Constants.roomScreenTitle,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        ),
+      ),
       body: FutureBuilder<List<Room>>(
         future: RoomService.getAllRooms(),
         builder: (context, snapshot) {
