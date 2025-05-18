@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:botanicare/core/models/plant.dart';
 import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../constants.dart';
-import '../../../core/services/plant_provider.dart';
 import '../../../core/services/plant_service.dart';
 import '../../plantsForm/view/add_plant_form.dart';
 import '../../plantsForm/viewmodel/add_plant_view_model.dart';
@@ -14,8 +14,9 @@ class PlantCard extends StatelessWidget {
   final Plant plant;
   final RoomService roomService = RoomService();
   final PlantService plantService = PlantService();
+  final VoidCallback? onDelete;
 
-  PlantCard({super.key, required this.plant});
+  PlantCard({super.key, required this.plant, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +32,22 @@ class PlantCard extends StatelessWidget {
               topLeft: Radius.circular(8),
               bottomLeft: Radius.circular(8),
             ),
-            child:
-                plant.image != null
-                    ? Image.memory(
-                      base64.decode(plant.image!.bytes),
-                      fit: BoxFit.cover, // Optional
-                    )
-                    : Icon(
-                      Icons.image_not_supported_outlined,
-                      size: 16,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
+            child: SizedBox(
+              width: 80,
+              height: 85,
+              child:
+                  plant.image != null
+                      ? Image.memory(
+                        Uint8List.fromList(plant.image!.plantPicture),
+                        width: 50,
+                        fit: BoxFit.cover, // Optional
+                      )
+                      : Icon(
+                        Icons.image_not_supported_outlined,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+            ),
           ),
           Expanded(
             child: Padding(
@@ -78,13 +84,13 @@ class PlantCard extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        Icons.water_drop_outlined,
+                        Icons.calendar_month_outlined,
                         size: 16,
                         color: Theme.of(context).colorScheme.onPrimary,
                       ),
                       SizedBox(width: 6),
                       Text(
-                        plant.waterNeed,
+                        plant.waterDate ?? "tt.mm.jjjj",
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
@@ -171,10 +177,7 @@ class PlantCard extends StatelessWidget {
                   );
 
                   if (confirmDeletion == true && context.mounted) {
-                    Provider.of<PlantProvider>(
-                      context,
-                      listen: false,
-                    ).deletePlant(plant.id);
+                    await PlantService.deletePlant(plant.id);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -187,6 +190,8 @@ class PlantCard extends StatelessWidget {
                         duration: const Duration(milliseconds: 450),
                       ),
                     );
+
+                    onDelete?.call();
                   }
                 },
                 style: ElevatedButton.styleFrom(

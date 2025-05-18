@@ -1,7 +1,6 @@
 import 'package:botanicare/core/services/device_service.dart';
 import 'package:botanicare/features/settings/notifier/notifications_notifier.dart';
 import 'package:botanicare/features/settings/notifier/theme_notifier.dart';
-import 'package:botanicare/core/services/room_provider.dart';
 import 'package:botanicare/features/plants/view/plant_selection_screen.dart';
 import 'package:botanicare/themes/text_theme.dart';
 import 'package:botanicare/themes/theme.dart';
@@ -11,8 +10,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'constants.dart';
-import 'core/services/task_provider.dart';
-import 'core/services/plant_provider.dart';
 import 'data/local/hive_helper.dart';
 import 'data/local/models/theme.dart' as local_theme;
 import 'features/settings/view/settings_screen.dart';
@@ -75,14 +72,6 @@ void main() async {
         ChangeNotifierProvider<NotificationNotifier>.value(
           value: notificationNotifier,
         ),
-
-        ChangeNotifierProvider(create: (context) => TaskProvider()),
-
-        ChangeNotifierProvider(create: (context) => PlantProvider()),
-
-        ChangeNotifierProvider(create: (context) => RoomProvider()),
-
-        ChangeNotifierProvider(create: (context) => TaskProvider()),
       ],
       child: const BotaniCareMobileApp(),
     ),
@@ -139,7 +128,7 @@ class BotaniCareHomeState extends State<BotaniCareHome> {
         onTap: (index) {
           if (index == 1) {
             navigatorStateRoom.currentState?.popUntil(
-                  (route) => route.isFirst,
+              (route) => route.isFirst,
             ); //navigate back to the plant screen
           }
           //if navigation bar item is room

@@ -19,12 +19,31 @@ class RoomSelectionScreen extends StatefulWidget {
 }
 
 class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
+  late Future<List<Room>> _roomFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _roomFuture = RoomService.getAllRooms();
+  }
+
+  void _refreshRooms() {
+    setState(() {
+      _roomFuture = RoomService.getAllRooms();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(Constants.roomScreenTitle)),
+      appBar: AppBar(
+        title: Text(
+          Constants.roomScreenTitle,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        ),
+      ),
       body: FutureBuilder<List<Room>>(
-        future: RoomService.getAllRooms(),
+        future: _roomFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -32,6 +51,23 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             final rooms = snapshot.data!;
+            if (rooms.isEmpty) {
+              return (Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Container(
+                    width: 320,
+                    height: 60,
+                    alignment: Alignment.center,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.5),
+                    child: Text(Constants.noRoomsCreated),
+                  ),
+                ),
+              ));
+            }
+
             return ListView.builder(
               itemCount: rooms.length,
               itemBuilder: (context, index) {
@@ -52,6 +88,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                           : roomName == Constants.balcony.toLowerCase()
                           ? Constants.balconyImage
                           : Constants.defaultImage,
+                  onDelete: _refreshRooms,
                 );
               },
             );
@@ -74,7 +111,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                         isEditing: false,
                         roomService: widget.roomService,
                       ),
-                  child: const AddRoomForm(),
+                  child: AddRoomForm(),
                 );
               },
             ),
@@ -82,9 +119,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
 
           // Only reload if the form actually saved something
           if (result == true && mounted) {
-            setState(
-              () {},
-            ); // Rebuilds the widget and triggers reload (e.g. in initState or build)
+            _refreshRooms(); // Rebuilds the widget and triggers reload (e.g. in initState or build)
           }
         },
       ),

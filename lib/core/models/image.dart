@@ -1,22 +1,25 @@
-class PlantImage {
-  int id;
-  String bytes;
+import 'dart:convert';
 
-  PlantImage({
-    required this.id,
-    required this.bytes,
+class PlantPicture {
+  final int? id;
+  final List<int> plantPicture;
+
+  PlantPicture({
+    this.id,
+    required this.plantPicture,
   });
 
-  Map<String, dynamic> toJsonAdding(String plantname) => {
-    "fileName": "$plantname.jpg",
-    "fileType": "image/jpeg",
-    "data": bytes
-  };
+  factory PlantPicture.fromJson(Map<String, dynamic> json) {
+    return PlantPicture(
+      id: json['id'],
+      plantPicture: base64Decode(json['plantPicture']),
+    );
+  }
 
-  Map<String, dynamic> toJsonEditing(String plantname) => {
-    "id": id,
-    "fileName": "$plantname.jpg",
-    "fileType": "image/jpeg",
-    "data": bytes
-  };
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'plantPicture': base64Encode(plantPicture),
+    };
+  }
 }

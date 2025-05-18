@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:botanicare/core/models/image.dart';
 import 'package:botanicare/core/models/task.dart';
 
@@ -16,8 +15,9 @@ class Plant {
   String waterNeed;
   String sunLight;
   bool isWatered;
-  PlantImage? image;
+  PlantPicture? image;
   List<Task>? tasks;
+  String? waterDate;
 
   Plant({
     required this.id,
@@ -28,16 +28,21 @@ class Plant {
     required this.isWatered,
     required this.image,
     this.tasks,
+    this.waterDate,
   });
 
   factory Plant.fromJson(Map<String, dynamic> json) => Plant(
-    id: json['id'],
-    name: json['name'],
-    type: json['type'],
-    waterNeed: json['waterNeed'],
-    sunLight: json['sunLight'],
-    isWatered: json['isWatered'],
-    image: json['plantPicture'],
+    id: json['id'] ?? 0,
+    name: json['name'] ?? "",
+    type: json['type'] ?? "",
+    waterNeed: json['waterNeed'] ?? "",
+    sunLight: json['sunLight'] ?? "",
+    isWatered: json['isWatered'] ?? false,
+    image:
+        json['plantPicture'] != null
+            ? PlantPicture.fromJson(json['plantPicture'])
+            : null,
+    waterDate: json['waterDate'],
   );
 
   Map<String, dynamic> toJsonEditing() => {
@@ -47,7 +52,7 @@ class Plant {
     'waterNeed': waterNeed,
     'sunlight': sunLight,
     'isWatered': isWatered,
-    'plantPicture': image?.toJsonEditing(name),
+    'plantPicture': image?.toJson(),
   };
 
   Map<String, dynamic> toJsonAdding() => {
@@ -56,6 +61,6 @@ class Plant {
     'waterNeed': waterNeed,
     'sunlight': sunLight,
     'isWatered': isWatered,
-    'plantPicture': image?.toJsonAdding(name),
+    'plantPicture': image?.toJson(),
   };
 }

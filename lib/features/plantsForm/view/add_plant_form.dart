@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:botanicare/core/services/task_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
-import '../../../core/models/room.dart';
 import '../viewmodel/add_plant_view_model.dart';
 
 class AddPlantScreen extends StatefulWidget {
@@ -17,6 +16,7 @@ class AddPlantScreen extends StatefulWidget {
 
 class _AddPlantScreenState extends State<AddPlantScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool showImageError = false;
 
   @override
   void initState() {
@@ -35,40 +35,51 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     }
   }
 
-
   Future<void> _saveForm(BuildContext context) async {
     final vm = context.read<AddPlantViewModel>();
 
     _formKey.currentState!.save();
-    if (_formKey.currentState!.validate()) {
-      final error = vm.validateForm();
-      if (error != null) {
-        _showSnackBar(context, error, isError: true);
-        return;
-      }
+    final error = vm.validateForm();
 
+    setState(() {
+      showImageError = error != null;
+    });
+
+    if (_formKey.currentState!.validate() && error == null) {
       final success = await vm.save();
 
       if (success) {
+        debugPrint("---- Until here");
         _showSnackBar(
           context,
           vm.isEditing
               ? 'Änderungen erfolgreich gespeichert! 🎉'
               : 'Pflanze erfolgreich gespeichert! 🎉',
         );
-        Navigator.pop(context, true);
+        //create task for plant
+
+        await TaskService.createPlantTask();
+        debugPrint("---- After then");
+        if (mounted) {
+          Navigator.pop(context, true);
+        }
       } else {
-        _showSnackBar(context, 'Fehler beim Speichern der Pflanze ❌', isError: true);
+        _showSnackBar(
+          context,
+          'Fehler beim Speichern der Pflanze ❌',
+          isError: true,
+        );
       }
+    } else if (error != null) {
+      _showSnackBar(context, error, isError: true);
     }
   }
 
-
   void _showSnackBar(
-      BuildContext context,
-      String message, {
-        bool isError = false,
-      }) {
+    BuildContext context,
+    String message, {
+    bool isError = false,
+  }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -98,13 +109,25 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 'Name',
                 initialValue: vm.isEditing ? vm.plant.name : '',
                 onSaved: vm.updateName,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Bitte einen Pflanzennamen ein.";
+                  }
+                  return null;
+                },
               ),
               _buildTextField(
                 'Art der Pflanze',
                 initialValue: vm.isEditing ? vm.plant.type : '',
                 onChanged: vm.updateType,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Bitte einen Pflanzenart eingeben.";
+                  }
+                  return null;
+                },
               ),
-              if(!vm.isEditing)
+              if (!vm.isEditing)
                 _buildDropdown(
                   "Kürzlich gegossen",
                   ['Ja', 'Nein'],
@@ -147,23 +170,64 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   }
 
   Widget _buildImagePicker(BuildContext context, AddPlantViewModel vm) {
-    return GestureDetector(
-      onTap: () => _showImageSourceSelector(context),
-      child: Container(
-        height: 180,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Theme.of(context).colorScheme.secondary),
+    final hasImage = vm.plant.image != null;
+    final isError = showImageError && !hasImage;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () => _showImageSourceSelector(context),
+          child: Container(
+            height: 180,
+            decoration: BoxDecoration(
+              color:
+                  isError
+                      ? Theme.of(context).colorScheme.error.withOpacity(0.1)
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color:
+                    isError
+                        ? Theme.of(context).colorScheme.error
+                        : Theme.of(context).colorScheme.secondary,
+                width: 2,
+              ),
+            ),
+            child:
+                hasImage
+                    ? ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.memory(
+                        Uint8List.fromList(vm.plant.image!.plantPicture),
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                    : Center(
+                      child: Text(
+                        "Bild hinzufügen",
+                        style: TextStyle(
+                          color:
+                              isError
+                                  ? Theme.of(context).colorScheme.error
+                                  : Theme.of(context).colorScheme.onBackground,
+                        ),
+                      ),
+                    ),
+          ),
         ),
-        child:
-        vm.plant.image != null
-            ? ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.memory(base64Decode(vm.plant.image!.bytes)),
-        )
-            : const Center(child: Text("Bild hinzufügen")),
-      ),
+        if (isError)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 4),
+            child: Text(
+              "Bitte füge ein Bild hinzu.",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 12,
+              ),
+            ),
+          ),
+      ],
     );
   }
 
@@ -172,97 +236,53 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
       context: context,
       builder:
           (_) => SafeArea(
-        child: Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Aus Galerie auswählen'),
-              onTap: () => _pickImage(context, ImageSource.gallery),
+            child: Wrap(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: const Text('Aus Galerie auswählen'),
+                  onTap: () => _pickImage(context, ImageSource.gallery),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text('Foto aufnehmen'),
+                  onTap: () => _pickImage(context, ImageSource.camera),
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('Foto aufnehmen'),
-              onTap: () => _pickImage(context, ImageSource.camera),
-            ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 
   Widget _buildTextField(
-      String label, {
-        String? initialValue,
-        void Function(String)? onChanged,
-        void Function(String)? onSaved,
-      }) {
+    String label, {
+    String? initialValue,
+    void Function(String)? onChanged,
+    void Function(String)? onSaved,
+    String? Function(String?)? validator,
+  }) {
     return TextFormField(
       initialValue: initialValue,
       decoration: InputDecoration(labelText: label),
+      validator: validator,
       onSaved: onSaved != null ? (val) => onSaved(val!) : null,
       onChanged: onChanged,
     );
   }
 
-  Widget _buildAutocomplete(
-      BuildContext context, {
-        required String label,
-        String? hint,
-        required List<String> options,
-        required TextEditingController controller,
-        required void Function(String) onSelected,
-        required void Function(String) onSaved,
-      }) {
-    return Autocomplete<String>(
-      optionsBuilder:
-          (textEditingValue) => options.where(
-            (option) => option.toLowerCase().contains(
-          textEditingValue.text.toLowerCase(),
-        ),
-      ),
-      onSelected: onSelected,
-      fieldViewBuilder: (
-          context,
-          fieldController,
-          focusNode,
-          onEditingComplete,
-          ) {
-        fieldController.text = controller.text;
-        fieldController.selection = TextSelection.fromPosition(
-          TextPosition(offset: fieldController.text.length),
-        );
-        fieldController.addListener(
-              () => controller.text = fieldController.text,
-        );
-
-        return TextFormField(
-          controller: fieldController,
-          focusNode: focusNode,
-          decoration: InputDecoration(labelText: label, hintText: hint),
-          onEditingComplete: onEditingComplete,
-          onSaved: (val) {
-            if (val != null) {
-              onSaved(val);
-            }
-          },
-        );
-      },
-    );
-  }
-
   Widget _buildDropdown(
-      String label,
-      List<String> items,
-      String value,
-      void Function(String) onChanged,
-      ) {
+    String label,
+    List<String> items,
+    String value,
+    void Function(String) onChanged,
+  ) {
     return DropdownButtonFormField<String>(
       value: value,
       decoration: InputDecoration(labelText: label),
       items:
-      items
-          .map((val) => DropdownMenuItem(value: val, child: Text(val)))
-          .toList(),
+          items
+              .map((val) => DropdownMenuItem(value: val, child: Text(val)))
+              .toList(),
       onChanged: (val) => onChanged(val!),
     );
   }

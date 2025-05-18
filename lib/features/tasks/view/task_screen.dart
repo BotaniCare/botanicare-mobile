@@ -34,7 +34,12 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(Constants.appTitle)),
+      appBar: AppBar(
+        title: Text(
+          Constants.appTitle,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        ),
+      ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _taskFuture,
         builder: (context, snapshot) {
@@ -50,23 +55,40 @@ class _TaskScreenState extends State<TaskScreen> {
 
           final roomWithTaskList = snapshot.data!;
 
-          //get only tasks of room
-          final taskList = roomWithTaskList.expand((entry) => entry['task'] as List<Task>).toList();
+          //all tasks
+          final taskList =
+              roomWithTaskList.expand((entry) {
+                final tasks = entry['tasks'];
+                return tasks is List<Task> ? tasks : <Task>[];
+              }).toList();
+
           if (taskList.isEmpty) {
             NotificationText(text: Constants.noTasks);
-            return Center(
-              child: Text(Constants.noTasks),
-            );
+            return (Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Container(
+                  width: 260,
+                  height: 45,
+                  alignment: Alignment.center,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.5),
+                  child: Text(Constants.noTasks),
+                ),
+              ),
+            ));
           }
 
           return ListView.builder(
+            //get tasks from a specific room
             itemCount: roomWithTaskList.length,
             itemBuilder: (context, index) {
               final room = roomWithTaskList[index]['room'] as Room;
-              final taskList = roomWithTaskList[index]['tasks'] as List<Task>;
+              final taskListOfRoom = roomWithTaskList[index]['tasks'];
 
-              if (taskList.isEmpty) {
-                return Center(child: Text(Constants.noTasks));
+              if (taskListOfRoom == null || taskListOfRoom.isEmpty) {
+                return SizedBox();
               }
 
               return Column(
@@ -84,7 +106,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       ),
                     ),
                   ),
-                  ...taskList.map((task) {
+                  ...taskListOfRoom.map((task) {
                     final plant = task.plant;
                     return TaskCard(
                       imageUrl:

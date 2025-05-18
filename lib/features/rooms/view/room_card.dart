@@ -7,8 +7,14 @@ import '../../../core/models/room.dart';
 class RoomCard extends StatelessWidget {
   final Room room;
   final String imagePath;
+  final VoidCallback? onDelete;
 
-  const RoomCard({super.key, required this.room, required this.imagePath});
+  const RoomCard({
+    super.key,
+    required this.room,
+    required this.imagePath,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +26,7 @@ class RoomCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: GestureDetector(
           onTap:
-              () =>
-              Navigator.of(context).push(
+              () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => RoomDisplayPlantScreen(room: room),
                 ),
@@ -48,10 +53,7 @@ class RoomCard extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
                         foregroundColor:
-                        Theme
-                            .of(context)
-                            .colorScheme
-                            .onPrimary,
+                            Theme.of(context).colorScheme.onPrimary,
                         backgroundColor: Colors.grey.shade400,
                         padding: EdgeInsets.all(10),
                       ),
@@ -70,23 +72,21 @@ class RoomCard extends StatelessWidget {
                     padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
                     child: ElevatedButton(
                       onPressed: () async {
-                        if(room.plantList.isNotEmpty){
+                        if (room.plantList.isEmpty) {
                           final confirmDeletion = await showDialog<bool>(
                             context: context,
                             builder:
-                                (con) =>
-                                AlertDialog(
+                                (con) => AlertDialog(
                                   title: Text(
                                     Constants.alertDialogTitle.replaceFirst(
-                                        "{}", room.roomName),
+                                      "{}",
+                                      room.roomName,
+                                    ),
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                       color:
-                                      Theme
-                                          .of(context)
-                                          .colorScheme
-                                          .primary,
+                                          Theme.of(context).colorScheme.primary,
                                     ),
                                   ),
                                   content: Text(
@@ -108,7 +108,8 @@ class RoomCard extends StatelessWidget {
                                           onPressed:
                                               () => Navigator.pop(con, true),
                                           child: Text(
-                                              Constants.confirmRoomDeletion),
+                                            Constants.confirmRoomDeletion,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -117,54 +118,61 @@ class RoomCard extends StatelessWidget {
                           );
 
                           if (confirmDeletion == true && context.mounted) {
-                            final RoomService roomService= RoomService();
-                            roomService.deleteRoom(room.roomName);
+                            final RoomService roomService = RoomService();
+                            await roomService.deleteRoom(room.roomName);
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  Constants.deletionSnackBarMessage.replaceFirst(
-                                      "{}", room.roomName),
+                                  Constants.deletionSnackBarMessage
+                                      .replaceFirst("{}", room.roomName),
                                 ),
                                 behavior: SnackBarBehavior.floating,
                                 duration: const Duration(milliseconds: 450),
                               ),
                             );
+
+                            onDelete?.call();
                           }
                         } else {
                           await showDialog<void>(
                             context: context,
-                            builder: (con) => AlertDialog(
-                              title: Text(
-                                "${room.roomName} kann nicht gelöscht werden",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(con).colorScheme.primary,
-                                ),
-                              ),
-                              content: Text(
-                                "Bitte lösche erst die Pflanzen in ${room.roomName}, um diesen Raum löschen zu können",
-                                style: TextStyle(fontSize: 14),
-                              ),
-                              actions: [
-                                Row(
-                                  children: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(con),
-                                      child: Text("Verstanden"),
+                            builder:
+                                (con) => AlertDialog(
+                                  title: Text(
+                                    "${room.roomName} kann nicht gelöscht werden",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(con).colorScheme.primary,
+                                    ),
+                                  ),
+                                  content: Text(
+                                    "Bitte lösche erst die Pflanzen in ${room.roomName}, um diesen Raum löschen zu können",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  actions: [
+                                    Row(
+                                      children: [
+                                        TextButton(
+                                          onPressed: () => Navigator.pop(con),
+                                          child: Text("Verstanden"),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
                           );
                         }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                        backgroundColor: (room.plantList.isEmpty) ? Theme.of(context).colorScheme.primary : Colors.grey.shade400,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor:
+                            (room.plantList.isEmpty)
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.grey.shade400,
                         padding: EdgeInsets.all(10),
                       ),
                       child: Icon(Icons.delete_forever, size: 23),
@@ -181,10 +189,7 @@ class RoomCard extends StatelessWidget {
                 child: Text(
                   room.roomName,
                   style: TextStyle(
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .onSurface,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),

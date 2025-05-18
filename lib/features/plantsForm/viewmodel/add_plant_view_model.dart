@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:botanicare/core/models/image.dart';
 import 'package:botanicare/core/services/room_service.dart';
 import 'package:flutter/material.dart';
@@ -26,19 +28,23 @@ class AddPlantViewModel extends ChangeNotifier {
     _plant = initialPlant;
     if (_plant.isWatered) {
       isWatered = "Ja";
+    } else {
+      isWatered = "Nein";
     }
-    isWatered = "Nein";
     if (roomName != null) {
       this.roomName = roomName; // initialize if provided
     }
+    loadRooms();
   }
 
   Plant get plant => _plant;
 
   Future<void> loadRooms() async {
     rooms = await RoomService.getAllRooms();
-    if (!_isRoomNameInitialized()) {
-      roomName = rooms.first.roomName;
+    if (rooms.isNotEmpty) {
+      if (roomName.isEmpty || !rooms.any((r) => r.roomName == roomName)) {
+        roomName = rooms.first.roomName;
+      }
     }
     notifyListeners();
   }
@@ -67,7 +73,8 @@ class AddPlantViewModel extends ChangeNotifier {
   }
 
   void setImage(String image) {
-    _plant.image = PlantImage(id: 0, bytes: image);
+    final bytes = base64Decode(image);
+    _plant.image = PlantPicture(id: 0, plantPicture: bytes);
     notifyListeners();
   }
 
@@ -102,9 +109,7 @@ class AddPlantViewModel extends ChangeNotifier {
   }
 
   String? validateForm() {
-    if (_plant.name.isEmpty) return 'Bitte füge einen Namen hinzu';
-    if (_plant.image == null) return 'Bitte füge ein Bild hinzu.';
-    if (_plant.type.trim().isEmpty) return 'Bitte gib eine Pflanzenart ein';
+    // if server side validation is needed
     return null; // no error
   }
 
